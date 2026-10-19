@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bitácora de Obra</title>
+<meta name="theme-color" content="#2b3136">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bitácora">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: libreta de campo — barra superior tipo señalamiento, formulario por secciones plegables, registros como hojas apiladas */
+:root{
+  --bg:#f3f4f1; --paper:#ffffff; --ink:#1c2226; --muted:#5d676c; --line:#d9ddd8;
+  --accent:#f2b705; --accent-ink:#1c2226; --asphalt:#2b3136; --concrete:#8a9499;
+  --ok:#2f7d4f; --bad:#b3362c; --chip:#eceee9;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14181b; --paper:#1d2327; --ink:#e8ebe7; --muted:#9aa4a8; --line:#323a3f;
+  --accent:#f5c22b; --accent-ink:#14181b; --asphalt:#0d1012; --concrete:#7d878c;
+  --ok:#5bbf84; --bad:#ef7a6f; --chip:#262d31; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14181b; --paper:#1d2327; --ink:#e8ebe7; --muted:#9aa4a8; --line:#323a3f;
+  --accent:#f5c22b; --accent-ink:#14181b; --asphalt:#0d1012; --concrete:#7d878c;
+  --ok:#5bbf84; --bad:#ef7a6f; --chip:#262d31; color-scheme:dark}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--asphalt)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--asphalt);color:#f3f4f1;border-bottom:4px solid var(--accent)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px;padding-bottom:12px}
+h1{font-family:var(--f-display);font-weight:700;font-size:1.7rem;letter-spacing:.02em;margin:0;text-transform:uppercase;line-height:1}
+h1 small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.68rem;letter-spacing:.08em;color:#c9cfcb;margin-top:4px;text-transform:none}
+.tabs{display:flex;gap:6px}
+.tab{font:600 .85rem var(--f-body);border:1px solid #4a5258;background:transparent;color:#f3f4f1;padding:8px 12px;border-radius:6px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.status{font:.75rem var(--f-mono);color:var(--muted);margin:14px 0 0}
+section.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;margin-top:14px}
+.sec-h{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.sec-h h2{font-family:var(--f-display);font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;margin:0}
+.tag{width:10px;height:10px;border-radius:2px;background:var(--accent)}
+.tag.c{background:var(--concrete)} .tag.a{background:var(--asphalt);outline:1px solid var(--muted)} .tag.q{background:var(--ok)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:14px}
+.full{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:4px;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:0}
+input,select,textarea{font:400 1rem var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;width:100%;min-width:0}
+input[type=number],.mono{font-family:var(--f-mono)}
+textarea{min-height:84px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.unit{font-family:var(--f-mono);text-transform:none;letter-spacing:0;font-weight:400}
+.types{display:flex;flex-wrap:wrap;gap:8px;padding:14px}
+.type{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:8px 14px;font:500 .9rem var(--f-body);cursor:pointer}
+.type[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn{font:600 .95rem var(--f-body);border-radius:6px;padding:11px 16px;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{padding:7px 11px;font-size:.82rem}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.gps{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.gps .btn{white-space:nowrap}
+.hint{font-size:.8rem;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
+.qc{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+.qcrow{display:grid;grid-template-columns:1.4fr 1fr 1fr auto auto;gap:8px;align-items:end}
+@media (max-width:560px){.qcrow{grid-template-columns:1fr 1fr}.qcrow .pr{grid-column:1/-1}}
+.cumple{display:flex;gap:4px}
+.cumple button{font:600 .8rem var(--f-body);padding:9px 10px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
+.cumple button.on.y{background:var(--ok);color:#fff;border-color:var(--ok)}
+.cumple button.on.n{background:var(--bad);color:#fff;border-color:var(--bad)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;justify-content:flex-end}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-size:.9rem;z-index:20}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.toolbar input,.toolbar select{flex:1 1 160px;width:auto}
+.entry{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;margin-top:12px;padding:12px 14px}
+.entry.concreto{border-left-color:var(--concrete)} .entry.asfalto{border-left-color:var(--asphalt)} .entry.terraceria{border-left-color:#a0743a}
+.e-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.e-date{font-family:var(--f-display);font-size:1.25rem;letter-spacing:.03em;text-transform:uppercase}
+.e-meta{font:.8rem var(--f-mono);color:var(--muted)}
+.e-obra{font-weight:600;margin-top:2px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px 14px;margin-top:10px}
+.kv div{min-width:0}
+.kv dt{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.kv dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{background:var(--chip);border-radius:4px;padding:2px 8px;font-size:.75rem;font-weight:600}
+.chip.y{color:var(--ok)} .chip.n{color:var(--bad)}
+.notes{margin-top:10px;white-space:pre-wrap;font-size:.93rem}
+.e-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.e-actions a{color:var(--ink)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--bad)}
+.empty{text-align:center;color:var(--muted);padding:36px 12px;border:1px dashed var(--line);border-radius:8px;margin-top:14px}
+.badge-ej{font:600 .65rem var(--f-mono);background:var(--accent);color:var(--accent-ink);padding:2px 6px;border-radius:3px;margin-left:6px;vertical-align:middle}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:0 14px 14px}
+.ph{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ph .img{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:6px;overflow:hidden;background:var(--chip);border:1px solid var(--line)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .x{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;cursor:pointer;font-size:.9rem}
+.ph .busy{position:absolute;inset:0;display:grid;place-items:center;font:.75rem var(--f-mono);color:var(--muted)}
+.ph input{font-size:.85rem;padding:7px}
+.addph{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:14px}
+.addph input[type=file]{display:none}
+.e-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:10px}
+.e-photos a{display:block;aspect-ratio:1;max-width:100%;border-radius:5px;overflow:hidden;background:var(--chip)}
+.e-photos img{width:100%;height:100%;object-fit:cover;display:block}
+.e-photos figure{margin:0;min-width:0}
+.e-photos figcaption{font-size:.7rem;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.pdfopts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.pdfopts label{flex:1 1 220px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <h1>Bitácora de Obra<small id="hdrDate">Supervisión · JUVISA</small></h1>
+  <nav class="tabs" role="tablist">
+    <button class="tab" id="tabNew" role="tab" aria-selected="true">Nueva</button>
+    <button class="tab" id="tabList" role="tab" aria-selected="false">Registros <span id="count"></span></button>
+  </nav>
+</div></header>
+
+<main class="wrap">
+<p class="status" id="status">Conectando…</p>
+
+<!-- ============ FORMULARIO ============ -->
+<form id="form" autocomplete="off">
+  <section class="card">
+    <div class="sec-h"><span class="tag"></span><h2>Datos generales</h2></div>
+    <div class="grid">
+      <label>Fecha<input type="date" id="f_fecha" required></label>
+      <label>Día<select id="f_dia"><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option><option>Sábado</option><option>Domingo</option></select></label>
+      <label>Hora<input type="time" id="f_hora"></label>
+      <label class="full">Obra / tramo<input id="f_obra" list="obras" placeholder="Carretera Manzanillo–Cihuatlán"></label>
+      <datalist id="obras"></datalist>
+      <label>Cadenamiento del<input id="f_cad1" class="mono" placeholder="17+800"></label>
+      <label>Cadenamiento al<input id="f_cad2" class="mono" placeholder="18+120"></label>
+      <label>Cuerpo / carril<select id="f_cuerpo"><option value="">—</option><option>Cuerpo A</option><option>Cuerpo B</option><option>Carril izquierdo</option><option>Carril derecho</option><option>Acotamiento</option><option>Ambos</option></select></label>
+      <label class="full">Ubicación
+        <div class="gps">
+          <input id="f_ubic" placeholder="Referencia: entronque El Chavarín" style="flex:1 1 200px;width:auto">
+          <button type="button" class="btn pri" id="btnGps">📍 Mi ubicación</button>
+        </div>
+      </label>
+      <label>Latitud<input id="f_lat" class="mono" inputmode="decimal" placeholder="19.2341"></label>
+      <label>Longitud<input id="f_lng" class="mono" inputmode="decimal" placeholder="-104.5672"></label>
+      <p class="hint full" id="gpsHint" style="margin:0">Toca “Mi ubicación” y acepta el permiso del GPS. También puedes pegar un enlace o coordenadas de Google Maps / Apple Maps.</p>
+      <label>Clima<select id="f_clima"><option value="">—</option><option>Soleado</option><option>Nublado</option><option>Lluvia ligera</option><option>Lluvia</option><option>Viento</option></select></label>
+      <label>Temp. ambiente <span class="unit">°C</span><input type="number" step="0.1" id="f_tamb"></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="sec-h"><span class="tag"></span><h2>Actividad</h2></div>
+    <div class="types" id="types">
+      <button type="button" class="type" data-t="concreto" aria-pressed="true">Colado de concreto</button>
+      <button type="button" class="type" data-t="asfalto" aria-pressed="false">Carpeta / base asfáltica</button>
+      <button type="button" class="type" data-t="terraceria" aria-pressed="false">Terracerías</button>
+      <button type="button" class="type" data-t="general" aria-pressed="false">Supervisión general</button>
+    </div>
+  </section>
+
+  <section class="card" id="sec_concreto">
+    <div class="sec-h"><span class="tag c"></span><h2>Colado de concreto</h2></div>
+    <div class="grid">
+      <label class="full">Elemento<input id="c_elemento" list="elementos" placeholder="Trabe, muro diafragma, losa, guarnición…"></label>
+      <datalist id="elementos"><option>Trabe</option><option>Muro diafragma</option><option>Losa</option><option>Guarnición</option><option>Bordillo</option><option>Cabezal</option><option>Zapata</option><option>Parapeto</option></datalist>
+      <label>Concretera<input id="c_concretera" list="concreteras" placeholder="Nombre de la planta"></label>
+      <datalist id="concreteras"></datalist>
+      <label>f'c <span class="unit">kg/cm²</span><input type="number" id="c_fc" placeholder="250"></label>
+      <label>Revenimiento <span class="unit">cm</span><input type="number" step="0.5" id="c_rev"></label>
+      <label>Temp. concreto <span class="unit">°C</span><input type="number" step="0.1" id="c_temp"></label>
+      <label>Volumen <span class="unit">m³</span><input type="number" step="0.01" id="c_vol"></label>
+      <label>No. de ollas<input type="number" id="c_ollas"></label>
+      <label>Remisión(es)<input id="c_remision" class="mono"></label>
+      <label>TMA <span class="unit">mm / pulg</span><input id="c_tma" placeholder='3/4"'></label>
+      <label>Aditivo<input id="c_aditivo"></label>
+      <label>Hora inicio<input type="time" id="c_hini"></label>
+      <label>Hora término<input type="time" id="c_hfin"></label>
+      <label>Cilindros / especímenes<input id="c_cil" placeholder="4 cilindros, 7-14-28 días"></label>
+      <label>Método de colocación<select id="c_metodo"><option value="">—</option><option>Bomba</option><option>Directo de olla</option><option>Bacha / grúa</option><option>Manual</option></select></label>
+      <label>Vibrado<select id="c_vibrado"><option value="">—</option><option>Correcto</option><option>Deficiente</option></select></label>
+      <label>Curado<select id="c_curado"><option value="">—</option><option>Membrana</option><option>Agua</option><option>Pendiente</option></select></label>
+    </div>
+  </section>
+
+  <section class="card" id="sec_asfalto" hidden>
+    <div class="sec-h"><span class="tag a"></span><h2>Mezcla asfáltica</h2></div>
+    <div class="grid">
+      <label>Capa<select id="a_capa"><option>Carpeta asfáltica</option><option>Base negra</option><option>Bacheo</option><option>Riego de liga</option><option>Riego de impregnación</option></select></label>
+      <label>Planta de producción<input id="a_planta" list="plantas"></label>
+      <datalist id="plantas"></datalist>
+      <label>Contenido asfáltico <span class="unit">%</span><input type="number" step="0.01" id="a_ca" placeholder="5.80"></label>
+      <label>Tipo de asfalto<input id="a_tipo" placeholder="AC-20 / PG 64-22"></label>
+      <label>T. producción <span class="unit">°C</span><input type="number" id="a_tprod"></label>
+      <label>T. tendido <span class="unit">°C</span><input type="number" id="a_tten"></label>
+      <label>T. compactación <span class="unit">°C</span><input type="number" id="a_tcomp"></label>
+      <label>Espesor <span class="unit">cm</span><input type="number" step="0.1" id="a_esp"></label>
+      <label>Ancho <span class="unit">m</span><input type="number" step="0.01" id="a_ancho"></label>
+      <label>Toneladas<input type="number" step="0.01" id="a_ton"></label>
+      <label>No. de camiones / viajes<input type="number" id="a_viajes"></label>
+      <label>Riego de liga <span class="unit">L/m²</span><input type="number" step="0.01" id="a_liga"></label>
+      <label class="full">Equipo<input id="a_equipo" placeholder="Pavimentadora, rodillo liso, neumático…"></label>
+    </div>
+  </section>
+
+  <section class="card" id="sec_terraceria" hidden>
+    <div class="sec-h"><span class="tag" style="background:#a0743a"></span><h2>Terracerías</h2></div>
+    <div class="grid">
+      <label>Capa<select id="t_capa"><option>Terraplén</option><option>Subyacente</option><option>Subrasante</option><option>Sub-base</option><option>Base hidráulica</option></select></label>
+      <label>Banco de material<input id="t_banco"></label>
+      <label>Espesor <span class="unit">cm</span><input type="number" step="0.1" id="t_esp"></label>
+      <label>Humedad <span class="unit">%</span><input type="number" step="0.1" id="t_hum"></label>
+      <label>Grado de compactación <span class="unit">%</span><input type="number" step="0.1" id="t_gc"></label>
+      <label>Grado requerido <span class="unit">%</span><input type="number" step="0.1" id="t_gcreq" placeholder="95"></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="sec-h"><span class="tag q"></span><h2>Control de calidad</h2></div>
+    <div class="qc" id="qcList" style="padding-top:14px"></div>
+    <div style="padding:0 14px 14px"><button type="button" class="btn sm" id="addQc">+ Agregar prueba</button></div>
+  </section>
+
+  <section class="card" id="sec_fotos">
+    <div class="sec-h"><span class="tag" style="background:var(--muted)"></span><h2>Fotografías</h2></div>
+    <div class="addph">
+      <label class="btn pri" for="phCam" style="flex-direction:row;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--accent-ink)">📷 Tomar foto</label>
+      <input type="file" id="phCam" accept="image/*" capture="environment">
+      <label class="btn" for="phLib" style="flex-direction:row;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--ink)">🖼 Elegir de la galería</label>
+      <input type="file" id="phLib" accept="image/*" multiple>
+      <span class="hint" id="phHint">Se guardan en resolución original, sin compresión, en este teléfono.</span>
+    </div>
+    <div class="photos" id="phList"></div>
+  </section>
+
+  <section class="card">
+    <div class="sec-h"><span class="tag"></span><h2>Notas del día</h2></div>
+    <div class="grid">
+      <label class="full">Observaciones, incidencias, personal y maquinaria<textarea id="f_notas" placeholder="Baches, limpieza de cunetas, defensa metálica, acuerdos con residente…"></textarea></label>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button type="button" class="btn" id="btnClear">Limpiar</button>
+    <button type="submit" class="btn pri" id="btnSave">Guardar registro</button>
+  </div>
+</form>
+
+<!-- ============ LISTA ============ -->
+<div id="listView" hidden>
+  <div class="toolbar">
+    <input id="q" placeholder="Buscar obra, cadenamiento, elemento…">
+    <select id="fType"><option value="">Todas las actividades</option><option value="concreto">Concreto</option><option value="asfalto">Asfalto</option><option value="terraceria">Terracerías</option><option value="general">General</option></select>
+    <button class="btn sm" id="btnCsv" type="button">Exportar a Excel (CSV)</button>
+    <button class="btn sm pri" id="btnPdfAll" type="button">PDF de lo mostrado</button>
+  </div>
+  <div class="toolbar">
+    <button class="btn sm" id="btnBackup" type="button">Descargar respaldo</button>
+    <label class="btn sm" for="restoreFile" style="flex-direction:row;font-size:.82rem;letter-spacing:0;text-transform:none;color:var(--ink)">Restaurar respaldo</label>
+    <input type="file" id="restoreFile" accept=".json,application/json" hidden>
+    <span class="hint" id="backupHint" style="align-self:center">Tus registros y fotos se guardan solo en este teléfono. Descarga un respaldo cada semana.</span>
+  </div>
+  <div class="pdfopts">
+    <label>Desde<input type="date" id="dFrom"></label>
+    <label>Hasta<input type="date" id="dTo"></label>
+    <label>Nombre en el PDF<input id="pdfName" placeholder="Supervisor · empresa"></label>
+  </div>
+  <div id="entries"></div>
+</div>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const TIPOS={concreto:"Colado de concreto",asfalto:"Mezcla asfáltica",terraceria:"Terracerías",general:"Supervisión general"};
+const FIELDS=["f_fecha","f_dia","f_hora","f_obra","f_cad1","f_cad2","f_cuerpo","f_ubic","f_lat","f_lng","f_clima","f_tamb",
+ "c_elemento","c_concretera","c_fc","c_rev","c_temp","c_vol","c_ollas","c_remision","c_tma","c_aditivo","c_hini","c_hfin","c_cil","c_metodo","c_vibrado","c_curado",
+ "a_capa","a_planta","a_ca","a_tipo","a_tprod","a_tten","a_tcomp","a_esp","a_ancho","a_ton","a_viajes","a_liga","a_equipo",
+ "t_capa","t_banco","t_esp","t_hum","t_gc","t_gcreq","f_notas"];
+const LABELS={c_elemento:"Elemento",c_concretera:"Concretera",c_fc:"f'c kg/cm²",c_rev:"Revenimiento cm",c_temp:"Temp. concreto °C",c_vol:"Volumen m³",c_ollas:"Ollas",c_remision:"Remisión",c_tma:"TMA",c_aditivo:"Aditivo",c_hini:"Inicio",c_hfin:"Término",c_cil:"Cilindros",c_metodo:"Colocación",c_vibrado:"Vibrado",c_curado:"Curado",
+ a_capa:"Capa",a_planta:"Planta",a_ca:"Cont. asfáltico %",a_tipo:"Asfalto",a_tprod:"T. producción °C",a_tten:"T. tendido °C",a_tcomp:"T. compactación °C",a_esp:"Espesor cm",a_ancho:"Ancho m",a_ton:"Toneladas",a_viajes:"Viajes",a_liga:"Liga L/m²",a_equipo:"Equipo",
+ t_capa:"Capa",t_banco:"Banco",t_esp:"Espesor cm",t_hum:"Humedad %",t_gc:"Grado compactación %",t_gcreq:"Requerido %"};
+const PREFIX={concreto:"c_",asfalto:"a_",terraceria:"t_",general:"#"};
+
+let photos=[], assets=null, pendingUp=0;
+let tipo="concreto", qc=[], entries=[], editingId=null, db=null, col=null, downloads=null, local=false, confirmId=null;
+const SAMPLE=[{id:"ejemplo",ejemplo:true,tipo:"concreto",f_fecha:"2026-10-19",f_dia:"Lunes",f_hora:"08:30",f_obra:"Carretera Manzanillo–Cihuatlán",f_cad1:"24+350",f_cad2:"24+380",f_ubic:"Puente sobre arroyo",c_elemento:"Losa de puente",c_concretera:"Planta ejemplo",c_fc:"250",c_rev:"12",c_temp:"29",c_vol:"18.5",c_ollas:"3",qc:[{p:"Revenimiento",r:"12 cm",e:"10 ± 2.5 cm",ok:"y"},{p:"Temperatura",r:"29 °C",e:"≤ 32 °C",ok:"y"}],f_notas:"Registro de ejemplo. Se borra en cuanto guardes el primero tuyo.",t:0}];
+
+/* ---------- utilidades ---------- */
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2400)}
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function today(){const d=new Date();const p=n=>String(n).padStart(2,"0");return{date:`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`,time:`${p(d.getHours())}:${p(d.getMinutes())}`}}
+function diaDe(iso){if(!iso)return"";const [y,m,d]=iso.split("-").map(Number);return DIAS[new Date(y,m-1,d).getDay()]}
+function fmtFecha(iso){if(!iso)return"";const [y,m,d]=iso.split("-");const M=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];return`${+d} ${M[+m-1]} ${y}`}
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+/* ---------- tipo de actividad ---------- */
+function setTipo(t){tipo=t;document.querySelectorAll(".type").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
+ ["concreto","asfalto","terraceria"].forEach(k=>$("sec_"+k).hidden=k!==t);}
+$("types").addEventListener("click",e=>{const b=e.target.closest(".type");if(b)setTipo(b.dataset.t)});
+
+/* ---------- control de calidad ---------- */
+const QC_SUGG={concreto:["Revenimiento","Temperatura del concreto","Toma de cilindros","Contenido de aire"],asfalto:["Temperatura de tendido","Temperatura de compactación","Grado de compactación (núcleo)","Espesor","Contenido asfáltico (extracción)"],terraceria:["Grado de compactación (cala)","Humedad","Espesor de capa"],general:["Inspección visual"]};
+function renderQc(){
+ const box=$("qcList");box.innerHTML="";
+ if(!qc.length){box.innerHTML=`<p class="hint" style="margin:0">Sin pruebas. Toca “Agregar prueba” para anotar resultado, especificación y si cumple.</p>`;return}
+ qc.forEach((r,i)=>{const d=document.createElement("div");d.className="qcrow";
+  d.innerHTML=`<label class="pr">Prueba<input id="qc_p_${i}" list="qcs" value="${esc(r.p)}"></label>
+  <label>Resultado<input id="qc_r_${i}" value="${esc(r.r)}"></label>
+  <label>Especificación<input id="qc_e_${i}" value="${esc(r.e)}"></label>
+  <div class="cumple"><button type="button" class="y ${r.ok==="y"?"on":""}" data-i="${i}" data-v="y">Cumple</button><button type="button" class="n ${r.ok==="n"?"on":""}" data-i="${i}" data-v="n">No</button></div>
+  <button type="button" class="btn sm" data-del="${i}" aria-label="Quitar prueba">✕</button>`;
+  box.appendChild(d)});
+ let dl=$("qcs");if(!dl){dl=document.createElement("datalist");dl.id="qcs";document.body.appendChild(dl)}
+ dl.innerHTML=[...new Set(Object.values(QC_SUGG).flat())].map(s=>`<option>${esc(s)}</option>`).join("");
+}
+function syncQc(){qc.forEach((r,i)=>{r.p=$("qc_p_"+i)?.value||"";r.r=$("qc_r_"+i)?.value||"";r.e=$("qc_e_"+i)?.value||""})}
+$("qcList").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;syncQc();
+ if(b.dataset.del!=null){qc.splice(+b.dataset.del,1)}else{const r=qc[+b.dataset.i];r.ok=r.ok===b.dataset.v?"":b.dataset.v}renderQc()});
+$("addQc").onclick=()=>{syncQc();const s=QC_SUGG[tipo]||[];const used=qc.map(r=>r.p);qc.push({p:s.find(x=>!used.includes(x))||"",r:"",e:"",ok:""});renderQc();$("qc_r_"+(qc.length-1))?.focus()};
+
+/* ---------- ubicación ---------- */
+function parseCoords(txt){
+ if(!txt)return null;let m=txt.match(/@(-?\d+\.\d+),\s*(-?\d+\.\d+)/)||txt.match(/[?&](?:q|ll|query|sll)=(-?\d+\.\d+),\s*(-?\d+\.\d+)/)||txt.match(/(-?\d{1,2}\.\d{3,})\s*,\s*(-?\d{1,3}\.\d{3,})/);
+ if(m)return{lat:+m[1],lng:+m[2]};
+ m=txt.match(/(\d+)°\s*(\d+)'\s*([\d.]+)"?\s*([NS])[\s,]+(\d+)°\s*(\d+)'\s*([\d.]+)"?\s*([EWO])/i);
+ if(m){const c=(d,mi,s,h)=>(+d+ +mi/60+ +s/3600)*(/[SWO]/i.test(h)?-1:1);return{lat:c(m[1],m[2],m[3],m[4]),lng:c(m[5],m[6],m[7],m[8])}}
+ return null}
+function setCoords(c){$("f_lat").value=c.lat.toFixed(6);$("f_lng").value=c.lng.toFixed(6)}
+["f_ubic","f_lat","f_lng"].forEach(id=>$(id).addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardData).getData("text");const c=parseCoords(t);if(c){e.preventDefault();setCoords(c);if(id==="f_ubic"&&!$("f_ubic").value)$("f_ubic").value="";toast("Coordenadas capturadas")}}));
+$("btnGps").onclick=()=>{
+ const hint=$("gpsHint");
+ if(!navigator.geolocation){hint.textContent="Este navegador no da acceso al GPS. Abre Maps, mantén presionado tu punto, copia las coordenadas y pégalas en Latitud.";return}
+ $("btnGps").textContent="Buscando…";
+ navigator.geolocation.getCurrentPosition(p=>{setCoords({lat:p.coords.latitude,lng:p.coords.longitude});$("btnGps").textContent="📍 Mi ubicación";hint.textContent=`Ubicación capturada (precisión ±${Math.round(p.coords.accuracy)} m).`;toast("Ubicación capturada")},
+ ()=>{$("btnGps").textContent="📍 Mi ubicación";hint.innerHTML=`No se pudo leer el GPS. Revisa en Ajustes → Privacidad → Localización que Safari tenga permiso, o <a href="https://maps.apple.com/" target="_blank" rel="noopener">abre Maps</a>, copia tus coordenadas y pégalas en Latitud.`},{enableHighAccuracy:true,timeout:12000,maximumAge:30000})};
+function mapUrl(e){return e.f_lat&&e.f_lng?`https://maps.google.com/?q=${e.f_lat},${e.f_lng}`:""}
+
+/* ---------- formulario ---------- */
+$("f_fecha").addEventListener("change",()=>{$("f_dia").value=diaDe($("f_fecha").value)});
+function resetForm(keep){
+ const prev=keep?{f_obra:$("f_obra").value,c_concretera:$("c_concretera").value,a_planta:$("a_planta").value}:{};
+ FIELDS.forEach(f=>{const el=$(f);if(el.tagName==="SELECT")el.selectedIndex=0;else el.value=""});
+ Object.assign(prev,{});for(const k in prev)$(k).value=prev[k]||"";
+ const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);
+ qc=[];renderQc();photos=[];renderPhotos();editingId=null;$("btnSave").textContent="Guardar registro";
+ const last=lsGet("bit_ultimo");if(last){if(!$("f_obra").value)$("f_obra").value=last.obra||"";setTipo(last.tipo||"concreto")}else setTipo("concreto");
+}
+function readForm(){syncQc();syncPh();const o={tipo,qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||""}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v)o[f]=v});
+ const pre=PREFIX[tipo];Object.keys(o).forEach(k=>{if(/^[cat]_/.test(k)&&!k.startsWith(pre))delete o[k]});return o}
+function fillForm(e){resetForm();FIELDS.forEach(f=>{if(e[f]!=null)$(f).value=e[f]});setTipo(e.tipo||"general");qc=(e.qc||[]).map(r=>({...r}));renderQc();photos=(e.fotos||[]).map(f=>({...f}));renderPhotos();editingId=e.id;$("btnSave").textContent="Guardar cambios"}
+$("btnClear").onclick=()=>{resetForm();toast("Formulario limpio")};
+$("form").addEventListener("submit",async ev=>{ev.preventDefault();if(pendingUp){toast("Espera a que terminen de subir las fotos");return}const o=readForm();
+ if(!o.f_obra&&!o.f_notas&&!o.f_cad1&&!o.fotos.length){toast("Anota al menos la obra, el cadenamiento o una nota");return}
+ o.t=Date.now();const id=editingId||("b"+o.t.toString(36)+Math.random().toString(36).slice(2,6));
+ lsSet("bit_ultimo",{obra:o.f_obra,tipo});
+ try{
+  await idb.put("registros",{...o,id});await reload();
+  toast(editingId?"Cambios guardados":"Registro guardado");resetForm(true);
+ }catch(err){toast("No se pudo guardar: "+(err&&err.message||"error de conexión")+". Intenta de nuevo.")}
+});
+
+/* ---------- lista ---------- */
+function kvFor(e){const pre=PREFIX[e.tipo];return Object.keys(LABELS).filter(k=>k.startsWith(pre)&&e[k]).map(k=>`<div><dt>${LABELS[k]}</dt><dd>${esc(e[k])}</dd></div>`).join("")}
+function textFor(e){const L=[`BITÁCORA ${e.f_dia||""} ${fmtFecha(e.f_fecha)} ${e.f_hora||""}`.trim(),`Obra: ${e.f_obra||"—"}`];
+ if(e.f_cad1)L.push(`Cad.: ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}${e.f_cuerpo?" ("+e.f_cuerpo+")":""}`);
+ if(e.f_ubic)L.push(`Ubicación: ${e.f_ubic}`);if(mapUrl(e))L.push(mapUrl(e));
+ L.push(`Actividad: ${TIPOS[e.tipo]}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`${LABELS[k]}: ${e[k]}`)});
+ (e.qc||[]).forEach(r=>L.push(`CC ${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" ✔ cumple":r.ok==="n"?" ✘ no cumple":""}`));
+ if(e.f_notas)L.push(`Notas: ${e.f_notas}`);return L.join("\n")}
+function renderList(){
+ const q=$("q").value.toLowerCase().trim(),ft=$("fType").value;
+ const real=entries.filter(e=>!e.ejemplo);const df=$("dFrom").value,dt=$("dTo").value;const shown=(real.length?real:entries).filter(e=>(!ft||e.tipo===ft)&&(!df||(e.f_fecha||"")>=df)&&(!dt||(e.f_fecha||"")<=dt)&&(!q||JSON.stringify(e).toLowerCase().includes(q)));
+ $("count").textContent=real.length?`(${real.length})`:"";
+ const box=$("entries");
+ if(!shown.length){box.innerHTML=`<div class="empty">${entries.length?"Ningún registro coincide con la búsqueda.":"Aún no hay registros. Llena la pestaña “Nueva” y toca Guardar."}</div>`;return}
+ box.innerHTML=shown.map(e=>{const qcs=(e.qc||[]).map(r=>`<span class="chip ${r.ok||""}">${esc(r.p||"Prueba")}${r.r?": "+esc(r.r):""}${r.ok==="y"?" ✔":r.ok==="n"?" ✘":""}</span>`).join("");
+  return`<article class="entry ${e.tipo}">
+  <div class="e-h"><div class="e-date">${esc(e.f_dia||diaDe(e.f_fecha))} ${esc(fmtFecha(e.f_fecha))}${e.ejemplo?'<span class="badge-ej">EJEMPLO</span>':""}</div><div class="e-meta">${esc(e.f_hora||"")} · ${TIPOS[e.tipo]}</div></div>
+  <div class="e-obra">${esc(e.f_obra||"Sin obra")}</div>
+  <div class="e-meta">${e.f_cad1?"Km "+esc(e.f_cad1)+(e.f_cad2?" – "+esc(e.f_cad2):""):""}${e.f_cuerpo?" · "+esc(e.f_cuerpo):""}${e.f_ubic?" · "+esc(e.f_ubic):""}</div>
+  ${kvFor(e)?`<dl class="kv">${kvFor(e)}</dl>`:""}
+  ${qcs?`<div class="chips">${qcs}</div>`:""}
+  ${e.f_notas?`<div class="notes">${esc(e.f_notas)}</div>`:""}
+  ${(e.fotos||[]).length?`<div class="e-photos">${e.fotos.map(f=>`<figure><a href="${blobUrl(f.id)}" target="_blank" rel="noopener"><img src="${blobUrl(f.id)}" alt="${esc(f.cap||"Foto")}" loading="lazy"></a>${f.cap?`<figcaption>${esc(f.cap)}</figcaption>`:""}</figure>`).join("")}</div>`:""}
+  ${e.ejemplo?"":`<div class="e-actions">
+   ${mapUrl(e)?`<a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">Ver en mapa</a>`:""}
+   <button class="btn sm pri" data-act="pdf" data-id="${e.id}">PDF</button>
+   <button class="btn sm" data-act="copy" data-id="${e.id}">Copiar para WhatsApp</button>
+   <button class="btn sm" data-act="dup" data-id="${e.id}">Duplicar</button>
+   <button class="btn sm" data-act="edit" data-id="${e.id}">Editar</button>
+   ${confirmId===e.id?`<span class="confirm">¿Borrar este registro? <button class="btn sm danger" data-act="del" data-id="${e.id}">Sí, borrar</button><button class="btn sm" data-act="nodel">Cancelar</button></span>`:`<button class="btn sm danger" data-act="ask" data-id="${e.id}">Borrar</button>`}
+  </div>`}</article>`}).join("");
+ // sugerencias
+ const uniq=k=>[...new Set(real.map(e=>e[k]).filter(Boolean))].slice(0,20).map(v=>`<option>${esc(v)}</option>`).join("");
+ $("obras").innerHTML=uniq("f_obra")||"<option>Carretera Manzanillo–Cihuatlán</option><option>Autopista Armería–Manzanillo</option>";$("concreteras").innerHTML=uniq("c_concretera");$("plantas").innerHTML=uniq("a_planta");
+}
+$("q").oninput=renderList;$("dFrom").onchange=renderList;$("dTo").onchange=renderList;
+$("pdfName").value=lsGet("bit_nombre")||"Ing. Cesar Ezequiel Tafoya Garibay · JUVISA";$("pdfName").onchange=()=>lsSet("bit_nombre",$("pdfName").value.trim());
+window.__shown=()=>{const q=$("q").value.toLowerCase().trim(),ft=$("fType").value,df=$("dFrom").value,dt=$("dTo").value;return entries.filter(e=>!e.ejemplo&&(!ft||e.tipo===ft)&&(!df||(e.f_fecha||"")>=df)&&(!dt||(e.f_fecha||"")<=dt)&&(!q||JSON.stringify(e).toLowerCase().includes(q)))};$("fType").onchange=renderList;
+$("entries").addEventListener("click",async ev=>{const b=ev.target.closest("button[data-act]");if(!b)return;const e=entries.find(x=>x.id===b.dataset.id);const a=b.dataset.act;
+ if(a==="ask"){confirmId=e.id;renderList();return}
+ if(a==="nodel"){confirmId=null;renderList();return}
+ if(a==="pdf"){makePdf([e]);return}
+ if(a==="del"){confirmId=null;try{if(assets)for(const f of e.fotos||[])assets.delete(f.id).catch(()=>{});await idb.del("registros",e.id);await reload();toast("Registro borrado")}catch(err){toast("No se pudo borrar el registro.")}return}
+ if(a==="edit"){fillForm(e);show("new");window.scrollTo({top:0});return}
+ if(a==="dup"){fillForm(e);editingId=null;$("btnSave").textContent="Guardar registro";const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);show("new");window.scrollTo({top:0});toast("Copiado como nuevo registro de hoy");return}
+ if(a==="copy"){const txt=textFor(e);try{await navigator.clipboard.writeText(txt);toast("Texto copiado")}catch(err){const ta=document.createElement("textarea");ta.value=txt;ta.style.width="100%";b.parentElement.after(ta);ta.select();toast("Selecciona y copia el texto")}}
+});
+
+/* ---------- CSV ---------- */
+$("btnCsv").onclick=async()=>{const real=entries.filter(e=>!e.ejemplo);if(!real.length){toast("No hay registros para exportar");return}
+ const cols=["f_fecha","f_dia","f_hora","f_obra","f_cad1","f_cad2","f_cuerpo","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","f_notas"];
+ const head=["Fecha","Día","Hora","Obra","Cad. del","Cad. al","Cuerpo","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Notas"];
+ const cell=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+ const rows=real.slice().sort((a,b)=>(a.f_fecha||"").localeCompare(b.f_fecha||"")).map(e=>cols.map(c=>c==="qc"?(e.qc||[]).map(r=>`${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" cumple":r.ok==="n"?" NO cumple":""}`).join(" | "):c==="tipo"?TIPOS[e.tipo]:e[c]).map(cell).join(","));
+ const csv="﻿"+[head.map(cell).join(","),...rows].join("\r\n");
+ try{await downloads.save({filename:`bitacora_${today().date}.csv`,data:new Blob([csv],{type:"text/csv"})});toast("Archivo listo")}catch(err){if(err&&err.code!=="declined")toast("No se pudo descargar el archivo")}};
+
+/* ---------- fotos ---------- */
+const urlMap=new Map();function blobUrl(id){return urlMap.get(id)||""}
+function syncPh(){photos.forEach((f,i)=>{const el=$("ph_c_"+i);if(el)f.cap=el.value})}
+function renderPhotos(){const box=$("phList");box.innerHTML=photos.map((f,i)=>`<div class="ph"><div class="img">${f.id?`<img src="${f.prev||blobUrl(f.id)}" alt="">`:(f.prev?`<img src="${f.prev}" alt="" style="opacity:.45">`:"")}${f.id?"":`<span class="busy">${f.err?esc(f.err):"Subiendo…"}</span>`}<button type="button" class="x" data-rm="${i}" aria-label="Quitar foto">✕</button></div><input id="ph_c_${i}" placeholder="Descripción (ej. tendido km 24+350)" value="${esc(f.cap||"")}"></div>`).join("")}
+$("phList").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(!b)return;syncPh();const f=photos.splice(+b.dataset.rm,1)[0];
+ const saved=editingId&&entries.find(x=>x.id===editingId)?.fotos?.some(p=>p.id===f.id);if(f.id&&assets&&!saved)assets.delete(f.id).catch(()=>{});renderPhotos()});
+async function addFiles(files){if(!assets){toast("No se pueden subir fotos en este visor");return}syncPh();
+ for(const file of files){const rec={name:file.name,cap:"",prev:URL.createObjectURL(file)};photos.push(rec);renderPhotos();pendingUp++;
+  try{if(file.size>20*1024*1024)throw{code:"too_large"};const r=await assets.upload(file);rec.id=r.id}
+  catch(err){rec.err=err&&err.code==="too_large"?"Pesa más de 20 MB":"No se subió";}
+  pendingUp--;syncPh();renderPhotos()}
+ photos=photos.filter(f=>f.id||!f.err||true);}
+$("phCam").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
+$("phLib").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
+
+/* ---------- PDF ---------- */
+function exifOrientation(buf){const v=new DataView(buf);if(v.getUint16(0)!==0xFFD8)return 1;let o=2;
+ while(o<v.byteLength-4){const m=v.getUint16(o);if(m===0xFFE1){if(v.getUint32(o+4)!==0x45786966)return 1;const t=o+10;const le=v.getUint16(t)===0x4949;const n=v.getUint16(t+v.getUint32(t+4,le),le);
+  for(let i=0;i<n;i++){const e=t+v.getUint32(t+4,le)+2+i*12;if(v.getUint16(e,le)===0x0112)return v.getUint16(e+8,le)}return 1}
+  if((m&0xFF00)!==0xFF00)break;o+=2+v.getUint16(o+2)}return 1}
+async function loadPhoto(id){const res=await fetch(blobUrl(id));if(!res.ok)throw 0;const blob=await res.blob();const buf=await blob.arrayBuffer();
+ const isJpg=/jpe?g/i.test(blob.type)||new DataView(buf).getUint16(0)===0xFFD8;
+ const bmp=await createImageBitmap(blob,{imageOrientation:"from-image"});const w=bmp.width,h=bmp.height;
+ if(isJpg&&exifOrientation(buf)===1){bmp.close&&bmp.close();return{data:new Uint8Array(buf),fmt:"JPEG",w,h}}
+ if(/png/i.test(blob.type)){bmp.close&&bmp.close();return{data:new Uint8Array(buf),fmt:"PNG",w,h}}
+ const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(bmp,0,0);bmp.close&&bmp.close();
+ const out=await new Promise(r=>c.toBlob(r,"image/jpeg",0.97));return{data:new Uint8Array(await out.arrayBuffer()),fmt:"JPEG",w,h}}
+async function makePdf(list){
+ if(!list.length){toast("No hay registros que exportar");return}
+ if(!window.jspdf){toast("No cargó el generador de PDF. Revisa tu señal y vuelve a abrir.");return}
+ if(!downloads){toast("Este visor no permite descargar archivos");return}
+ toast("Armando el PDF…");
+ const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:"mm",format:"letter"});const cl=t=>String(t??"").replace(/≤/g,"<=").replace(/≥/g,">=").replace(/[✔✓]/g,"").replace(/[✘✗]/g,"").replace(/[^\x00-\xFF–—‘’“”•…€]/g,"");const _t=doc.text.bind(doc);doc.text=(t,...r)=>_t(Array.isArray(t)?t.map(cl):cl(t),...r);const W=215.9,H=279.4,M=14,CW=W-2*M;let y=M;
+ const nombre=$("pdfName").value.trim();
+ const header=()=>{doc.setFillColor(43,49,54);doc.rect(0,0,W,16,"F");doc.setFillColor(242,183,5);doc.rect(0,16,W,1.6,"F");doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(13);doc.text("BITÁCORA DE OBRA",M,10.5);doc.setFont("helvetica","normal");doc.setFontSize(8.5);if(nombre)doc.text(nombre,W-M,10.5,{align:"right"});doc.setTextColor(28,34,38);y=26};
+ const need=h=>{if(y+h>H-M){doc.addPage();header()}};
+ const line=(t,size=10,bold=false,color=[28,34,38])=>{doc.setFont("helvetica",bold?"bold":"normal");doc.setFontSize(size);doc.setTextColor(...color);const ls=doc.splitTextToSize(String(t),CW);for(const l of ls){need(size*.45);doc.text(l,M,y);y+=size*.45}};
+ header();
+ for(let n=0;n<list.length;n++){const e=list[n];if(n>0){need(40);y+=3;doc.setDrawColor(200);doc.line(M,y,W-M,y);y+=7}
+  line(`${(e.f_dia||diaDe(e.f_fecha)).toUpperCase()} ${fmtFecha(e.f_fecha)}${e.f_hora?"  ·  "+e.f_hora+" h":""}`,14,true);y+=1;
+  line(e.f_obra||"Sin obra",11,true);
+  const loc=[e.f_cad1?`Cadenamiento ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}`:"",e.f_cuerpo||"",e.f_ubic||""].filter(Boolean).join("  ·  ");if(loc)line(loc,9.5,false,[93,103,108]);
+  if(e.f_lat&&e.f_lng){need(5);doc.setFontSize(9);doc.setTextColor(30,90,160);doc.textWithLink(`Coordenadas: ${e.f_lat}, ${e.f_lng} (ver en mapa)`,M,y,{url:mapUrl(e)});y+=4.5}
+  const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C ambiente":""].filter(Boolean).join(" · ");if(amb)line(amb,9.5,false,[93,103,108]);
+  y+=2;line("ACTIVIDAD: "+TIPOS[e.tipo].toUpperCase(),9.5,true,[93,103,108]);y+=1;
+  const kv=Object.keys(LABELS).filter(k=>k.startsWith(PREFIX[e.tipo])&&e[k]);
+  if(kv.length){const cw=CW/2;doc.setFontSize(9.5);for(let i=0;i<kv.length;i+=2){need(6);[kv[i],kv[i+1]].forEach((k,j)=>{if(!k)return;doc.setFont("helvetica","normal");doc.setTextColor(93,103,108);doc.text(LABELS[k]+":",M+j*cw,y);doc.setTextColor(28,34,38);doc.setFont("helvetica","bold");doc.text(doc.splitTextToSize(String(e[k]),cw-48)[0],M+j*cw+46,y)});y+=5.2}}
+  if((e.qc||[]).length){y+=2;need(14);line("CONTROL DE CALIDAD",9.5,true,[93,103,108]);y+=1;
+   const cols=[[M,"Prueba",62],[M+64,"Resultado",40],[M+106,"Especificación",50],[M+158,"Cumple",30]];
+   doc.setFillColor(236,238,233);doc.rect(M,y-4,CW,6,"F");doc.setFontSize(8.5);doc.setFont("helvetica","bold");doc.setTextColor(28,34,38);cols.forEach(c=>doc.text(c[1],c[0]+1,y));y+=5.5;doc.setFont("helvetica","normal");
+   for(const r of e.qc){need(6);const vals=[r.p,r.r,r.e,r.ok==="y"?"Sí":r.ok==="n"?"NO":"—"];cols.forEach((c,i)=>{doc.setTextColor(...(i===3&&r.ok==="n"?[179,54,44]:i===3&&r.ok==="y"?[47,125,79]:[28,34,38]));doc.text(doc.splitTextToSize(String(vals[i]||""),c[2]-2)[0]||"",c[0]+1,y)});doc.setDrawColor(225);doc.line(M,y+1.8,W-M,y+1.8);y+=6}}
+  if(e.f_notas){y+=2;line("NOTAS",9.5,true,[93,103,108]);y+=1;line(e.f_notas,10)}
+  const fotos=e.fotos||[];
+  if(fotos.length){y+=3;need(12);line(`FOTOGRAFÍAS (${fotos.length})`,9.5,true,[93,103,108]);y+=2;
+   const gw=(CW-6)/2,maxH=95;let col=0,rowH=0;
+   for(const f of fotos){let im;try{im=await loadPhoto(f.id)}catch(err){continue}
+    let w=gw,h=gw*im.h/im.w;if(h>maxH){h=maxH;w=maxH*im.w/im.h}
+    const capH=f.cap?doc.splitTextToSize(f.cap,gw).length*3.8+1:0;
+    if(col===0){if(y+h+capH>H-M){doc.addPage();header()}}
+    const x=M+col*(gw+6)+(gw-w)/2;doc.addImage(im.data,im.fmt,x,y,w,h,undefined,"NONE");
+    if(f.cap){doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(93,103,108);doc.text(doc.splitTextToSize(f.cap,gw),M+col*(gw+6),y+h+4)}
+    rowH=Math.max(rowH,h+capH+4);col++;if(col===2){y+=rowH;col=0;rowH=0}}
+   if(col)y+=rowH}
+ }
+ const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(140);doc.text(`Página ${i} de ${pages}`,W-M,H-7,{align:"right"});doc.text(`Generado ${fmtFecha(today().date)}`,M,H-7)}
+ const f0=list[list.length-1].f_fecha,f1=list[0].f_fecha;const fname=list.length===1?`bitacora_${f0||"registro"}.pdf`:`bitacora_${[f0,f1].sort().join("_a_")}.pdf`;
+ try{await downloads.save({filename:fname,data:doc.output("blob")});toast("PDF listo")}catch(err){toast(err&&err.code==="too_large"?"El PDF es demasiado grande. Exporta menos días a la vez.":err&&err.code==="declined"?"Descarga cancelada":"No se pudo descargar el PDF")}
+}
+$("btnPdfAll").onclick=()=>makePdf(window.__shown());
+
+/* ---------- pestañas ---------- */
+function show(v){$("form").hidden=v!=="new";$("listView").hidden=v!=="list";$("tabNew").setAttribute("aria-selected",v==="new");$("tabList").setAttribute("aria-selected",v==="list");if(v==="list")renderList()}
+$("tabNew").onclick=()=>show("new");$("tabList").onclick=()=>show("list");
+
+/* ---------- almacenamiento en el teléfono (IndexedDB) ---------- */
+const idb=(()=>{let p;const open=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open("bitacora-obra",1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore("registros",{keyPath:"id"});d.createObjectStore("fotos",{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
+ const tx=async(store,mode,fn)=>{const d=await open();return new Promise((res,rej)=>{const t=d.transaction(store,mode);const s=t.objectStore(store);const r=fn(s);t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})};
+ return{put:(s,v)=>tx(s,"readwrite",o=>o.put(v)),del:(s,k)=>tx(s,"readwrite",o=>o.delete(k)),get:(s,k)=>tx(s,"readonly",o=>o.get(k)),all:(s)=>tx(s,"readonly",o=>o.getAll())}})();
+assets={async upload(file){const id="f"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);await idb.put("fotos",{id,blob:file,name:file.name,type:file.type});urlMap.set(id,URL.createObjectURL(file));return{id}},
+ async delete(id){await idb.del("fotos",id);const u=urlMap.get(id);if(u)URL.revokeObjectURL(u);urlMap.delete(id)}};
+downloads={async save({filename,data}){const blob=data instanceof Blob?data:new Blob([data]);
+ const file=new File([blob],filename,{type:blob.type||"application/octet-stream"});
+ if(/iPhone|iPad|iPod/.test(navigator.userAgent)&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:filename});return}catch(e){if(e&&e.name==="AbortError")throw{code:"declined"}}}
+ const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
+async function loadPhotoUrls(){for(const f of await idb.all("fotos")){if(!urlMap.has(f.id))urlMap.set(f.id,URL.createObjectURL(f.blob))}}
+async function reload(){const list=(await idb.all("registros")).sort((a,b)=>((b.f_fecha||"")+(b.f_hora||"")).localeCompare((a.f_fecha||"")+(a.f_hora||""))||(b.t||0)-(a.t||0));
+ entries=list.length?list:SAMPLE;renderList();$("status").textContent=`Guardado en este teléfono · ${list.length} registro${list.length===1?"":"s"}`}
+
+/* ---------- respaldo ---------- */
+const b64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)});
+$("btnBackup").onclick=async()=>{try{toast("Preparando respaldo…");const regs=await idb.all("registros");const fotos=[];for(const f of await idb.all("fotos"))fotos.push({id:f.id,name:f.name,type:f.type,data:await b64(f.blob)});
+ const json=JSON.stringify({app:"bitacora-obra",version:1,fecha:new Date().toISOString(),registros:regs,fotos});
+ await downloads.save({filename:`respaldo_bitacora_${today().date}.json`,data:new Blob([json],{type:"application/json"})});lsSet("bit_ultimo_respaldo",today().date);toast("Respaldo listo")}catch(e){if(!(e&&e.code==="declined"))toast("No se pudo crear el respaldo")}};
+$("restoreFile").onchange=async ev=>{const file=ev.target.files[0];ev.target.value="";if(!file)return;
+ try{const d=JSON.parse(await file.text());if(d.app!=="bitacora-obra")throw 0;let n=0;
+  for(const f of d.fotos||[]){const blob=await (await fetch(f.data)).blob();await idb.put("fotos",{id:f.id,blob,name:f.name,type:f.type});n++}
+  for(const r of d.registros||[])await idb.put("registros",r);
+  await loadPhotoUrls();await reload();toast(`Restaurados ${(d.registros||[]).length} registros y ${n} fotos`)}
+ catch(e){toast("Ese archivo no es un respaldo de la bitácora")}};
+
+/* ---------- arranque ---------- */
+resetForm();entries=SAMPLE;renderList();
+(async()=>{
+ try{await loadPhotoUrls();await reload()}catch(e){$("status").textContent="Este navegador no permite guardar datos. Abre la bitácora en Safari, fuera del modo privado."}
+ try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}
+ const last=lsGet("bit_ultimo_respaldo");$("backupHint").textContent=`Tus registros y fotos se guardan solo en este teléfono. ${last?"Último respaldo: "+fmtFecha(last)+".":"Aún no has descargado ningún respaldo."}`;
+ if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+})();
+</script>
+</body>
+</html>
