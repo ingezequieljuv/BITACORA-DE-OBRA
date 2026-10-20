@@ -10,7 +10,7 @@ App web para los apuntes diarios de supervisión de obra: colados de concreto, c
 - **Terracerías:** banco, humedad y grado de compactación contra el requerido.
 - **Control de calidad:** pruebas con resultado, especificación y si cumple o no.
 - **Fotos** en resolución original, con descripción.
-- **PDF** de un registro o de un rango de fechas, con fotos sin pérdida de calidad.
+- **PDF con vista previa** de un registro o de un rango de fechas: eliges hoja (Carta, Oficio, A4), fotos por fila e incluir o no fotos, y ves las páginas antes de guardar o imprimir. Las fotos van sin pérdida de calidad.
 - Exportación a Excel (CSV), texto para WhatsApp, y respaldo y restauración de todos los datos.
 - Funciona sin señal una vez abierta y se puede agregar a la pantalla de inicio del iPhone.
 
