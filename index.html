@@ -77,7 +77,10 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .gps{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
 .gps .btn{white-space:nowrap}
 .sat{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.sat .hint{flex:1 1 200px}
+.sat .btn{flex:1 1 170px;text-align:center;text-decoration:none}
+.lbtn{flex-direction:row;justify-content:center;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--ink)}
+.photos.ubicph{padding:0}
+.photos.ubicph:empty{display:none}
 .btn:disabled{opacity:.55;cursor:default}
 .hint{font-size:.8rem;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
 .qc{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
@@ -184,7 +187,14 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <label>Latitud<input id="f_lat" class="mono" inputmode="decimal" placeholder="19.2341"></label>
       <label>Longitud<input id="f_lng" class="mono" inputmode="decimal" placeholder="-104.5672"></label>
       <p class="hint full" id="gpsHint" style="margin:0">Toca “Mi ubicación” y acepta el permiso del GPS. También puedes pegar un enlace o coordenadas de Google Maps / Apple Maps.</p>
-      <div class="full sat"><button type="button" class="btn" id="btnSat">🛰 Agregar mapa satelital</button><span class="hint" id="satHint">Agrega una imagen satelital del punto con un marcador, coordenadas y cadenamiento.</span></div>
+      <div class="full sat">
+        <a class="btn" id="btnEarth" href="https://earth.google.com/web/" target="_blank" rel="noopener">🌍 Abrir en Google Earth</a>
+        <label class="btn lbtn" for="ubicFile">📎 Adjuntar captura</label>
+        <input type="file" id="ubicFile" accept="image/*" multiple hidden>
+        <button type="button" class="btn" id="btnSat">🛰 Mapa satelital automático</button>
+      </div>
+      <p class="hint full" id="satHint" style="margin:0">Abre Google Earth en tu punto, toma captura de pantalla (botón lateral + subir volumen) y adjúntala con 📎. Se guarda en este apartado y sale en el PDF junto a la ubicación.</p>
+      <div class="full photos ubicph" id="ubicList"></div>
       <label>Clima<select id="f_clima"><option value="">—</option><option>Soleado</option><option>Nublado</option><option>Lluvia ligera</option><option>Lluvia</option><option>Viento</option></select></label>
       <label>Temp. ambiente <span class="unit">°C</span><input type="number" step="0.1" id="f_tamb"></label>
     </div>
@@ -403,7 +413,7 @@ function resetForm(keep){
  qc=[];renderQc();photos=[];renderPhotos();editingId=null;$("btnSave").textContent="Guardar registro";
  const last=lsGet("bit_ultimo");if(last){if(!$("f_obra").value)$("f_obra").value=last.obra||"";setTipo(last.tipo||"concreto")}else setTipo("concreto");
 }
-function readForm(){syncQc();syncPh();const o={tipo,qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||"",...(f.mapa?{mapa:true}:{})}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v)o[f]=v});
+function readForm(){syncQc();syncPh();const o={tipo,qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v)o[f]=v});
  const pre=PREFIX[tipo];Object.keys(o).forEach(k=>{if(/^[cat]_/.test(k)&&!k.startsWith(pre))delete o[k]});return o}
 function fillForm(e){resetForm();FIELDS.forEach(f=>{if(e[f]!=null)$(f).value=e[f]});setTipo(e.tipo||"general");qc=(e.qc||[]).map(r=>({...r}));renderQc();photos=(e.fotos||[]).map(f=>({...f}));renderPhotos();editingId=e.id;$("btnSave").textContent="Guardar cambios"}
 $("btnClear").onclick=()=>{resetForm();toast("Formulario limpio")};
@@ -477,17 +487,22 @@ $("btnCsv").onclick=async()=>{const real=entries.filter(e=>!e.ejemplo);if(!real.
 /* ---------- fotos ---------- */
 const urlMap=new Map();function blobUrl(id){return urlMap.get(id)||""}
 function syncPh(){photos.forEach((f,i)=>{const el=$("ph_c_"+i);if(el)f.cap=el.value})}
-function renderPhotos(){const box=$("phList");box.innerHTML=photos.map((f,i)=>`<div class="ph"><div class="img">${f.id?`<img src="${f.prev||blobUrl(f.id)}" alt="">`:(f.prev?`<img src="${f.prev}" alt="" style="opacity:.45">`:"")}${f.id?"":`<span class="busy">${f.err?esc(f.err):"Subiendo…"}</span>`}<button type="button" class="x" data-rm="${i}" aria-label="Quitar foto">✕</button></div><input id="ph_c_${i}" placeholder="Descripción (ej. tendido km 24+350)" value="${esc(f.cap||"")}"></div>`).join("")}
-$("phList").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(!b)return;syncPh();const f=photos.splice(+b.dataset.rm,1)[0];
- const saved=editingId&&entries.find(x=>x.id===editingId)?.fotos?.some(p=>p.id===f.id);if(f.id&&assets&&!saved)assets.delete(f.id).catch(()=>{});renderPhotos()});
-async function addFiles(files){if(!assets){toast("No se pueden subir fotos en este visor");return}syncPh();
- for(const file of files){const rec={name:file.name,cap:"",prev:URL.createObjectURL(file)};photos.push(rec);renderPhotos();pendingUp++;
+const isU=f=>!!(f.mapa||f.ubic);
+function phHtml(f,i){return `<div class="ph"><div class="img">${f.id?`<img src="${f.prev||blobUrl(f.id)}" alt="">`:(f.prev?`<img src="${f.prev}" alt="" style="opacity:.45">`:"")}${f.id?"":`<span class="busy">${f.err?esc(f.err):"Subiendo…"}</span>`}<button type="button" class="x" data-rm="${i}" aria-label="Quitar foto">✕</button></div><input id="ph_c_${i}" placeholder="${isU(f)?"Descripción (ej. vista Google Earth)":"Descripción (ej. tendido km 24+350)"}" value="${esc(f.cap||"")}"></div>`}
+function renderPhotos(){$("phList").innerHTML=photos.map((f,i)=>isU(f)?"":phHtml(f,i)).join("");$("ubicList").innerHTML=photos.map((f,i)=>isU(f)?phHtml(f,i):"").join("")}
+["phList","ubicList"].forEach(id=>$(id).addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(!b)return;syncPh();const f=photos.splice(+b.dataset.rm,1)[0];
+ const saved=editingId&&entries.find(x=>x.id===editingId)?.fotos?.some(p=>p.id===f.id);if(f.id&&assets&&!saved)assets.delete(f.id).catch(()=>{});renderPhotos()}));
+async function addFiles(files,ubic){if(!assets){toast("No se pueden subir fotos en este visor");return}syncPh();
+ for(const file of files){const rec={name:file.name,cap:ubic?"Captura de ubicación"+($("f_cad1").value?" km "+$("f_cad1").value:""):"",...(ubic?{ubic:true}:{}),prev:URL.createObjectURL(file)};photos.push(rec);renderPhotos();pendingUp++;
   try{if(file.size>20*1024*1024)throw{code:"too_large"};const r=await assets.upload(file);rec.id=r.id}
   catch(err){rec.err=err&&err.code==="too_large"?"Pesa más de 20 MB":"No se subió";}
   pendingUp--;syncPh();renderPhotos()}
  photos=photos.filter(f=>f.id||!f.err||true);}
 $("phCam").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
 $("phLib").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
+$("ubicFile").onchange=e=>{addFiles([...e.target.files],true);e.target.value="";$("satHint").textContent="Captura agregada a la ubicación. Escríbele una descripción si quieres."};
+$("btnEarth").addEventListener("click",()=>{const lat=parseFloat($("f_lat").value),lng=parseFloat($("f_lng").value),u=$("f_ubic").value.trim();
+ $("btnEarth").href=isFinite(lat)&&isFinite(lng)?`https://earth.google.com/web/@${lat},${lng},120a,700d,35y,0h,0t,0r`:u?`https://earth.google.com/web/search/${encodeURIComponent(u)}`:"https://earth.google.com/web/"});
 
 /* ---------- mapa satelital ---------- */
 const SAT_Z=18,SAT_W=1280,SAT_H=800;
@@ -521,9 +536,9 @@ async function addSatMap(){
   syncPh();const old=photos.findIndex(f=>f.mapa);if(old>=0){const f=photos.splice(old,1)[0];const saved=editingId&&entries.find(x=>x.id===editingId)?.fotos?.some(p=>p.id===f.id);if(f.id&&!saved)assets.delete(f.id).catch(()=>{})}
   const rec={name:file.name,cap:"Ubicación satelital "+[$("f_cad1").value,$("f_ubic").value].filter(Boolean).join(" · "),prev:URL.createObjectURL(blob),mapa:true};photos.unshift(rec);renderPhotos();pendingUp++;
   try{const r=await assets.upload(file);rec.id=r.id}catch(e){rec.err="No se guardó"}pendingUp--;syncPh();renderPhotos();
-  $("satHint").textContent="Mapa satelital agregado como primera foto. Aparece en el registro y en el PDF.";
+  $("satHint").textContent="Mapa satelital agregado a la ubicación. Aparece en el registro y en el PDF.";
  }catch(e){$("satHint").innerHTML=window.claude?"La app de Claude no permite descargar el mapa satelital. Usa la versión de GitHub, o toma una captura de pantalla en Maps (vista Satélite) y agrégala en Fotografías.":"No se pudo descargar el mapa. Revisa tu señal, o toma una captura de pantalla en Maps (vista Satélite) y agrégala en Fotografías."}
- finally{btn.disabled=false;btn.textContent="🛰 Agregar mapa satelital"}}
+ finally{btn.disabled=false;btn.textContent="🛰 Mapa satelital automático"}}
 $("btnSat").onclick=addSatMap;
 
 /* ---------- PDF ---------- */
@@ -549,12 +564,23 @@ async function buildPdf(list,opt){
  const need=h=>{if(y+h>H-M){doc.addPage();header()}};
  const line=(t,size=10,bold=false,color=[28,34,38])=>{doc.setFont("helvetica",bold?"bold":"normal");doc.setFontSize(size);doc.setTextColor(...color);const ls=doc.splitTextToSize(cl(t),CW);for(const l of ls){need(size*.45);doc.text(l,M,y);y+=size*.45}};
  header();
+ const drawPh=async(fotos,title,nc,maxO)=>{if(!fotos.length)return;y+=3;need(12);line(`${title} (${fotos.length})`,9.5,true,[93,103,108]);y+=2;
+   const gap=6,gw=(CW-(nc-1)*gap)/nc,maxH=maxO||(nc===1?Math.min(150,H-80):nc===2?95:65);let col=0,rowH=0;
+   for(const f of fotos){let im;try{im=await loadPhoto(f.id)}catch(err){continue}
+    let w=gw,h=gw*im.h/im.w;if(h>maxH){h=maxH;w=maxH*im.w/im.h}
+    doc.setFontSize(8.5);const capH=f.cap?doc.splitTextToSize(cl(f.cap),gw).length*3.8+1:0;
+    if(col===0){if(y+h+capH>H-M){doc.addPage();header()}}
+    const x=M+col*(gw+gap)+(gw-w)/2;doc.addImage(im.data,im.fmt,x,y,w,h,"ph_"+f.id,"NONE");
+    if(f.cap){doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(93,103,108);doc.text(doc.splitTextToSize(cl(f.cap),gw),M+col*(gw+gap),y+h+4)}
+    rowH=Math.max(rowH,h+capH+4);col++;if(col===nc){y+=rowH;col=0;rowH=0}}
+   if(col)y+=rowH};
  for(let n=0;n<list.length;n++){const e=list[n];if(n>0){need(40);y+=3;doc.setDrawColor(200);doc.line(M,y,W-M,y);y+=7}
   line(`${(e.f_dia||diaDe(e.f_fecha)).toUpperCase()} ${fmtFecha(e.f_fecha)}${e.f_hora?"  ·  "+e.f_hora+" h":""}`,14,true);y+=1;
   line(e.f_obra||"Sin obra",11,true);
   const loc=[e.f_cad1?`Cadenamiento ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}`:"",e.f_cuerpo||"",e.f_carril?"Carril "+e.f_carril:"",e.f_ubic||""].filter(Boolean).join("  ·  ");if(loc)line(loc,9.5,false,[93,103,108]);
   if(e.f_lat&&e.f_lng){need(5);doc.setFontSize(9);doc.setTextColor(30,90,160);doc.textWithLink(`Coordenadas: ${e.f_lat}, ${e.f_lng} (ver en mapa)`,M,y,{url:mapUrl(e)});y+=4.5}
   const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C ambiente":""].filter(Boolean).join(" · ");if(amb)line(amb,9.5,false,[93,103,108]);
+  const uf=(e.fotos||[]).filter(isU);if(uf.length){await drawPh(uf,"UBICACIÓN",uf.length>1?2:1,90);y+=1}
   y+=2;line("ACTIVIDAD: "+TIPOS[e.tipo].toUpperCase(),9.5,true,[93,103,108]);y+=1;
   const kv=Object.keys(LABELS).filter(k=>k.startsWith(PREFIX[e.tipo])&&e[k]);
   if(kv.length){const cw=CW/2;doc.setFontSize(9.5);for(let i=0;i<kv.length;i+=2){need(6);[kv[i],kv[i+1]].forEach((k,j)=>{if(!k)return;doc.setFont("helvetica","normal");doc.setTextColor(93,103,108);doc.text(LABELS[k]+":",M+j*cw,y);doc.setTextColor(28,34,38);doc.setFont("helvetica","bold");doc.text(doc.splitTextToSize(cl(e[k]),cw-48)[0],M+j*cw+46,y)});y+=5.2}}
@@ -563,17 +589,7 @@ async function buildPdf(list,opt){
    doc.setFillColor(236,238,233);doc.rect(M,y-4,CW,6,"F");doc.setFontSize(8.5);doc.setFont("helvetica","bold");doc.setTextColor(28,34,38);cols.forEach(c=>doc.text(c[1],c[0]+1,y));y+=5.5;doc.setFont("helvetica","normal");
    for(const r of e.qc){need(6);const vals=[r.p,r.r,r.e,r.ok==="y"?"Sí":r.ok==="n"?"NO":"—"];cols.forEach((c,i)=>{doc.setTextColor(...(i===3&&r.ok==="n"?[179,54,44]:i===3&&r.ok==="y"?[47,125,79]:[28,34,38]));doc.text(doc.splitTextToSize(cl(vals[i]||""),c[2]-2)[0]||"",c[0]+1,y)});doc.setDrawColor(225);doc.line(M,y+1.8,W-M,y+1.8);y+=6}}
   if(e.f_notas){y+=2;line("NOTAS",9.5,true,[93,103,108]);y+=1;line(e.f_notas,10)}
-  const fotos=opt.fotos?(e.fotos||[]):[];
-  if(fotos.length){y+=3;need(12);line(`FOTOGRAFÍAS (${fotos.length})`,9.5,true,[93,103,108]);y+=2;
-   const nc=opt.cols,gap=6,gw=(CW-(nc-1)*gap)/nc,maxH=nc===1?Math.min(150,H-80):nc===2?95:65;let col=0,rowH=0;
-   for(const f of fotos){let im;try{im=await loadPhoto(f.id)}catch(err){continue}
-    let w=gw,h=gw*im.h/im.w;if(h>maxH){h=maxH;w=maxH*im.w/im.h}
-    doc.setFontSize(8.5);const capH=f.cap?doc.splitTextToSize(cl(f.cap),gw).length*3.8+1:0;
-    if(col===0){if(y+h+capH>H-M){doc.addPage();header()}}
-    const x=M+col*(gw+gap)+(gw-w)/2;doc.addImage(im.data,im.fmt,x,y,w,h,"ph_"+f.id,"NONE");
-    if(f.cap){doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(93,103,108);doc.text(doc.splitTextToSize(cl(f.cap),gw),M+col*(gw+gap),y+h+4)}
-    rowH=Math.max(rowH,h+capH+4);col++;if(col===nc){y+=rowH;col=0;rowH=0}}
-   if(col)y+=rowH}
+  await drawPh(opt.fotos?(e.fotos||[]).filter(f=>!isU(f)):[],"FOTOGRAFÍAS",opt.cols);
  }
  const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(140);doc.text(`Página ${i} de ${pages}`,W-M,H-7,{align:"right"});doc.text(`Generado ${fmtFecha(today().date)}`,M,H-7)}
  const f0=list[list.length-1].f_fecha,f1=list[0].f_fecha;const fname=list.length===1?`bitacora_${f0||"registro"}.pdf`:`bitacora_${[f0,f1].sort().join("_a_")}.pdf`;
