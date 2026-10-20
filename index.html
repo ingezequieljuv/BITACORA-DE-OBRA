@@ -262,7 +262,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <input id="q" placeholder="Buscar obra, cadenamiento, elemento…">
     <select id="fType"><option value="">Todas las actividades</option><option value="concreto">Concreto</option><option value="asfalto">Asfalto</option><option value="terraceria">Terracerías</option><option value="general">General</option></select>
     <button class="btn sm" id="btnCsv" type="button">Exportar a Excel (CSV)</button>
-    <button class="btn sm pri" id="btnPdfAll" type="button">PDF de lo mostrado</button>
+    <button class="btn sm pri" id="btnPdfAll" type="button">PDF / Imprimir lo mostrado</button>
   </div>
   <div class="toolbar">
     <button class="btn sm" id="btnBackup" type="button">Descargar respaldo</button>
@@ -397,9 +397,9 @@ function renderList(){
   ${qcs?`<div class="chips">${qcs}</div>`:""}
   ${e.f_notas?`<div class="notes">${esc(e.f_notas)}</div>`:""}
   ${(e.fotos||[]).length?`<div class="e-photos">${e.fotos.map(f=>`<figure><a href="${blobUrl(f.id)}" target="_blank" rel="noopener"><img src="${blobUrl(f.id)}" alt="${esc(f.cap||"Foto")}" loading="lazy"></a>${f.cap?`<figcaption>${esc(f.cap)}</figcaption>`:""}</figure>`).join("")}</div>`:""}
-  ${e.ejemplo?"":`<div class="e-actions">
+  ${e.ejemplo?`<p class="hint" style="margin:10px 0 0">Los botones <b>PDF</b>, Editar y Compartir aparecen en cada registro cuando guardas el primero tuyo.</p>`:`<div class="e-actions">
    ${mapUrl(e)?`<a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">Ver en mapa</a>`:""}
-   <button class="btn sm pri" data-act="pdf" data-id="${e.id}">PDF</button>
+   <button class="btn sm pri" data-act="pdf" data-id="${e.id}">PDF / Imprimir</button>
    <button class="btn sm" data-act="copy" data-id="${e.id}">Copiar para WhatsApp</button>
    <button class="btn sm" data-act="dup" data-id="${e.id}">Duplicar</button>
    <button class="btn sm" data-act="edit" data-id="${e.id}">Editar</button>
