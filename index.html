@@ -122,7 +122,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <h1>Bitácora de Obra<small id="hdrDate">Supervisión · JUVISA</small></h1>
+  <h1>Bitácora de Obra<small id="hdrDate">Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA</small></h1>
   <nav class="tabs" role="tablist">
     <button class="tab" id="tabNew" role="tab" aria-selected="true">Nueva</button>
     <button class="tab" id="tabList" role="tab" aria-selected="false">Registros <span id="count"></span></button>
@@ -410,7 +410,7 @@ function renderList(){
  $("obras").innerHTML=uniq("f_obra")||"<option>Carretera Manzanillo–Cihuatlán</option><option>Autopista Armería–Manzanillo</option>";$("concreteras").innerHTML=uniq("c_concretera");$("plantas").innerHTML=uniq("a_planta");
 }
 $("q").oninput=renderList;$("dFrom").onchange=renderList;$("dTo").onchange=renderList;
-$("pdfName").value=lsGet("bit_nombre")||"Ing. Cesar Ezequiel Tafoya Garibay · JUVISA";$("pdfName").onchange=()=>lsSet("bit_nombre",$("pdfName").value.trim());
+$("pdfName").value=lsGet("bit_nombre")||"Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA";$("pdfName").onchange=()=>lsSet("bit_nombre",$("pdfName").value.trim());
 window.__shown=()=>{const q=$("q").value.toLowerCase().trim(),ft=$("fType").value,df=$("dFrom").value,dt=$("dTo").value;return entries.filter(e=>!e.ejemplo&&(!ft||e.tipo===ft)&&(!df||(e.f_fecha||"")>=df)&&(!dt||(e.f_fecha||"")<=dt)&&(!q||JSON.stringify(e).toLowerCase().includes(q)))};$("fType").onchange=renderList;
 $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("button[data-act]");if(!b)return;const e=entries.find(x=>x.id===b.dataset.id);const a=b.dataset.act;
  if(a==="ask"){confirmId=e.id;renderList();return}
