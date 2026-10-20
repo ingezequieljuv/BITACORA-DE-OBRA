@@ -170,7 +170,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <datalist id="obras"></datalist>
       <label>Cadenamiento del<input id="f_cad1" class="mono" placeholder="17+800"></label>
       <label>Cadenamiento al<input id="f_cad2" class="mono" placeholder="18+120"></label>
-      <label>Cuerpo / carril<select id="f_cuerpo"><option value="">—</option><option>Cuerpo A</option><option>Cuerpo B</option><option>Carril izquierdo</option><option>Carril derecho</option><option>Acotamiento</option><option>Ambos</option></select></label>
+      <label>Cuerpo<select id="f_cuerpo"><option value="">—</option><option>Cuerpo A</option><option>Cuerpo B</option></select></label>
+      <label>Carril<select id="f_carril"><option value="">—</option><option>Alta</option><option>Media</option><option>Baja</option></select></label>
       <label class="full">Ubicación
         <div class="gps">
           <input id="f_ubic" placeholder="Referencia: entronque El Chavarín" style="flex:1 1 200px;width:auto">
@@ -324,7 +325,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 const $=id=>document.getElementById(id);
 const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 const TIPOS={concreto:"Colado de concreto",asfalto:"Mezcla asfáltica",terraceria:"Terracerías",general:"Supervisión general"};
-const FIELDS=["f_fecha","f_dia","f_hora","f_obra","f_cad1","f_cad2","f_cuerpo","f_ubic","f_lat","f_lng","f_clima","f_tamb",
+const FIELDS=["f_fecha","f_dia","f_hora","f_obra","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb",
  "c_elemento","c_concretera","c_fc","c_rev","c_temp","c_vol","c_ollas","c_remision","c_tma","c_aditivo","c_hini","c_hfin","c_cil","c_metodo","c_vibrado","c_curado",
  "a_capa","a_planta","a_ca","a_tipo","a_tprod","a_tten","a_tcomp","a_esp","a_ancho","a_ton","a_viajes","a_liga","a_equipo",
  "t_capa","t_banco","t_esp","t_hum","t_gc","t_gcreq","f_notas"];
@@ -415,7 +416,7 @@ $("form").addEventListener("submit",async ev=>{ev.preventDefault();if(pendingUp)
 /* ---------- lista ---------- */
 function kvFor(e){const pre=PREFIX[e.tipo];return Object.keys(LABELS).filter(k=>k.startsWith(pre)&&e[k]).map(k=>`<div><dt>${LABELS[k]}</dt><dd>${esc(e[k])}</dd></div>`).join("")}
 function textFor(e){const L=[`BITÁCORA ${e.f_dia||""} ${fmtFecha(e.f_fecha)} ${e.f_hora||""}`.trim(),`Obra: ${e.f_obra||"—"}`];
- if(e.f_cad1)L.push(`Cad.: ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}${e.f_cuerpo?" ("+e.f_cuerpo+")":""}`);
+ if(e.f_cad1)L.push(`Cad.: ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}${e.f_cuerpo||e.f_carril?" ("+[e.f_cuerpo,e.f_carril?"Carril "+e.f_carril:""].filter(Boolean).join(", ")+")":""}`);
  if(e.f_ubic)L.push(`Ubicación: ${e.f_ubic}`);if(mapUrl(e))L.push(mapUrl(e));
  L.push(`Actividad: ${TIPOS[e.tipo]}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`${LABELS[k]}: ${e[k]}`)});
  (e.qc||[]).forEach(r=>L.push(`CC ${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" ✔ cumple":r.ok==="n"?" ✘ no cumple":""}`));
@@ -430,7 +431,7 @@ function renderList(){
   return`<article class="entry ${e.tipo}">
   <div class="e-h"><div class="e-date">${esc(e.f_dia||diaDe(e.f_fecha))} ${esc(fmtFecha(e.f_fecha))}${e.ejemplo?'<span class="badge-ej">EJEMPLO</span>':""}</div><div class="e-meta">${esc(e.f_hora||"")} · ${TIPOS[e.tipo]}</div></div>
   <div class="e-obra">${esc(e.f_obra||"Sin obra")}</div>
-  <div class="e-meta">${e.f_cad1?"Km "+esc(e.f_cad1)+(e.f_cad2?" – "+esc(e.f_cad2):""):""}${e.f_cuerpo?" · "+esc(e.f_cuerpo):""}${e.f_ubic?" · "+esc(e.f_ubic):""}</div>
+  <div class="e-meta">${e.f_cad1?"Km "+esc(e.f_cad1)+(e.f_cad2?" – "+esc(e.f_cad2):""):""}${e.f_cuerpo?" · "+esc(e.f_cuerpo):""}${e.f_carril?" · Carril "+esc(e.f_carril):""}${e.f_ubic?" · "+esc(e.f_ubic):""}</div>
   ${kvFor(e)?`<dl class="kv">${kvFor(e)}</dl>`:""}
   ${qcs?`<div class="chips">${qcs}</div>`:""}
   ${e.f_notas?`<div class="notes">${esc(e.f_notas)}</div>`:""}
@@ -462,8 +463,8 @@ $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("butt
 
 /* ---------- CSV ---------- */
 $("btnCsv").onclick=async()=>{const real=entries.filter(e=>!e.ejemplo);if(!real.length){toast("No hay registros para exportar");return}
- const cols=["f_fecha","f_dia","f_hora","f_obra","f_cad1","f_cad2","f_cuerpo","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","f_notas"];
- const head=["Fecha","Día","Hora","Obra","Cad. del","Cad. al","Cuerpo","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Notas"];
+ const cols=["f_fecha","f_dia","f_hora","f_obra","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","f_notas"];
+ const head=["Fecha","Día","Hora","Obra","Cad. del","Cad. al","Cuerpo","Carril","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Notas"];
  const cell=v=>`"${String(v??"").replace(/"/g,'""')}"`;
  const rows=real.slice().sort((a,b)=>(a.f_fecha||"").localeCompare(b.f_fecha||"")).map(e=>cols.map(c=>c==="qc"?(e.qc||[]).map(r=>`${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" cumple":r.ok==="n"?" NO cumple":""}`).join(" | "):c==="tipo"?TIPOS[e.tipo]:e[c]).map(cell).join(","));
  const csv="﻿"+[head.map(cell).join(","),...rows].join("\r\n");
@@ -510,7 +511,7 @@ async function buildPdf(list,opt){
  for(let n=0;n<list.length;n++){const e=list[n];if(n>0){need(40);y+=3;doc.setDrawColor(200);doc.line(M,y,W-M,y);y+=7}
   line(`${(e.f_dia||diaDe(e.f_fecha)).toUpperCase()} ${fmtFecha(e.f_fecha)}${e.f_hora?"  ·  "+e.f_hora+" h":""}`,14,true);y+=1;
   line(e.f_obra||"Sin obra",11,true);
-  const loc=[e.f_cad1?`Cadenamiento ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}`:"",e.f_cuerpo||"",e.f_ubic||""].filter(Boolean).join("  ·  ");if(loc)line(loc,9.5,false,[93,103,108]);
+  const loc=[e.f_cad1?`Cadenamiento ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}`:"",e.f_cuerpo||"",e.f_carril?"Carril "+e.f_carril:"",e.f_ubic||""].filter(Boolean).join("  ·  ");if(loc)line(loc,9.5,false,[93,103,108]);
   if(e.f_lat&&e.f_lng){need(5);doc.setFontSize(9);doc.setTextColor(30,90,160);doc.textWithLink(`Coordenadas: ${e.f_lat}, ${e.f_lng} (ver en mapa)`,M,y,{url:mapUrl(e)});y+=4.5}
   const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C ambiente":""].filter(Boolean).join(" · ");if(amb)line(amb,9.5,false,[93,103,108]);
   y+=2;line("ACTIVIDAD: "+TIPOS[e.tipo].toUpperCase(),9.5,true,[93,103,108]);y+=1;
