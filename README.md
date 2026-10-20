@@ -4,7 +4,8 @@ App web para los apuntes diarios de supervisión de obra: colados de concreto, c
 
 ## Qué hace
 
-- Registro por día con fecha, hora, obra, cadenamiento, cuerpo o carril, clima y ubicación GPS con un toque.
+- Registro por día con fecha, hora, obra, cadenamiento, cuerpo (A/B), carril (alta, media, baja), clima y ubicación GPS con un toque.
+- **Mapa satelital** del punto con marcador, coordenadas y cadenamiento, que se guarda como foto del registro (imágenes de Esri).
 - **Concreto:** elemento, concretera, f'c, revenimiento, temperatura, volumen, ollas, remisión, cilindros, colocación, vibrado y curado.
 - **Mezcla asfáltica:** planta, contenido asfáltico, temperaturas de producción, tendido y compactación, espesor, toneladas y riego de liga.
 - **Terracerías:** banco, humedad y grado de compactación contra el requerido.

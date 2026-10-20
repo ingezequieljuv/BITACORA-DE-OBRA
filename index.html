@@ -76,6 +76,9 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .btn.danger{color:var(--bad);border-color:var(--bad)}
 .gps{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
 .gps .btn{white-space:nowrap}
+.sat{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sat .hint{flex:1 1 200px}
+.btn:disabled{opacity:.55;cursor:default}
 .hint{font-size:.8rem;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
 .qc{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
 .qcrow{display:grid;grid-template-columns:1.4fr 1fr 1fr auto auto;gap:8px;align-items:end}
@@ -181,6 +184,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <label>Latitud<input id="f_lat" class="mono" inputmode="decimal" placeholder="19.2341"></label>
       <label>Longitud<input id="f_lng" class="mono" inputmode="decimal" placeholder="-104.5672"></label>
       <p class="hint full" id="gpsHint" style="margin:0">Toca “Mi ubicación” y acepta el permiso del GPS. También puedes pegar un enlace o coordenadas de Google Maps / Apple Maps.</p>
+      <div class="full sat"><button type="button" class="btn" id="btnSat">🛰 Agregar mapa satelital</button><span class="hint" id="satHint">Agrega una imagen satelital del punto con un marcador, coordenadas y cadenamiento.</span></div>
       <label>Clima<select id="f_clima"><option value="">—</option><option>Soleado</option><option>Nublado</option><option>Lluvia ligera</option><option>Lluvia</option><option>Viento</option></select></label>
       <label>Temp. ambiente <span class="unit">°C</span><input type="number" step="0.1" id="f_tamb"></label>
     </div>
@@ -385,7 +389,7 @@ $("btnGps").onclick=()=>{
  const hint=$("gpsHint");
  if(!navigator.geolocation){hint.textContent="Este navegador no da acceso al GPS. Abre Maps, mantén presionado tu punto, copia las coordenadas y pégalas en Latitud.";return}
  $("btnGps").textContent="Buscando…";
- navigator.geolocation.getCurrentPosition(p=>{setCoords({lat:p.coords.latitude,lng:p.coords.longitude});$("btnGps").textContent="📍 Mi ubicación";hint.textContent=`Ubicación capturada (precisión ±${Math.round(p.coords.accuracy)} m).`;toast("Ubicación capturada")},
+ navigator.geolocation.getCurrentPosition(p=>{setCoords({lat:p.coords.latitude,lng:p.coords.longitude});$("btnGps").textContent="📍 Mi ubicación";hint.textContent=`Ubicación capturada (precisión ±${Math.round(p.coords.accuracy)} m).`;toast("Ubicación capturada");addSatMap()},
  ()=>{$("btnGps").textContent="📍 Mi ubicación";hint.innerHTML=`No se pudo leer el GPS. Revisa en Ajustes → Privacidad → Localización que Safari tenga permiso, o <a href="https://maps.apple.com/" target="_blank" rel="noopener">abre Maps</a>, copia tus coordenadas y pégalas en Latitud.`},{enableHighAccuracy:true,timeout:12000,maximumAge:30000})};
 function mapUrl(e){return e.f_lat&&e.f_lng?`https://maps.google.com/?q=${e.f_lat},${e.f_lng}`:""}
 
@@ -399,7 +403,7 @@ function resetForm(keep){
  qc=[];renderQc();photos=[];renderPhotos();editingId=null;$("btnSave").textContent="Guardar registro";
  const last=lsGet("bit_ultimo");if(last){if(!$("f_obra").value)$("f_obra").value=last.obra||"";setTipo(last.tipo||"concreto")}else setTipo("concreto");
 }
-function readForm(){syncQc();syncPh();const o={tipo,qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||""}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v)o[f]=v});
+function readForm(){syncQc();syncPh();const o={tipo,qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||"",...(f.mapa?{mapa:true}:{})}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v)o[f]=v});
  const pre=PREFIX[tipo];Object.keys(o).forEach(k=>{if(/^[cat]_/.test(k)&&!k.startsWith(pre))delete o[k]});return o}
 function fillForm(e){resetForm();FIELDS.forEach(f=>{if(e[f]!=null)$(f).value=e[f]});setTipo(e.tipo||"general");qc=(e.qc||[]).map(r=>({...r}));renderQc();photos=(e.fotos||[]).map(f=>({...f}));renderPhotos();editingId=e.id;$("btnSave").textContent="Guardar cambios"}
 $("btnClear").onclick=()=>{resetForm();toast("Formulario limpio")};
@@ -484,6 +488,43 @@ async function addFiles(files){if(!assets){toast("No se pueden subir fotos en es
  photos=photos.filter(f=>f.id||!f.err||true);}
 $("phCam").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
 $("phLib").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
+
+/* ---------- mapa satelital ---------- */
+const SAT_Z=18,SAT_W=1280,SAT_H=800;
+function loadTile(url){return new Promise((res,rej)=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>res(im);im.onerror=rej;im.src=url})}
+async function satImage(lat,lng){
+ const n=256*Math.pow(2,SAT_Z),r=lat*Math.PI/180;
+ const px=(lng+180)/360*n,py=(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n;
+ const x0=px-SAT_W/2,y0=py-SAT_H/2,tx0=Math.floor(x0/256),ty0=Math.floor(y0/256),tx1=Math.floor((x0+SAT_W)/256),ty1=Math.floor((y0+SAT_H)/256);
+ const c=document.createElement("canvas");c.width=SAT_W;c.height=SAT_H;const g=c.getContext("2d");g.fillStyle="#333";g.fillRect(0,0,SAT_W,SAT_H);
+ const jobs=[];for(let ty=ty0;ty<=ty1;ty++)for(let tx=tx0;tx<=tx1;tx++)jobs.push(loadTile(`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${SAT_Z}/${ty}/${tx}`).then(im=>g.drawImage(im,Math.round(tx*256-x0),Math.round(ty*256-y0))));
+ await Promise.all(jobs);
+ // marcador
+ const cx=SAT_W/2,cy=SAT_H/2;g.save();g.shadowColor="rgba(0,0,0,.5)";g.shadowBlur=8;g.fillStyle="#e53935";g.beginPath();g.arc(cx,cy-34,20,Math.PI,0);g.lineTo(cx,cy);g.closePath();g.fill();g.restore();
+ g.fillStyle="#fff";g.beginPath();g.arc(cx,cy-34,8,0,Math.PI*2);g.fill();
+ // escala (metros por píxel)
+ const mpp=156543.03392*Math.cos(r)/Math.pow(2,SAT_Z),sm=100,sl=sm/mpp;
+ g.fillStyle="rgba(0,0,0,.55)";g.fillRect(SAT_W-sl-44,SAT_H-74,sl+30,30);g.fillStyle="#fff";g.fillRect(SAT_W-sl-30,SAT_H-52,sl,5);g.font="600 16px system-ui,sans-serif";g.fillText("100 m",SAT_W-sl-30,SAT_H-58);
+ // etiqueta
+ const cad=[$("f_cad1").value?"Km "+$("f_cad1").value+($("f_cad2").value?" – "+$("f_cad2").value:""):"",$("f_cuerpo").value,$("f_carril").value?"Carril "+$("f_carril").value:""].filter(Boolean).join(" · ");
+ const t1=`${lat.toFixed(6)}, ${lng.toFixed(6)}`,t2=[cad,`${fmtFecha($("f_fecha").value)} ${$("f_hora").value}`].filter(Boolean).join("  ·  ");
+ g.font="600 22px system-ui,sans-serif";const tw=Math.max(g.measureText(t1).width,(g.font="500 18px system-ui,sans-serif",g.measureText(t2).width));
+ g.fillStyle="rgba(0,0,0,.6)";g.fillRect(14,14,tw+28,70);g.fillStyle="#fff";g.font="600 22px system-ui,sans-serif";g.fillText(t1,28,44);g.fillStyle="#f2b705";g.font="500 18px system-ui,sans-serif";g.fillText(t2,28,72);
+ g.font="13px system-ui,sans-serif";const at="Imagen: Esri, Maxar, Earthstar Geographics";const aw=g.measureText(at).width;g.fillStyle="rgba(255,255,255,.75)";g.fillRect(SAT_W-aw-14,SAT_H-22,aw+14,22);g.fillStyle="#222";g.fillText(at,SAT_W-aw-7,SAT_H-7);
+ return await new Promise((res,rej)=>{try{c.toBlob(b=>b?res(b):rej(new Error("blob")),"image/jpeg",0.92)}catch(e){rej(e)}})}
+async function addSatMap(){
+ const lat=parseFloat($("f_lat").value),lng=parseFloat($("f_lng").value);
+ if(!isFinite(lat)||!isFinite(lng)){toast("Primero captura la ubicación o escribe latitud y longitud");return}
+ if(!assets){toast("No se pueden guardar imágenes en este visor");return}
+ const btn=$("btnSat");btn.disabled=true;btn.textContent="Descargando mapa…";
+ try{const blob=await satImage(lat,lng);const file=new File([blob],`mapa_${lat.toFixed(5)}_${lng.toFixed(5)}.jpg`,{type:"image/jpeg"});
+  syncPh();const old=photos.findIndex(f=>f.mapa);if(old>=0){const f=photos.splice(old,1)[0];const saved=editingId&&entries.find(x=>x.id===editingId)?.fotos?.some(p=>p.id===f.id);if(f.id&&!saved)assets.delete(f.id).catch(()=>{})}
+  const rec={name:file.name,cap:"Ubicación satelital "+[$("f_cad1").value,$("f_ubic").value].filter(Boolean).join(" · "),prev:URL.createObjectURL(blob),mapa:true};photos.unshift(rec);renderPhotos();pendingUp++;
+  try{const r=await assets.upload(file);rec.id=r.id}catch(e){rec.err="No se guardó"}pendingUp--;syncPh();renderPhotos();
+  $("satHint").textContent="Mapa satelital agregado como primera foto. Aparece en el registro y en el PDF.";
+ }catch(e){$("satHint").innerHTML=window.claude?"La app de Claude no permite descargar el mapa satelital. Usa la versión de GitHub, o toma una captura de pantalla en Maps (vista Satélite) y agrégala en Fotografías.":"No se pudo descargar el mapa. Revisa tu señal, o toma una captura de pantalla en Maps (vista Satélite) y agrégala en Fotografías."}
+ finally{btn.disabled=false;btn.textContent="🛰 Agregar mapa satelital"}}
+$("btnSat").onclick=addSatMap;
 
 /* ---------- PDF ---------- */
 function exifOrientation(buf){const v=new DataView(buf);if(v.getUint16(0)!==0xFFD8)return 1;let o=2;
