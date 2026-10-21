@@ -147,6 +147,11 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .pv-page{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:100%}
 .pv-page canvas{display:block;max-width:100%;height:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.25);border-radius:2px}
 .pv-num{font:.72rem var(--f-mono);color:var(--muted)}
+.sh-body{flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;max-width:760px;width:100%;margin:0 auto;padding-top:16px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sh-body textarea{font:400 .92rem var(--f-body);min-height:240px}
+.sh-acts{display:flex;flex-direction:column;gap:8px}
+.sh-acts .btn{text-align:center;text-decoration:none}
+.sh-tips{margin:0;padding-left:18px;color:var(--muted);font-size:.85rem;display:flex;flex-direction:column;gap:6px}
 .pv-wait{color:var(--muted);padding:40px 16px;text-align:center;max-width:420px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -331,6 +336,24 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
   </div>
   <div class="pv-pages" id="pvPages"></div>
 </div>
+<div class="preview" id="share" hidden role="dialog" aria-modal="true" aria-label="Compartir registro">
+  <div class="pv-bar">
+    <div class="pv-top"><button type="button" class="btn sm" id="shClose">✕ Cerrar</button><strong class="pv-title">Compartir</strong><span class="pv-info" id="shInfo"></span></div>
+  </div>
+  <div class="sh-body">
+    <label for="shText">Mensaje (lo puedes editar)<textarea id="shText" rows="14"></textarea></label>
+    <div class="sh-acts">
+      <button type="button" class="btn pri" id="shPhotos">📲 Enviar texto y fotos</button>
+      <button type="button" class="btn" id="shZip">🗂 Fotos originales en ZIP</button>
+      <a class="btn" id="shWa" href="https://wa.me/" target="_blank" rel="noopener">💬 Solo el texto a WhatsApp</a>
+      <button type="button" class="btn" id="shCopy">Copiar texto</button>
+    </div>
+    <ul class="sh-tips">
+      <li><b>Enviar texto y fotos:</b> abre el menú de compartir; elige WhatsApp y el chat. El texto también queda copiado por si WhatsApp no lo pega solo. Toca <b>HD</b> antes de enviar para mejor calidad.</li>
+      <li><b>Fotos originales en ZIP:</b> WhatsApp lo manda como documento, así que las fotos llegan sin reducir calidad. Quien lo recibe lo abre en Archivos y saca las fotos. Incluye un archivo con los datos.</li>
+    </ul>
+  </div>
+</div>
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -453,7 +476,8 @@ function renderList(){
   ${e.ejemplo?`<p class="hint" style="margin:10px 0 0">Los botones <b>PDF</b>, Editar y Compartir aparecen en cada registro cuando guardas el primero tuyo.</p>`:`<div class="e-actions">
    ${mapUrl(e)?`<a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">Ver en mapa</a>`:""}
    <button class="btn sm pri" data-act="pdf" data-id="${e.id}">PDF / Imprimir</button>
-   <button class="btn sm" data-act="copy" data-id="${e.id}">Copiar para WhatsApp</button>
+   <button class="btn sm pri" data-act="share" data-id="${e.id}">Compartir por WhatsApp</button>
+   <button class="btn sm" data-act="copy" data-id="${e.id}">Copiar texto</button>
    <button class="btn sm" data-act="dup" data-id="${e.id}">Duplicar</button>
    <button class="btn sm" data-act="edit" data-id="${e.id}">Editar</button>
    ${confirmId===e.id?`<span class="confirm">¿Borrar este registro? <button class="btn sm danger" data-act="del" data-id="${e.id}">Sí, borrar</button><button class="btn sm" data-act="nodel">Cancelar</button></span>`:`<button class="btn sm danger" data-act="ask" data-id="${e.id}">Borrar</button>`}
@@ -472,7 +496,8 @@ $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("butt
  if(a==="del"){confirmId=null;try{if(assets)for(const f of e.fotos||[])assets.delete(f.id).catch(()=>{});await idb.del("registros",e.id);await reload();toast("Registro borrado")}catch(err){toast("No se pudo borrar el registro.")}return}
  if(a==="edit"){fillForm(e);show("new");window.scrollTo({top:0});return}
  if(a==="dup"){fillForm(e);editingId=null;$("btnSave").textContent="Guardar registro";const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);show("new");window.scrollTo({top:0});toast("Copiado como nuevo registro de hoy");return}
- if(a==="copy"){const txt=textFor(e);try{await navigator.clipboard.writeText(txt);toast("Texto copiado")}catch(err){const ta=document.createElement("textarea");ta.value=txt;ta.style.width="100%";b.parentElement.after(ta);ta.select();toast("Selecciona y copia el texto")}}
+ if(a==="share"){openShare(e);return}
+ if(a==="copy"){const txt=shareText(e);try{await navigator.clipboard.writeText(txt);toast("Texto copiado")}catch(err){const ta=document.createElement("textarea");ta.value=txt;ta.style.width="100%";b.parentElement.after(ta);ta.select();toast("Selecciona y copia el texto")}}
 });
 
 /* ---------- CSV ---------- */
@@ -540,6 +565,53 @@ async function addSatMap(){
  }catch(e){$("satHint").innerHTML=window.claude?"La app de Claude no permite descargar el mapa satelital. Usa la versión de GitHub, o toma una captura de pantalla en Maps (vista Satélite) y agrégala en Fotografías.":"No se pudo descargar el mapa. Revisa tu señal, o toma una captura de pantalla en Maps (vista Satélite) y agrégala en Fotografías."}
  finally{btn.disabled=false;btn.textContent="🛰 Mapa satelital automático"}}
 $("btnSat").onclick=addSatMap;
+
+/* ---------- compartir ---------- */
+function shareText(e){const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliación Armería – Manzanillo",""];
+ L.push(`📅 *${e.f_dia||diaDe(e.f_fecha)} ${fmtFecha(e.f_fecha)}*${e.f_hora?" · "+e.f_hora+" h":""}`);
+ if(e.f_obra)L.push(`🏗 *Obra:* ${e.f_obra}`);
+ if(e.f_cad1)L.push(`📍 *Cadenamiento:* ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}`);
+ const cc=[e.f_cuerpo,e.f_carril?"Carril "+e.f_carril:""].filter(Boolean).join(" · ");if(cc)L.push(`↔️ ${cc}`);
+ if(e.f_ubic)L.push(`🗺 ${e.f_ubic}`);if(mapUrl(e))L.push(mapUrl(e));
+ const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C":""].filter(Boolean).join(" · ");if(amb)L.push(`🌤 ${amb}`);
+ L.push("",`🔧 *Actividad:* ${TIPOS[e.tipo]}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`• ${LABELS[k]}: ${e[k]}`)});
+ if((e.qc||[]).length){L.push("","✅ *Control de calidad*");(e.qc||[]).forEach(r=>L.push(`• ${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" ✔ cumple":r.ok==="n"?" ✘ NO cumple":""}`))}
+ if(e.f_notas)L.push("",`📝 *Notas:* ${e.f_notas}`);
+ const n=(e.fotos||[]).length;if(n)L.push("",`📷 ${n} foto${n===1?"":"s"}`);
+ const nom=$("pdfName").value.trim();if(nom)L.push("",nom);return L.join("\n")}
+let sh={e:null,files:[],zip:null};
+function extOf(t){return /png/.test(t)?"png":/heic|heif/.test(t)?"heic":"jpg"}
+async function openShare(e){sh={e,files:[],zip:null};$("shText").value=shareText(e);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
+ $("share").hidden=false;document.body.style.overflow="hidden";const n=(e.fotos||[]).length;
+ $("shPhotos").hidden=!n||!navigator.canShare;$("shZip").hidden=!n;$("shInfo").textContent=n?"Preparando fotos…":"Este registro no tiene fotos.";$("shPhotos").disabled=true;$("shZip").disabled=true;
+ const used=new Set();let i=0;for(const f of e.fotos||[]){i++;try{const r=await fetch(blobUrl(f.id));if(!r.ok)continue;const b=await r.blob();
+  let base=(f.mapa?"mapa_satelital":f.ubic?"ubicacion_"+i:("foto_"+i))+(e.f_cad1?"_km"+e.f_cad1.replace(/[^\w+]/g,""):"");let nm=base+"."+extOf(b.type);while(used.has(nm))nm=base+"_"+i+"."+extOf(b.type);used.add(nm);
+  sh.files.push(new File([b],nm,{type:b.type||"image/jpeg"}))}catch(err){}}
+ if(sh.e!==e)return;const mb=sh.files.reduce((s,f)=>s+f.size,0)/1048576;
+ if(n){$("shInfo").textContent=`${sh.files.length} foto${sh.files.length===1?"":"s"} lista${sh.files.length===1?"":"s"} · ${mb.toFixed(1)} MB en calidad original`;$("shZip").disabled=!sh.files.length;
+  if(navigator.canShare&&sh.files.length&&navigator.canShare({files:sh.files}))$("shPhotos").disabled=false;else $("shPhotos").hidden=true}}
+function closeShare(){sh={e:null,files:[],zip:null};$("share").hidden=true;document.body.style.overflow=""}
+$("shClose").onclick=closeShare;
+document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&!$("share").hidden)closeShare()});
+$("shText").addEventListener("input",()=>{$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value)});
+$("shCopy").onclick=async()=>{const t=$("shText").value;try{await navigator.clipboard.writeText(t);toast("Texto copiado")}catch(err){$("shText").select();toast("Selecciona y copia el texto")}};
+$("shPhotos").onclick=async()=>{const t=$("shText").value;try{await navigator.clipboard.writeText(t)}catch(err){}
+ try{await navigator.share({files:sh.files,text:t});toast("Enviado")}catch(err){if(!(err&&err.name==="AbortError"))toast("No se pudo abrir el menú de compartir")}};
+function crc32(u){let c,t=crc32.t;if(!t){t=crc32.t=new Uint32Array(256);for(let n=0;n<256;n++){c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}}c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=t[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+async function makeZip(entries){const enc=new TextEncoder(),parts=[],central=[];let off=0;const d=new Date(),dt=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1)),dd=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate());
+ for(const en of entries){const data=new Uint8Array(await en.blob.arrayBuffer()),name=enc.encode(en.name),crc=crc32(data);
+  const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,dt,true);h.setUint16(12,dd,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,name.length,true);h.setUint16(28,0,true);
+  parts.push(h.buffer,name,data);
+  const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(10,0,true);c.setUint16(12,dt,true);c.setUint16(14,dd,true);c.setUint32(16,crc,true);c.setUint32(20,data.length,true);c.setUint32(24,data.length,true);c.setUint16(28,name.length,true);c.setUint32(42,off,true);
+  central.push(c.buffer,name);off+=30+name.length+data.length}
+ const csz=central.reduce((s,p)=>s+(p.byteLength||p.length),0);const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,entries.length,true);e.setUint16(10,entries.length,true);e.setUint32(12,csz,true);e.setUint32(16,off,true);
+ return new Blob([...parts,...central,e.buffer],{type:"application/zip"})}
+$("shZip").onclick=async()=>{if(!sh.files.length)return;
+ if(!downloads){toast("La app de Claude no permite descargar aquí. Usa la versión de GitHub en Safari.");return}
+ const e=sh.e,t=$("shText").value;try{await navigator.clipboard.writeText(t)}catch(err){}
+ if(!sh.zip){$("shZip").disabled=true;$("shZip").textContent="Armando ZIP…";sh.zip=await makeZip([{name:"datos.txt",blob:new Blob([t.replace(/\*/g,"")],{type:"text/plain"})},...sh.files.map(f=>({name:f.name,blob:f}))]);$("shZip").textContent="🗂 Fotos originales en ZIP";$("shZip").disabled=false}
+ const nm=`bitacora_${e.f_fecha||"registro"}${e.f_cad1?"_km"+e.f_cad1.replace(/[^\w+]/g,""):""}.zip`;
+ try{await downloads.save({filename:nm,data:sh.zip});toast("Elige WhatsApp. El texto ya está copiado: pégalo en el chat.")}catch(err){if(!(err&&err.code==="declined"))toast(err&&err.code==="too_large"?"El ZIP es demasiado grande para enviarlo":"No se pudo preparar el ZIP")}};
 
 /* ---------- PDF ---------- */
 function exifOrientation(buf){const v=new DataView(buf);if(v.getUint16(0)!==0xFFD8)return 1;let o=2;
