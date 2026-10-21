@@ -151,6 +151,15 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .sh-body textarea{font:400 .92rem var(--f-body);min-height:240px}
 .sh-acts{display:flex;flex-direction:column;gap:8px}
 .sh-acts .btn{text-align:center;text-decoration:none}
+.sh-status{margin:0;font-weight:600}
+.sh-link{margin:0;font:.78rem var(--f-mono);color:var(--muted);overflow-wrap:anywhere}
+.sh-link:empty{display:none}
+.btn.off{opacity:.5;pointer-events:none}
+.setup{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.setup h3{margin:0;font-family:var(--f-display);font-size:1.15rem;letter-spacing:.03em;text-transform:uppercase}
+.setup ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:.92rem}
+.setup a{color:var(--ink)}
+.linkbtn{background:none;border:none;color:var(--muted);text-decoration:underline;font:inherit;font-size:.85rem;cursor:pointer;align-self:flex-start;padding:0}
 .sh-tips{margin:0;padding-left:18px;color:var(--muted);font-size:.85rem;display:flex;flex-direction:column;gap:6px}
 .pv-wait{color:var(--muted);padding:40px 16px;text-align:center;max-width:420px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -338,20 +347,37 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 </div>
 <div class="preview" id="share" hidden role="dialog" aria-modal="true" aria-label="Compartir registro">
   <div class="pv-bar">
-    <div class="pv-top"><button type="button" class="btn sm" id="shClose">✕ Cerrar</button><strong class="pv-title">Compartir</strong><span class="pv-info" id="shInfo"></span></div>
+    <div class="pv-top"><button type="button" class="btn sm" id="shClose">✕ Cerrar</button><strong class="pv-title">Compartir</strong></div>
   </div>
   <div class="sh-body">
+    <p class="sh-status" id="shStatus" role="status"></p>
+    <div class="setup" id="shSetup" hidden>
+      <h3>Configura el link (solo una vez)</h3>
+      <ol>
+        <li>Abre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → nuevo token</a> e inicia sesión.</li>
+        <li>En <b>Token name</b> escribe <i>Bitácora</i>. En <b>Expiration</b> elige la fecha más lejana.</li>
+        <li>En <b>Repository access</b> elige <b>Only select repositories</b> y marca <b>BITACORA-DE-OBRA</b>.</li>
+        <li>En <b>Permissions</b> agrega <b>Contents</b> con acceso <b>Read and write</b>.</li>
+        <li>Toca <b>Generate token</b>, cópialo y pégalo aquí.</li>
+      </ol>
+      <label for="shTok">Token de GitHub<input id="shTok" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <button type="button" class="btn pri" id="shTokSave">Guardar y crear link</button>
+      <p class="hint" style="margin:0">El token se guarda solo en este teléfono y solo sirve para tu bitácora.</p>
+    </div>
     <label for="shText">Mensaje (lo puedes editar)<textarea id="shText" rows="14"></textarea></label>
+    <p class="sh-link" id="shInfo"></p>
     <div class="sh-acts">
-      <button type="button" class="btn pri" id="shPhotos">📲 Enviar texto y fotos</button>
-      <button type="button" class="btn" id="shZip">🗂 Fotos originales en ZIP</button>
-      <a class="btn" id="shWa" href="https://wa.me/" target="_blank" rel="noopener">💬 Solo el texto a WhatsApp</a>
-      <button type="button" class="btn" id="shCopy">Copiar texto</button>
+      <a class="btn pri" id="shWa" href="https://wa.me/" target="_blank" rel="noopener">💬 Enviar link por WhatsApp</a>
+      <button type="button" class="btn" id="shPdf" disabled>📄 Enviar link + PDF</button>
+      <span class="hint" id="shPdfState"></span>
+      <button type="button" class="btn" id="shCopy">Copiar mensaje</button>
+      <button type="button" class="btn" id="shRetry" hidden>Volver a intentar</button>
     </div>
     <ul class="sh-tips">
-      <li><b>Enviar texto y fotos:</b> abre el menú de compartir; elige WhatsApp y el chat. El texto también queda copiado por si WhatsApp no lo pega solo. Toca <b>HD</b> antes de enviar para mejor calidad.</li>
-      <li><b>Fotos originales en ZIP:</b> WhatsApp lo manda como documento, así que las fotos llegan sin reducir calidad. Quien lo recibe lo abre en Archivos y saca las fotos. Incluye un archivo con los datos.</li>
+      <li>Quien abra el link ve el registro sin poder cambiar nada y puede descargar las fotos en calidad original. No necesita GitHub ni ninguna app.</li>
+      <li><b>Link + PDF</b> manda el PDF y el mensaje con el link. Si WhatsApp no pone el mensaje, pégalo: ya está copiado.</li>
     </ul>
+    <button type="button" class="linkbtn" id="shAgain" hidden>Cambiar permiso de GitHub</button>
   </div>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -476,7 +502,8 @@ function renderList(){
   ${e.ejemplo?`<p class="hint" style="margin:10px 0 0">Los botones <b>PDF</b>, Editar y Compartir aparecen en cada registro cuando guardas el primero tuyo.</p>`:`<div class="e-actions">
    ${mapUrl(e)?`<a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">Ver en mapa</a>`:""}
    <button class="btn sm pri" data-act="pdf" data-id="${e.id}">PDF / Imprimir</button>
-   <button class="btn sm pri" data-act="share" data-id="${e.id}">Compartir por WhatsApp</button>
+   <button class="btn sm pri" data-act="share" data-id="${e.id}">🔗 Compartir por WhatsApp</button>
+   <button class="btn sm" data-act="sharepdf" data-id="${e.id}">📄 Link + PDF</button>
    <button class="btn sm" data-act="copy" data-id="${e.id}">Copiar texto</button>
    <button class="btn sm" data-act="dup" data-id="${e.id}">Duplicar</button>
    <button class="btn sm" data-act="edit" data-id="${e.id}">Editar</button>
@@ -496,7 +523,8 @@ $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("butt
  if(a==="del"){confirmId=null;try{if(assets)for(const f of e.fotos||[])assets.delete(f.id).catch(()=>{});await idb.del("registros",e.id);await reload();toast("Registro borrado")}catch(err){toast("No se pudo borrar el registro.")}return}
  if(a==="edit"){fillForm(e);show("new");window.scrollTo({top:0});return}
  if(a==="dup"){fillForm(e);editingId=null;$("btnSave").textContent="Guardar registro";const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);show("new");window.scrollTo({top:0});toast("Copiado como nuevo registro de hoy");return}
- if(a==="share"){openShare(e);return}
+ if(a==="share"){openShare(e,"link");return}
+ if(a==="sharepdf"){openShare(e,"pdf");return}
  if(a==="copy"){const txt=shareText(e);try{await navigator.clipboard.writeText(txt);toast("Texto copiado")}catch(err){const ta=document.createElement("textarea");ta.value=txt;ta.style.width="100%";b.parentElement.after(ta);ta.select();toast("Selecciona y copia el texto")}}
 });
 
@@ -566,52 +594,87 @@ async function addSatMap(){
  finally{btn.disabled=false;btn.textContent="🛰 Mapa satelital automático"}}
 $("btnSat").onclick=addSatMap;
 
-/* ---------- compartir ---------- */
+/* ---------- compartir con link ---------- */
+const GH={repo:"ingezequieljuv/BITACORA-DE-OBRA",branch:"registros",site:"https://ingezequieljuv.github.io/BITACORA-DE-OBRA/"};
+const shareUrl=id=>GH.site+"ver.html#"+id;
 function shareText(e){const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliación Armería – Manzanillo",""];
  L.push(`📅 *${e.f_dia||diaDe(e.f_fecha)} ${fmtFecha(e.f_fecha)}*${e.f_hora?" · "+e.f_hora+" h":""}`);
  if(e.f_obra)L.push(`🏗 *Obra:* ${e.f_obra}`);
  if(e.f_cad1)L.push(`📍 *Cadenamiento:* ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}`);
  const cc=[e.f_cuerpo,e.f_carril?"Carril "+e.f_carril:""].filter(Boolean).join(" · ");if(cc)L.push(`↔️ ${cc}`);
- if(e.f_ubic)L.push(`🗺 ${e.f_ubic}`);if(mapUrl(e))L.push(mapUrl(e));
+ if(e.f_ubic)L.push(`🗺 ${e.f_ubic}`);
  const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C":""].filter(Boolean).join(" · ");if(amb)L.push(`🌤 ${amb}`);
  L.push("",`🔧 *Actividad:* ${TIPOS[e.tipo]}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`• ${LABELS[k]}: ${e[k]}`)});
  if((e.qc||[]).length){L.push("","✅ *Control de calidad*");(e.qc||[]).forEach(r=>L.push(`• ${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" ✔ cumple":r.ok==="n"?" ✘ NO cumple":""}`))}
  if(e.f_notas)L.push("",`📝 *Notas:* ${e.f_notas}`);
- const n=(e.fotos||[]).length;if(n)L.push("",`📷 ${n} foto${n===1?"":"s"}`);
- const nom=$("pdfName").value.trim();if(nom)L.push("",nom);return L.join("\n")}
-let sh={e:null,files:[],zip:null};
+ const nom=$("pdfName").value.trim();if(nom)L.push("",nom);
+ if(e.share&&e.share.id){const n=(e.fotos||[]).length;L.push("",`🔗 *Ver registro${n?" y descargar fotos originales ("+n+")":""}:*`,shareUrl(e.share.id))}
+ else if(mapUrl(e))L.push("",mapUrl(e));
+ return L.join("\n")}
+const ghToken=()=>lsGet("bit_ghtoken")||"";
+async function gh(path,opt={}){return fetch("https://api.github.com/repos/"+GH.repo+path,{...opt,headers:{Accept:"application/vnd.github+json",Authorization:"Bearer "+ghToken(),"X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{})}})}
+const toB64=blob=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(String(f.result).split(",")[1]);f.onerror=rej;f.readAsDataURL(blob)});
+async function ghPut(p,blob,msg,sha){const body={message:msg,content:await toB64(blob),branch:GH.branch};if(sha)body.sha=sha;
+ let r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)});
+ if(r.status===409||r.status===422){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){body.sha=(await g.json()).sha;r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)})}}
+ if(!r.ok){const j=await r.json().catch(()=>({}));throw{status:r.status,message:j.message||""}}return(await r.json()).content.sha}
+function newShareId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join("")+Date.now().toString(36).slice(-4)}
 function extOf(t){return /png/.test(t)?"png":/heic|heif/.test(t)?"heic":"jpg"}
-async function openShare(e){sh={e,files:[],zip:null};$("shText").value=shareText(e);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
- $("share").hidden=false;document.body.style.overflow="hidden";const n=(e.fotos||[]).length;
- $("shPhotos").hidden=!n||!navigator.canShare;$("shZip").hidden=!n;$("shInfo").textContent=n?"Preparando fotos…":"Este registro no tiene fotos.";$("shPhotos").disabled=true;$("shZip").disabled=true;
- const used=new Set();let i=0;for(const f of e.fotos||[]){i++;try{const r=await fetch(blobUrl(f.id));if(!r.ok)continue;const b=await r.blob();
-  let base=(f.mapa?"mapa_satelital":f.ubic?"ubicacion_"+i:("foto_"+i))+(e.f_cad1?"_km"+e.f_cad1.replace(/[^\w+]/g,""):"");let nm=base+"."+extOf(b.type);while(used.has(nm))nm=base+"_"+i+"."+extOf(b.type);used.add(nm);
-  sh.files.push(new File([b],nm,{type:b.type||"image/jpeg"}))}catch(err){}}
- if(sh.e!==e)return;const mb=sh.files.reduce((s,f)=>s+f.size,0)/1048576;
- if(n){$("shInfo").textContent=`${sh.files.length} foto${sh.files.length===1?"":"s"} lista${sh.files.length===1?"":"s"} · ${mb.toFixed(1)} MB en calidad original`;$("shZip").disabled=!sh.files.length;
-  if(navigator.canShare&&sh.files.length&&navigator.canShare({files:sh.files}))$("shPhotos").disabled=false;else $("shPhotos").hidden=true}}
-function closeShare(){sh={e:null,files:[],zip:null};$("share").hidden=true;document.body.style.overflow=""}
+async function publishRecord(e,progress){
+ const share=JSON.parse(JSON.stringify(e.share||{id:newShareId(),files:{}}));share.files=share.files||{};
+ const fotos=e.fotos||[],used=new Set(Object.values(share.files));const pend=fotos.filter(f=>!share.files[f.id]);let k=0;
+ for(const f of pend){k++;progress(`Subiendo foto ${k} de ${pend.length}…`);
+  const r=await fetch(blobUrl(f.id));if(!r.ok)continue;const b=await r.blob();
+  const i=fotos.indexOf(f)+1;let base=f.mapa?"mapa_satelital":f.ubic?"ubicacion_"+i:"foto_"+i;if(e.f_cad1)base+="_km"+e.f_cad1.replace(/[^\w+]/g,"");
+  let nm=base+"."+extOf(b.type),n=2;while(used.has(nm))nm=base+"_"+(n++)+"."+extOf(b.type);
+  await ghPut(`r/${share.id}/${nm}`,b,`Foto ${nm} del registro ${e.f_fecha||""}`);share.files[f.id]=nm;used.add(nm);
+  e.share=share;await saveShare(e)}
+ progress("Guardando datos del registro…");
+ const data={};Object.keys(e).forEach(key=>{if(!["fotos","share","id","t","ejemplo"].includes(key))data[key]=e[key]});
+ data.fotos=fotos.filter(f=>share.files[f.id]).map(f=>({file:share.files[f.id],cap:f.cap||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}));
+ data.nombre=$("pdfName").value.trim();data.actualizado=new Date().toISOString();
+ share.sha=await ghPut(`r/${share.id}/registro.json`,new Blob([JSON.stringify(data,null,1)],{type:"application/json"}),`Registro ${e.f_fecha||""} ${e.f_cad1||""}`.trim(),share.sha);
+ share.at=data.actualizado;e.share=share;await saveShare(e);return share}
+async function saveShare(e){try{if(typeof idb!=="undefined"){await idb.put("registros",e)}else if(col){await col.doc(e.id).update({share:e.share})}}catch(err){}}
+
+let sh={e:null,mode:"link",pdf:null,run:0};
+function setSh(o){for(const k in o){const el=$(k);if(!el)continue;const v=o[k];if(typeof v==="boolean")el.hidden=!v;else el.textContent=v}}
+async function openShare(e,mode){const run=++sh.run;sh={e,mode,pdf:null,run};
+ $("share").hidden=false;document.body.style.overflow="hidden";
+ $("shText").value=shareText(e);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
+ $("shWa").classList.toggle("pri",mode==="link");$("shPdf").classList.toggle("pri",mode==="pdf");
+ $("shWa").setAttribute("aria-disabled","true");$("shWa").classList.add("off");$("shPdf").disabled=true;
+ setSh({shSetup:false,shRetry:false,shAgain:false,shInfo:"",shStatus:"Preparando link…"});
+ if(window.claude){setSh({shStatus:"El link para WhatsApp se crea desde la versión de GitHub (ingezequieljuv.github.io/BITACORA-DE-OBRA). Aquí puedes mandar solo el texto."});$("shWa").classList.remove("off");$("shWa").removeAttribute("aria-disabled");return}
+ if(!ghToken()){setSh({shSetup:true,shStatus:"Falta configurar el permiso de GitHub para crear links."});return}
+ try{const s=await publishRecord(e,msg=>{if(sh.run===run)setSh({shStatus:msg})});if(sh.run!==run)return;
+  const fresh=entries.find(x=>x.id===e.id)||e;fresh.share=s;sh.e=fresh;
+  $("shText").value=shareText(fresh);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
+  $("shWa").classList.remove("off");$("shWa").removeAttribute("aria-disabled");
+  setSh({shStatus:"✓ Link listo. Si editas el registro, compártelo otra vez y el mismo link se actualiza.",shAgain:true,shInfo:shareUrl(s.id)});
+  setSh({shPdfState:"Preparando PDF…"});const r=await buildPdf([fresh],pdfOpt);if(sh.run!==run)return;
+  sh.pdf=new File([r.blob],r.fname,{type:"application/pdf"});$("shPdf").disabled=false;setSh({shPdfState:`PDF listo · ${r.pages} pág. · ${(r.blob.size/1048576).toFixed(1)} MB`});
+  if(typeof reload==="function")reload()}
+ catch(err){if(sh.run!==run)return;
+  if(err&&err.status===401){localStorage.removeItem("bit_ghtoken");setSh({shSetup:true,shStatus:"El permiso de GitHub no es válido o ya venció. Configúralo otra vez."})}
+  else if(err&&(err.status===403||err.status===404)){setSh({shSetup:true,shStatus:"El permiso de GitHub no deja guardar en BITACORA-DE-OBRA. Revisa que tenga Contents: Read and write."})}
+  else setSh({shRetry:true,shStatus:"No se pudo subir. Revisa tu señal y vuelve a intentar."})}}
+function closeShare(){sh.run++;$("share").hidden=true;document.body.style.overflow="";if(typeof reload==="function")reload()}
 $("shClose").onclick=closeShare;
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&!$("share").hidden)closeShare()});
+$("shRetry").onclick=()=>openShare(sh.e,sh.mode);
+$("shAgain").onclick=()=>{setSh({shSetup:true})};
 $("shText").addEventListener("input",()=>{$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value)});
-$("shCopy").onclick=async()=>{const t=$("shText").value;try{await navigator.clipboard.writeText(t);toast("Texto copiado")}catch(err){$("shText").select();toast("Selecciona y copia el texto")}};
-$("shPhotos").onclick=async()=>{const t=$("shText").value;try{await navigator.clipboard.writeText(t)}catch(err){}
- try{await navigator.share({files:sh.files,text:t});toast("Enviado")}catch(err){if(!(err&&err.name==="AbortError"))toast("No se pudo abrir el menú de compartir")}};
-function crc32(u){let c,t=crc32.t;if(!t){t=crc32.t=new Uint32Array(256);for(let n=0;n<256;n++){c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}}c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=t[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
-async function makeZip(entries){const enc=new TextEncoder(),parts=[],central=[];let off=0;const d=new Date(),dt=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1)),dd=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate());
- for(const en of entries){const data=new Uint8Array(await en.blob.arrayBuffer()),name=enc.encode(en.name),crc=crc32(data);
-  const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,dt,true);h.setUint16(12,dd,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,name.length,true);h.setUint16(28,0,true);
-  parts.push(h.buffer,name,data);
-  const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(10,0,true);c.setUint16(12,dt,true);c.setUint16(14,dd,true);c.setUint32(16,crc,true);c.setUint32(20,data.length,true);c.setUint32(24,data.length,true);c.setUint16(28,name.length,true);c.setUint32(42,off,true);
-  central.push(c.buffer,name);off+=30+name.length+data.length}
- const csz=central.reduce((s,p)=>s+(p.byteLength||p.length),0);const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,entries.length,true);e.setUint16(10,entries.length,true);e.setUint32(12,csz,true);e.setUint32(16,off,true);
- return new Blob([...parts,...central,e.buffer],{type:"application/zip"})}
-$("shZip").onclick=async()=>{if(!sh.files.length)return;
- if(!downloads){toast("La app de Claude no permite descargar aquí. Usa la versión de GitHub en Safari.");return}
- const e=sh.e,t=$("shText").value;try{await navigator.clipboard.writeText(t)}catch(err){}
- if(!sh.zip){$("shZip").disabled=true;$("shZip").textContent="Armando ZIP…";sh.zip=await makeZip([{name:"datos.txt",blob:new Blob([t.replace(/\*/g,"")],{type:"text/plain"})},...sh.files.map(f=>({name:f.name,blob:f}))]);$("shZip").textContent="🗂 Fotos originales en ZIP";$("shZip").disabled=false}
- const nm=`bitacora_${e.f_fecha||"registro"}${e.f_cad1?"_km"+e.f_cad1.replace(/[^\w+]/g,""):""}.zip`;
- try{await downloads.save({filename:nm,data:sh.zip});toast("Elige WhatsApp. El texto ya está copiado: pégalo en el chat.")}catch(err){if(!(err&&err.code==="declined"))toast(err&&err.code==="too_large"?"El ZIP es demasiado grande para enviarlo":"No se pudo preparar el ZIP")}};
+$("shWa").addEventListener("click",ev=>{if($("shWa").classList.contains("off"))ev.preventDefault()});
+$("shCopy").onclick=async()=>{const t=$("shText").value;try{await navigator.clipboard.writeText(t);toast("Mensaje copiado")}catch(err){$("shText").select();toast("Selecciona y copia el mensaje")}};
+$("shPdf").onclick=async()=>{if(!sh.pdf)return;const t=$("shText").value;try{await navigator.clipboard.writeText(t)}catch(err){}
+ if(navigator.canShare&&navigator.canShare({files:[sh.pdf]})){try{await navigator.share({files:[sh.pdf],text:t});toast("Si el mensaje no aparece con el PDF, pégalo en el chat: ya está copiado.")}catch(err){if(!(err&&err.name==="AbortError"))toast("No se pudo abrir el menú de compartir")}return}
+ try{await downloads.save({filename:sh.pdf.name,data:sh.pdf});toast("PDF descargado. El mensaje con el link ya está copiado.")}catch(err){toast("No se pudo guardar el PDF")}};
+$("shTokSave").onclick=async()=>{const t=$("shTok").value.trim();if(!t){toast("Pega el token primero");return}
+ $("shTokSave").disabled=true;$("shTokSave").textContent="Revisando…";lsSet("bit_ghtoken",t);
+ try{const r=await gh("");if(!r.ok)throw r.status;$("shTok").value="";toast("Permiso guardado");openShare(sh.e,sh.mode)}
+ catch(err){localStorage.removeItem("bit_ghtoken");setSh({shStatus:err===401?"Ese token no es válido. Revisa que lo copiaste completo.":"No se pudo revisar el token. Revisa tu señal."})}
+ finally{$("shTokSave").disabled=false;$("shTokSave").textContent="Guardar y crear link"}};
 
 /* ---------- PDF ---------- */
 function exifOrientation(buf){const v=new DataView(buf);if(v.getUint16(0)!==0xFFD8)return 1;let o=2;
@@ -651,6 +714,7 @@ async function buildPdf(list,opt){
   line(e.f_obra||"Sin obra",11,true);
   const loc=[e.f_cad1?`Cadenamiento ${e.f_cad1}${e.f_cad2?" al "+e.f_cad2:""}`:"",e.f_cuerpo||"",e.f_carril?"Carril "+e.f_carril:"",e.f_ubic||""].filter(Boolean).join("  ·  ");if(loc)line(loc,9.5,false,[93,103,108]);
   if(e.f_lat&&e.f_lng){need(5);doc.setFontSize(9);doc.setTextColor(30,90,160);doc.textWithLink(`Coordenadas: ${e.f_lat}, ${e.f_lng} (ver en mapa)`,M,y,{url:mapUrl(e)});y+=4.5}
+  if(e.share&&e.share.id){need(5);doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(30,90,160);doc.textWithLink("Registro en línea y fotos originales: "+shareUrl(e.share.id),M,y,{url:shareUrl(e.share.id)});y+=4.5}
   const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C ambiente":""].filter(Boolean).join(" · ");if(amb)line(amb,9.5,false,[93,103,108]);
   const uf=(e.fotos||[]).filter(isU);if(uf.length){await drawPh(uf,"UBICACIÓN",uf.length>1?2:1,90);y+=1}
   y+=2;line("ACTIVIDAD: "+TIPOS[e.tipo].toUpperCase(),9.5,true,[93,103,108]);y+=1;

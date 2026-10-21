@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Registro · Bitácora de Obra</title>
+<meta name="description" content="Supervisión Ampliación Armería – Manzanillo · JUVISA. Registro de bitácora con fotos originales para descargar.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Registro de Bitácora de Obra">
+<meta property="og:description" content="Supervisión Ampliación Armería – Manzanillo · Ver datos y descargar fotos originales">
+<meta property="og:image" content="https://ingezequieljuv.github.io/BITACORA-DE-OBRA/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#2b3136">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: hoja de registro de solo lectura — franja de encabezado, ficha de datos, galería de fotos descargables */
+:root{
+  --bg:#f3f4f1; --paper:#ffffff; --ink:#1c2226; --muted:#5d676c; --line:#d9ddd8;
+  --accent:#f2b705; --accent-ink:#1c2226; --asphalt:#2b3136; --ok:#2f7d4f; --bad:#b3362c; --chip:#eceee9;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14181b; --paper:#1d2327; --ink:#e8ebe7; --muted:#9aa4a8; --line:#323a3f;
+  --accent:#f5c22b; --accent-ink:#14181b; --asphalt:#0d1012; --ok:#5bbf84; --bad:#ef7a6f; --chip:#262d31; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14181b; --paper:#1d2327; --ink:#e8ebe7; --muted:#9aa4a8; --line:#323a3f;
+  --accent:#f5c22b; --accent-ink:#14181b; --asphalt:#0d1012; --ok:#5bbf84; --bad:#ef7a6f; --chip:#262d31; color-scheme:dark}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+img{max-width:100%}
+[hidden]{display:none!important}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--asphalt)}
+.wrap{max-width:820px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:var(--asphalt);color:#f3f4f1;border-bottom:4px solid var(--accent)}
+header .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:12px}
+.logo{height:46px;width:auto;background:#fff;border-radius:6px;padding:3px 5px}
+h1{font-family:var(--f-display);font-weight:700;font-size:1.6rem;letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1}
+.hsub{flex-basis:100%;display:flex;flex-direction:column;gap:2px}
+.proy{font-family:var(--f-display);font-weight:600;font-size:1rem;letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+.sup{font-family:var(--f-mono);font-size:.72rem;color:#c9cfcb}
+main.wrap{padding-block:16px 48px;display:flex;flex-direction:column;gap:14px}
+.ro{font:.72rem var(--f-mono);color:var(--muted);display:flex;align-items:center;gap:6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px}
+.card h2{font-family:var(--f-display);font-size:1.1rem;letter-spacing:.04em;text-transform:uppercase;margin:0 0 10px;color:var(--muted)}
+.date{font-family:var(--f-display);font-size:1.6rem;letter-spacing:.02em;text-transform:uppercase;line-height:1.1}
+.meta{font:.82rem var(--f-mono);color:var(--muted)}
+.obra{font-weight:600;font-size:1.05rem;margin-top:4px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px 16px}
+.kv div{min-width:0}
+.kv dt{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.kv dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.y{color:var(--ok);font-weight:600} td.n{color:var(--bad);font-weight:600}
+.notes{white-space:pre-wrap}
+.btn{font:600 .95rem var(--f-body);border-radius:6px;padding:11px 16px;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{padding:7px 11px;font-size:.82rem}
+.btn:disabled{opacity:.55;cursor:default}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.ph{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ph .img{aspect-ratio:4/3;max-width:100%;border-radius:6px;overflow:hidden;background:var(--chip);display:grid;place-items:center;color:var(--muted);font:.75rem var(--f-mono)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .cap{font-size:.82rem;color:var(--muted);overflow-wrap:anywhere}
+.ph .size{font:.7rem var(--f-mono);color:var(--muted)}
+.state{text-align:center;color:var(--muted);padding:48px 16px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-size:.9rem;z-index:20;max-width:calc(100% - 32px)}
+footer{font:.72rem var(--f-mono);color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <img class="logo" src="logo-juvisa.jpg" alt="JUVISA Ingeniería SA de CV">
+  <h1>Bitácora de Obra</h1>
+  <div class="hsub"><span class="proy">Supervisión Ampliación Armería – Manzanillo</span><span class="sup" id="sup">JUVISA</span></div>
+</div></header>
+
+<main class="wrap" id="main">
+  <div class="state" id="state">Cargando registro…</div>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const REPO="ingezequieljuv/BITACORA-DE-OBRA",BRANCH="registros";
+const RAW=`https://raw.githubusercontent.com/${REPO}/${BRANCH}/r/`;
+const TIPOS={concreto:"Colado de concreto",asfalto:"Mezcla asfáltica",terraceria:"Terracerías",general:"Supervisión general"};
+const PREFIX={concreto:"c_",asfalto:"a_",terraceria:"t_",general:"#"};
+const LABELS={c_elemento:"Elemento",c_concretera:"Concretera",c_fc:"f'c kg/cm²",c_rev:"Revenimiento cm",c_temp:"Temp. concreto °C",c_vol:"Volumen m³",c_ollas:"Ollas",c_remision:"Remisión",c_tma:"TMA",c_aditivo:"Aditivo",c_hini:"Inicio",c_hfin:"Término",c_cil:"Cilindros",c_metodo:"Colocación",c_vibrado:"Vibrado",c_curado:"Curado",
+ a_capa:"Capa",a_planta:"Planta",a_ca:"Cont. asfáltico %",a_tipo:"Asfalto",a_tprod:"T. producción °C",a_tten:"T. tendido °C",a_tcomp:"T. compactación °C",a_esp:"Espesor cm",a_ancho:"Ancho m",a_ton:"Toneladas",a_viajes:"Viajes",a_liga:"Liga L/m²",a_equipo:"Equipo",
+ t_capa:"Capa",t_banco:"Banco",t_esp:"Espesor cm",t_hum:"Humedad %",t_gc:"Grado compactación %",t_gcreq:"Requerido %"};
+const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const M=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=iso=>{if(!iso)return"";const [y,m,d]=iso.split("-");return`${+d} ${M[+m-1]} ${y}`};
+const dia=iso=>{if(!iso)return"";const [y,m,d]=iso.split("-").map(Number);return DIAS[new Date(y,m-1,d).getDay()]};
+const mb=b=>(b/1048576).toFixed(1)+" MB";
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2800)}
+const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const files=[];
+
+async function save(list){
+ if(!list.length)return;
+ if(navigator.canShare&&navigator.canShare({files:list})&&(isIOS||/Android/.test(navigator.userAgent))){
+  try{await navigator.share({files:list});return}catch(e){if(e&&e.name==="AbortError")return}}
+ for(const f of list){const u=URL.createObjectURL(f);const a=document.createElement("a");a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);await new Promise(r=>setTimeout(r,350))}
+ toast(list.length===1?"Foto descargada":`${list.length} fotos descargadas`)}
+
+async function main(){
+ const id=(location.hash||"").replace(/^#/,"").replace(/[^\w-]/g,"");
+ if(!id){$("state").textContent="Este link no tiene un registro. Pide a quien te lo mandó que lo comparta de nuevo.";return}
+ let d;try{const r=await fetch(RAW+id+"/registro.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw r.status;d=await r.json()}
+ catch(e){$("state").innerHTML="No se encontró el registro. Si te lo acaban de compartir, espera un minuto y vuelve a abrir el link.";return}
+ document.title=`${dia(d.f_fecha)} ${fmt(d.f_fecha)} · ${d.f_obra||"Bitácora de Obra"}`;
+ if(d.nombre)$("sup").textContent=d.nombre;
+ const pre=PREFIX[d.tipo];const kv=Object.keys(LABELS).filter(k=>k.startsWith(pre)&&d[k]).map(k=>`<div><dt>${LABELS[k]}</dt><dd>${esc(d[k])}</dd></div>`).join("");
+ const map=d.f_lat&&d.f_lng?`https://maps.google.com/?q=${d.f_lat},${d.f_lng}`:"";
+ const gen=[["Cadenamiento",d.f_cad1?d.f_cad1+(d.f_cad2?" al "+d.f_cad2:""):""],["Cuerpo",d.f_cuerpo],["Carril",d.f_carril],["Ubicación",d.f_ubic],["Coordenadas",d.f_lat&&d.f_lng?d.f_lat+", "+d.f_lng:""],["Clima",d.f_clima],["T. ambiente °C",d.f_tamb]].filter(x=>x[1]).map(x=>`<div><dt>${x[0]}</dt><dd>${esc(x[1])}</dd></div>`).join("");
+ const fotos=d.fotos||[],uf=fotos.filter(f=>f.mapa||f.ubic),of=fotos.filter(f=>!(f.mapa||f.ubic));
+ const gal=(arr,off)=>arr.map((f,i)=>`<figure class="ph" style="margin:0"><div class="img" id="im_${off+i}">Cargando…</div>${f.cap?`<div class="cap">${esc(f.cap)}</div>`:""}<div class="row"><button class="btn sm" data-dl="${off+i}" disabled>Descargar</button><span class="size" id="sz_${off+i}"></span></div></figure>`).join("");
+ const all=[...uf,...of];
+ $("main").innerHTML=`
+  <p class="ro">🔒 Registro de solo lectura</p>
+  <section class="card">
+   <div class="date">${esc(d.f_dia||dia(d.f_fecha))} ${esc(fmt(d.f_fecha))}</div>
+   <div class="meta">${esc(d.f_hora||"")}${d.f_hora?" h · ":""}${esc(TIPOS[d.tipo]||"")}</div>
+   <div class="obra">${esc(d.f_obra||"")}</div>
+  </section>
+  ${gen?`<section class="card"><h2>Datos generales</h2><dl class="kv" style="margin:0">${gen}</dl>${map?`<div class="row" style="margin-top:12px"><a class="btn sm" href="${map}" target="_blank" rel="noopener">Ver en Google Maps</a></div>`:""}</section>`:""}
+  ${uf.length?`<section class="card"><h2>Ubicación</h2><div class="gal">${gal(uf,0)}</div></section>`:""}
+  ${kv?`<section class="card"><h2>${esc(TIPOS[d.tipo])}</h2><dl class="kv" style="margin:0">${kv}</dl></section>`:""}
+  ${(d.qc||[]).length?`<section class="card"><h2>Control de calidad</h2><div class="tbl"><table><thead><tr><th>Prueba</th><th>Resultado</th><th>Especificación</th><th>Cumple</th></tr></thead><tbody>${d.qc.map(r=>`<tr><td>${esc(r.p)}</td><td>${esc(r.r)}</td><td>${esc(r.e)}</td><td class="${r.ok||""}">${r.ok==="y"?"Sí":r.ok==="n"?"No":"—"}</td></tr>`).join("")}</tbody></table></div></section>`:""}
+  ${d.f_notas?`<section class="card"><h2>Notas</h2><div class="notes">${esc(d.f_notas)}</div></section>`:""}
+  ${of.length?`<section class="card"><h2>Fotografías (${of.length})</h2><div class="gal">${gal(of,uf.length)}</div></section>`:""}
+  ${all.length?`<div class="row"><button class="btn pri" id="dlAll" disabled style="flex:1 1 220px">Descargar todas las fotos (${all.length})</button></div><p class="ro" style="justify-content:center">Las fotos se descargan en su calidad original.</p>`:""}
+  <footer>Supervisión Ampliación Armería – Manzanillo · JUVISA</footer>`;
+ let total=0;
+ await Promise.all(all.map(async(f,i)=>{try{const r=await fetch(RAW+id+"/"+encodeURIComponent(f.file));if(!r.ok)throw 0;const b=await r.blob();
+   const file=new File([b],f.file,{type:b.type&&b.type!=="application/octet-stream"?b.type:(/\.png$/i.test(f.file)?"image/png":"image/jpeg")});files[i]=file;total+=b.size;
+   $("im_"+i).innerHTML=`<img src="${URL.createObjectURL(file)}" alt="${esc(f.cap||"Foto")}">`;$("sz_"+i).textContent=mb(b.size);
+   document.querySelector(`[data-dl="${i}"]`).disabled=false}
+  catch(e){$("im_"+i).textContent="No se pudo cargar"}}));
+ const btn=$("dlAll");if(btn){btn.disabled=!files.filter(Boolean).length;btn.textContent=`Descargar todas las fotos (${files.filter(Boolean).length} · ${mb(total)})`}
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-dl]");if(b&&files[+b.dataset.dl])save([files[+b.dataset.dl]]);if(e.target.closest("#dlAll"))save(files.filter(Boolean))});
+window.addEventListener("hashchange",()=>location.reload());
+main();
+})();
+</script>
+</body>
+</html>
