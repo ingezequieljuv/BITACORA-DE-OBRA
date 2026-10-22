@@ -1,0 +1,62 @@
+{
+ "tipo": "concreto",
+ "qc": [],
+ "f_fecha": "2026-10-19",
+ "f_dia": "Lunes",
+ "f_hora": "10:25",
+ "f_obra": "Puente Jalipa",
+ "f_cad1": "10+250",
+ "f_ubic": "Gasa 10",
+ "f_lat": "19.098761",
+ "f_lng": "-104.282647",
+ "c_elemento": "Cuneta",
+ "c_concretera": "DCC",
+ "c_fc": "150",
+ "c_rev": "10",
+ "c_temp": "29",
+ "c_vol": "7.0",
+ "c_ollas": "1",
+ "c_remision": "A 194594",
+ "c_tma": "3/4”",
+ "c_hini": "10:00",
+ "c_hfin": "10:40",
+ "c_cil": "0 Cilindros",
+ "c_metodo": "Directo de olla",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km10+250.jpg",
+   "cap": "Ubicación satelital 10+250 · Gasa 10 ",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km10+250.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km10+250.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km10+250.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km10+250.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km10+250.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km10+250.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km10+250.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-22T02:28:29.191Z"
+}
