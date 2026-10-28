@@ -1,0 +1,53 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-26",
+ "f_dia": "Lunes",
+ "f_hora": "11:00",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "70+750",
+ "f_cuerpo": "Cuerpo A",
+ "f_carril": "Baja",
+ "f_lat": "18.966258",
+ "f_lng": "-104.160539",
+ "a_capa": "Bacheo",
+ "a_planta": "Chocuco",
+ "a_tipo": "PG 64-22",
+ "a_esp": "16.0",
+ "a_ancho": "3.50",
+ "a_equipo": "Perfiladora, Petrolizadora, Extenderora, Doble rodillo, Compactador Neumático.",
+ "f_notas": "Empresa: Placosa; INCAMM\nSe encuentra el bacheo ya realizado, el cual fue ejecutado el día Sábado 24/Octubre/2026.\nAncho de 3.50 m x 50 m x 0.16 m.\nComo control de calidad y supervisión: JESMAR",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km70+750.jpg",
+   "cap": "Ubicación satelital 70+750",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km70+750.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km70+750.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km70+750.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km70+750.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km70+750.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km70+750.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-28T04:59:37.964Z"
+}
