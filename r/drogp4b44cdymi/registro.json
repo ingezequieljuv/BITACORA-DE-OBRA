@@ -1,0 +1,165 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-26",
+ "f_dia": "Lunes",
+ "f_hora": "11:30",
+ "f_obra": "Puente Jalipa",
+ "f_cad1": "94+158",
+ "f_ubic": "Gasa 60 (Ruta Jalipa)",
+ "f_lat": "19.099328",
+ "f_lng": "-104.284661",
+ "a_capa": "Carpeta asfáltica",
+ "a_planta": "El Colomo",
+ "a_tipo": "PG 64-22",
+ "a_tten": "151.0",
+ "a_esp": "12.0",
+ "a_ancho": "3.80",
+ "a_equipo": "Petrolizadora, Pavimentadora, Volteos, Doble Rodillo, Compactador Neumático, Retroexcavadora.",
+ "f_notas": "Empresa: GACSA.\nControl de Calidad: JESMAR.\nPetrolizadora FH-81-340:\n-Temperatura: 70 Grados Celsius.\n-Contenido: 6,600 Litros.\nTENDIDO\nCamión 1 82-AT-6G:\n-Temperatura de Tendido: 151.0 Grados C.\nCamión 2 JX-6827-A:\n-Temperatura de Tendido: 149.0 Grados C.\n\nEl tendido comenzó en la Gasa 60 para finalizar en línea con la Gasa 10 o lateral inferior del Puente Jalipa.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km94+158.jpg",
+   "cap": "Ubicación satelital 94+158 · Gasa 60 (Ruta Jalipa)",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_26_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_27_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_28_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_29_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_30_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_31_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_32_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_33_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_34_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_35_km94+158.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-28T05:20:41.619Z"
+}
