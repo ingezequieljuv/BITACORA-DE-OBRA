@@ -1,0 +1,141 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-26",
+ "f_dia": "Lunes",
+ "f_hora": "13:00",
+ "f_obra": "Puente Jalipa",
+ "f_cad1": "94+158",
+ "f_ubic": "Gasa 10 (Lateral)",
+ "f_lat": "19.099072",
+ "f_lng": "-104.285019",
+ "a_capa": "Carpeta asfáltica",
+ "a_planta": "El Colomo",
+ "a_tipo": "PG 64-22",
+ "a_tten": "150.0",
+ "a_esp": "16.0",
+ "a_ancho": "4.80",
+ "a_equipo": "Petrolizadora, Pavimentadora, Volteos, Doble Rodillo, Compactador Neumático, Retroexcavadora.",
+ "f_notas": "Se marcó la atención al Residente de GACSA y a Control de Calidad JESMAR, por tender una carpeta con un espesor suelto de 16.0 cm lo cual no es recomendable y sumamente incorrecto en cuanto a los aspectos para cumplir con la densidad esperada y grado de compactación; La autorización fue directamente de PINFRA por el hecho de que en la zona que se estaba trabajando hay una gran densidad de tráfico diario y se necesita el avance.\n\nTENDIDO\nCamión 1 523-EK-8\n-Temperatura de Tendido: 152.0 Grados C.\n-Ancho: 4.80 m\n-Espesor: 16.0 cm\n\nCamion 2 FD-1752-A\n-Temperatura de Tendido: 150.0 Grados C.\n-Ancho: 4.50 m\n-Espesor: 12.0 cm \n\nCamión 3 FJ-5143-A\n-Temperatura de Tendido: 153.0 Grados C.\n-Ancho: 4.20 m\n-Espesor: 14.0 cm\n\nCamión 4 FH-9351-A\n-Temperatura de Tendido: 148.0 Grados C.\n-Ancho: 4.30 m\n-Espesor: 6.0 cm",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km94+158.jpg",
+   "cap": "Ubicación satelital 94+158 · Gasa 10 (Lateral)",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_26_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_27_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_28_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_29_km94+158.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-28T05:22:42.249Z"
+}
