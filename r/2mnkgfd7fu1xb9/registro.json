@@ -1,0 +1,84 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-26",
+ "f_dia": "Lunes",
+ "f_hora": "10:40",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "51+840",
+ "f_cuerpo": "Cuerpo A",
+ "f_carril": "Baja",
+ "f_lat": "18.926942",
+ "f_lng": "-103.999931",
+ "a_capa": "Base negra",
+ "a_planta": "Chocuco",
+ "a_ancho": "3.5",
+ "a_liga": "1.2",
+ "a_equipo": "Perfiladora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático",
+ "f_notas": "-Empresa: Placosa; INCAMM\n\nSe encontraban en trabajos de perfilado con un ancho a bachear de 3.50 metros x 120.0 metros de longitud y una profundidad de 16.0 cm.\nPetrolizadora utilizada con matrícula 29-AZ-4J a una temperatura de 75.0 grados Celsius y una carga de 3,000.0 litros.\nSe encontraba un camión en tramo esperando para ser tendido con Base Asfáltica y matrícula FT-1304-D.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km51+840.jpg",
+   "cap": "Ubicación satelital 51+840",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km51+840.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km51+840.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-28T04:57:42.971Z"
+}
