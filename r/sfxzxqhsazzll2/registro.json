@@ -1,0 +1,70 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-27",
+ "f_dia": "Martes",
+ "f_hora": "10:00",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_cad1": "51+800",
+ "f_cuerpo": "Cuerpo A",
+ "f_carril": "Baja",
+ "f_lat": "18.926972",
+ "f_lng": "-103.999969",
+ "a_capa": "Bacheo",
+ "a_planta": "Xicuco",
+ "a_tipo": "PG 64-22",
+ "a_esp": "16.0",
+ "a_ancho": "3.50",
+ "a_liga": "1.2",
+ "a_equipo": "Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático.",
+ "f_notas": "EMPRESA: PLACOSA \nASFALTEROS: INCAMM\nCONTROL DE CALIDAD: JESMAR\nSe realizó el bacheo tendiendo una primera capa de Base Asfáltica con un espesor compacto de 11.0 cm y finalizando con una capa subsecuente de Carpeta Asfáltica con cemento modificado PG 64-22 con un espesor compacto de 5.0 cm.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km51+800.jpg",
+   "cap": "Ubicación satelital 51+800",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km51+800.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km51+800.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-29T06:03:57.864Z"
+}
