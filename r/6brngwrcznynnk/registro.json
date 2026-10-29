@@ -1,0 +1,166 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-27",
+ "f_dia": "Martes",
+ "f_hora": "15:30",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "89+000",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Media",
+ "f_lat": "19.060944",
+ "f_lng": "-104.269822",
+ "a_capa": "Carpeta asfáltica",
+ "a_planta": "El Coloml",
+ "a_tipo": "PG 64-22",
+ "a_tten": "155.0",
+ "a_ancho": "4.40",
+ "a_liga": "1",
+ "a_equipo": "Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático",
+ "f_notas": "EMPRESA: HORUS GB\nCONTROL DE CALIDAD: JESMAR\n\nCamión 3 516-EJ-8\n-Temperatura de Tendido: 155.0 Grados C.\n-Ancho: 3.80 m.\n-Espesor Suelto: 6.0 cm.\n\nCAMIONES PRÓXIMOS A TENDER:\n-Camón 4 JN-65-946\n-Camión 5 9522NS\n-Camión 6 FG-0863-A\n-Camión 7 LD-57-140\n-Camion 8 JX-6827-A\n\n“Programación total a tender de 16 Camiones”.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km89+000.jpg",
+   "cap": "Ubicación satelital 89+000",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_26_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_27_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_28_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_29_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_30_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_31_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_32_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_33_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_34_km89+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_35_km89+000.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-29T12:38:24.053Z"
+}
