@@ -1,0 +1,70 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-27",
+ "f_dia": "Martes",
+ "f_hora": "10:17",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_cad1": "52+110",
+ "f_cuerpo": "Cuerpo A",
+ "f_carril": "Baja",
+ "f_lat": "18.925897",
+ "f_lng": "-104.002931",
+ "a_capa": "Bacheo",
+ "a_planta": "Xicuco",
+ "a_tipo": "PG 64-22",
+ "a_esp": "16.0",
+ "a_ancho": "3.5",
+ "a_liga": "1.2",
+ "a_equipo": "Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático.",
+ "f_notas": "EMPRESA: PLACOSA\nASFALTEROS: INCAMM\nCONTROL DE CALIDAD: JESMAR\nSe extenderá carpeta asfáltica en el tramo pendiente para terminar el bacheo con una longitud de 30.0 m x 3.5 m de ancho x 16.0 cm de espesor.\nPetrolizadora 49-AZ-4J\n-Temperatura de Emulsión: 78.0 Grados C.\nCamión 1 HV-9532-B\nCamión 2 JE-5245-B",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km52+110.jpg",
+   "cap": "Ubicación satelital 52+110",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km52+110.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km52+110.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-29T06:06:53.672Z"
+}
