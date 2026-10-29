@@ -1,0 +1,139 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-27",
+ "f_dia": "Martes",
+ "f_hora": "14:23",
+ "f_obra": "Puente Jalipa",
+ "f_cad1": "10+500",
+ "f_cad2": "10+560",
+ "f_ubic": "Gasa 10 (Lateral)",
+ "f_lat": "19.099033",
+ "f_lng": "-104.284439",
+ "a_capa": "Carpeta asfáltica",
+ "a_planta": "GACSA",
+ "a_tipo": "PG 64-22",
+ "a_tten": "157.0",
+ "a_esp": "12.0",
+ "a_ancho": "5.20",
+ "a_liga": "1.2",
+ "a_equipo": "Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático, Retroexcavadora.",
+ "f_notas": "EMPRESA: GACSA\nCONTROL DE CALIDAD: JESMAR \n\nPetrolizadora FH-81-340\n-Temperatura de Emulsión: 75.0 Grados C.\nCamión 1 FH-9351-A\n-Temperatura de Tendido: 157.0 Grados C.\n-Ancho: 5.20 m.\n-Espesor Suelto: 12.0 cm.\n Camión 2 FD-5561-A\n-Temperatura de Tendido: 157.0 Grados C.\n-Ancho: 3.20 m.\nEspesor Suelto: 12.0 cm.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km10+500.jpg",
+   "cap": "Ubicación satelital 10+500 · Gasa 10 (Lateral)",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_26_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_27_km10+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_28_km10+500.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-29T06:16:27.043Z"
+}
