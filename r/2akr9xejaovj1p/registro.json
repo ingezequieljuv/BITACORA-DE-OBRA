@@ -1,0 +1,102 @@
+{
+ "tipo": "concreto",
+ "qc": [],
+ "f_fecha": "2026-10-28",
+ "f_dia": "Miércoles",
+ "f_hora": "16:50",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "65+000",
+ "f_cuerpo": "Cuerpo B",
+ "f_lat": "18.943822",
+ "f_lng": "-104.110803",
+ "c_elemento": "Cuneta",
+ "c_concretera": "PSM",
+ "c_fc": "150.0",
+ "c_rev": "10",
+ "c_tma": "20 mm",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km65+000.jpg",
+   "cap": "Ubicación satelital 65+000",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km65+000.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-31T06:04:38.708Z"
+}
