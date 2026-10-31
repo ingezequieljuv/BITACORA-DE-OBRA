@@ -1,0 +1,126 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-28",
+ "f_dia": "Miércoles",
+ "f_hora": "17:15",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "54+000",
+ "f_cuerpo": "Cuerpo A",
+ "f_carril": "Baja",
+ "f_lat": "18.920303",
+ "f_lng": "-104.018928",
+ "a_capa": "Bacheo",
+ "a_planta": "Xicuco",
+ "a_tipo": "PG 64-22",
+ "a_tten": "160.0",
+ "a_esp": "16.0",
+ "a_ancho": "3.50",
+ "a_equipo": "Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático, Volteo.",
+ "f_notas": "EMPRESA: PLACOSA\nASFALTEROS: INCAMM\nCONTROL DE CALIDAD: JESMAR\nDIMENSIONES: 3.5 m x 50.0 m x 0.16 m\n\nLa zona en la que se realizará el tendido se encontraba con exceso de humedad, un estado del tiempo nublado sin lluvia en el momento pero con amenaza de presentarse. \nLa zona no cumplía con los requisitos óptimos para continuar con el tendido, se encontraba en la zona el Ingeniero César Lazcano de PINFRA con el cual se llegó al acuerdo de que se poreara la zona y se autorizó por su parte el tendido de base asfáltica y posteriormente carpeta.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km54+000.jpg",
+   "cap": "Ubicación satelital 54+000",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km54+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km54+000.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km54+000.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km54+000.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km54+000.jpg",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-31T06:11:50.217Z"
+}
