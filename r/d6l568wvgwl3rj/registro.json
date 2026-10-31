@@ -1,0 +1,77 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-28",
+ "f_dia": "Miércoles",
+ "f_hora": "10:06",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "53+580",
+ "f_cuerpo": "Cuerpo A",
+ "f_carril": "Baja",
+ "f_lat": "18.921575",
+ "f_lng": "-104.015319",
+ "a_capa": "Bacheo",
+ "a_planta": "Xicuco",
+ "a_tipo": "PG 64-22",
+ "a_esp": "16.0",
+ "a_ancho": "3.50",
+ "a_equipo": "Perfiladora, Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático, Volteo.",
+ "f_notas": "EMPRESA: PLACOSA \nASFALTEROS: INCAMM\nCONTROL DE CALIDAD: JESMAR\nDIMENSIONES: 3.50 m x 150.0 m x 0.16 m\n\nPetrolizadora 24-AZ-4J\n-Temperatura de Emulsión: 70.0 Grados C.\n\nBASE ASFÁLTICA\nCamión 1: JX-10-734 \nCamión 2: NM-1929-0\n\nCARPETA ASFÁLTICA\nCamión 3: NK-3624-B\n\n“Se encontraba un estado del tiempo con llovizna, totalmente nublado, la zona a tender se encontraba con cierto grado de humedad pero permisible para hacerlo ya que no se presentaban encharcamientos ni daños en la base hidráulica. \nLos camiones en sitio se encuentran completamente enlonados lo cual cubre la mezcla de la humedad por lluvia.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km53+580.jpg",
+   "cap": "Ubicación satelital 53+580",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km53+580.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km53+580.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-31T05:56:13.116Z"
+}
