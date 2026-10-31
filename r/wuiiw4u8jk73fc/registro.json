@@ -1,0 +1,54 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-28",
+ "f_dia": "Miércoles",
+ "f_hora": "09:54",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "52+600",
+ "f_cuerpo": "Cuerpo A",
+ "f_carril": "Media",
+ "f_lat": "18.924672",
+ "f_lng": "-104.006378",
+ "a_capa": "Bacheo",
+ "a_planta": "Xicuco",
+ "a_tipo": "PG 64-22",
+ "a_esp": "16.0",
+ "a_ancho": "3.50",
+ "a_liga": "0.8",
+ "a_equipo": "Perfiladora, Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático, Volteo.",
+ "f_notas": "EMPRESA: PLACOSA \nASFALTEROS: INCAMM\nCONTROL DE CALIDAD: JESMAR\n\nBacheo realizado el día 27 de Octubre del 2026.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km52+600.jpg",
+   "cap": "Ubicación satelital 52+600",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km52+600.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km52+600.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km52+600.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km52+600.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km52+600.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km52+600.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-10-31T05:44:29.660Z"
+}
