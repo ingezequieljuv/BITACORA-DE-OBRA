@@ -1,0 +1,73 @@
+{
+ "tipo": "terraceria",
+ "qc": [],
+ "f_fecha": "2026-10-19",
+ "f_dia": "Lunes",
+ "f_hora": "10:27",
+ "f_obra": "Puente Jalipa",
+ "f_cad1": "10+540",
+ "f_cad2": "10+580",
+ "f_ubic": "Gasa 10",
+ "f_lat": "19.099075",
+ "f_lng": "-104.284997",
+ "t_capa": "Subrasante",
+ "t_esp": "30",
+ "t_hum": "6",
+ "t_gc": "99.7",
+ "t_gcreq": "98",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km10+540.jpg",
+   "cap": "Ubicación satelital 10+580 · Gasa 10 ",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km10+540.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km10+540.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-03T06:12:10.784Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
