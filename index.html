@@ -379,7 +379,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       </ol>
       <label for="shTok">Token de GitHub<input id="shTok" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
       <button type="button" class="btn pri" id="shTokSave">Guardar y crear link</button>
-      <p class="hint" style="margin:0">El token se guarda solo en este teléfono y solo sirve para tu bitácora.</p>
+      <p class="hint" style="margin:0">El token se guarda en este teléfono y no se vuelve a pedir. Solo sirve para tu bitácora.</p>
+      <p class="hint" id="shTokSaved" style="margin:0"></p>
     </div>
     <label for="shText">Mensaje (lo puedes editar)<textarea id="shText" rows="14"></textarea></label>
     <p class="sh-link" id="shInfo"></p>
@@ -649,7 +650,12 @@ function shareText(e){const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliaci
  if(e.share&&e.share.id){const n=(e.fotos||[]).length;L.push("",`🔗 *Ver registro${n?" y descargar fotos originales ("+n+")":""}:*`,shareUrl(e.share.id))}
  else if(mapUrl(e))L.push("",mapUrl(e));
  return L.join("\n")}
-const ghToken=()=>lsGet("bit_ghtoken")||"";
+let tokMem="";
+const ghToken=()=>tokMem||lsGet("bit_ghtoken")||"";
+async function setToken(t){tokMem=t;lsSet("bit_ghtoken",t);try{if(typeof idb!=="undefined")await idb.put("ajustes",{id:"ghtoken",v:t})}catch(e){}}
+async function clearToken(){tokMem="";try{localStorage.removeItem("bit_ghtoken")}catch(e){}try{if(typeof idb!=="undefined")await idb.del("ajustes","ghtoken")}catch(e){}}
+async function restoreToken(){try{if(lsGet("bit_ghtoken")){tokMem=lsGet("bit_ghtoken");return}if(typeof idb==="undefined")return;const r=await idb.get("ajustes","ghtoken");if(r&&r.v){tokMem=r.v;lsSet("bit_ghtoken",r.v)}}catch(e){}}
+const PERM403="Tu token no tiene permiso para guardar. En GitHub entra a Settings → Developer settings → Fine-grained tokens → toca tu token → Edit. Revisa que en Repository access esté BITACORA-DE-OBRA y en Permissions, Contents diga Read and write. Toca Update y luego aquí “Volver a intentar”. No tienes que crear otro token.";
 async function gh(path,opt={}){return fetch("https://api.github.com/repos/"+GH.repo+path,{...opt,headers:{Accept:"application/vnd.github+json",Authorization:"Bearer "+ghToken(),"X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{})}})}
 const toB64=blob=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(String(f.result).split(",")[1]);f.onerror=rej;f.readAsDataURL(blob)});
 async function ghPut(p,blob,msg,sha){const body={message:msg,content:await toB64(blob),branch:GH.branch};if(sha)body.sha=sha;
@@ -695,24 +701,27 @@ async function openShare(e,mode){const run=++sh.run;sh={e,mode,pdf:null,run};
   sh.pdf=new File([r.blob],r.fname,{type:"application/pdf"});$("shPdf").disabled=false;setSh({shPdfState:`PDF listo · ${r.pages} pág. · ${(r.blob.size/1048576).toFixed(1)} MB`});
   if(typeof reload==="function")reload()}
  catch(err){if(sh.run!==run)return;
-  if(err&&err.status===401){localStorage.removeItem("bit_ghtoken");setSh({shSetup:true,shStatus:"El permiso de GitHub no es válido o ya venció. Configúralo otra vez."})}
-  else if(err&&(err.status===403||err.status===404)){setSh({shSetup:true,shStatus:"El permiso de GitHub no deja guardar en BITACORA-DE-OBRA. Revisa que tenga Contents: Read and write."})}
+  if(err&&err.status===401){clearToken();setSh({shSetup:true,shStatus:"GitHub dice que tu token no es válido o ya venció. Crea uno nuevo y pégalo aquí."})}
+  else if(err&&(err.status===403||err.status===404)&&!/rate limit/i.test(err.message||"")){setSh({shRetry:true,shAgain:true,shStatus:PERM403})}
   else setSh({shRetry:true,shStatus:"No se pudo subir. Revisa tu señal y vuelve a intentar."})}}
 function closeShare(){sh.run++;$("share").hidden=true;document.body.style.overflow="";if(typeof reload==="function")reload()}
 $("shClose").onclick=closeShare;
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&!$("share").hidden)closeShare()});
 $("shRetry").onclick=()=>sh.mode==="all"?openShareAll(false):openShare(sh.e,sh.mode);
-$("shAgain").onclick=()=>{setSh({shSetup:true})};
+$("shAgain").onclick=()=>{setSh({shSetup:true});const t=ghToken();$("shTokSaved").textContent=t?`Token guardado ahora: ${t.slice(0,15)}…${t.slice(-4)}. Pega uno nuevo solo si quieres cambiarlo.`:"No hay token guardado."};
 $("shText").addEventListener("input",()=>{$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value)});
 $("shWa").addEventListener("click",ev=>{if($("shWa").classList.contains("off"))ev.preventDefault()});
 $("shCopy").onclick=async()=>{const t=$("shText").value;try{await navigator.clipboard.writeText(t);toast("Mensaje copiado")}catch(err){$("shText").select();toast("Selecciona y copia el mensaje")}};
 $("shPdf").onclick=async()=>{if(!sh.pdf)return;const t=$("shText").value;try{await navigator.clipboard.writeText(t)}catch(err){}
  if(navigator.canShare&&navigator.canShare({files:[sh.pdf]})){try{await navigator.share({files:[sh.pdf],text:t});toast("Si el mensaje no aparece con el PDF, pégalo en el chat: ya está copiado.")}catch(err){if(!(err&&err.name==="AbortError"))toast("No se pudo abrir el menú de compartir")}return}
  try{await downloads.save({filename:sh.pdf.name,data:sh.pdf});toast("PDF descargado. El mensaje con el link ya está copiado.")}catch(err){toast("No se pudo guardar el PDF")}};
-$("shTokSave").onclick=async()=>{const t=$("shTok").value.trim();if(!t){toast("Pega el token primero");return}
- $("shTokSave").disabled=true;$("shTokSave").textContent="Revisando…";lsSet("bit_ghtoken",t);
- try{const r=await gh("");if(!r.ok)throw r.status;$("shTok").value="";toast("Permiso guardado");sh.mode==="all"?openShareAll(false):openShare(sh.e,sh.mode)}
- catch(err){localStorage.removeItem("bit_ghtoken");setSh({shStatus:err===401?"Ese token no es válido. Revisa que lo copiaste completo.":"No se pudo revisar el token. Revisa tu señal."})}
+$("shTokSave").onclick=async()=>{const t=$("shTok").value.replace(/\s+/g,"");if(!t){toast("Pega el token primero");return}
+ if(!/^(github_pat_|ghp_)\w{20,}$/.test(t)){setSh({shStatus:"Eso no parece un token de GitHub. Debe empezar con github_pat_ y copiarse completo."});return}
+ $("shTokSave").disabled=true;$("shTokSave").textContent="Revisando…";const prev=tokMem;tokMem=t;
+ try{const r=await gh("");
+  if(r.status===401)throw"inv";if(r.status===404||r.status===403)throw"repo";if(!r.ok)throw"net";
+  await setToken(t);$("shTok").value="";toast("Token guardado en este teléfono");sh.mode==="all"?openShareAll(false):openShare(sh.e,sh.mode)}
+ catch(err){tokMem=prev;setSh({shStatus:err==="inv"?"GitHub dice que ese token no es válido. Revisa que lo copiaste completo.":err==="repo"?"Ese token no tiene acceso a BITACORA-DE-OBRA. En GitHub edita el token y en Repository access elige Only select repositories → BITACORA-DE-OBRA.":"No se pudo revisar el token. Revisa tu señal e intenta otra vez."})}
  finally{$("shTokSave").disabled=false;$("shTokSave").textContent="Guardar y crear link"}};
 
 /* ---------- compartir toda la bitácora (con actualización automática) ---------- */
@@ -774,8 +783,8 @@ async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pd
   setSh({shStatus:`✓ Link listo con ${r.fresh.length} registros. Se actualiza solo cada vez que guardes, edites o borres un registro: no tienes que volver a mandarlo.`,shInfo:portUrl(r.pid),shAgain:true,shNewLink:true});
   setSync(`✓ Tu link está al día · ${hora(lsGet("bit_sync_at"))}`)}
  catch(err){if(sh.run!==run)return;
-  if(err&&err.status===401){localStorage.removeItem("bit_ghtoken");setSh({shSetup:true,shStatus:"El permiso de GitHub no es válido o ya venció. Configúralo otra vez."})}
-  else if(err&&(err.status===403||err.status===404)&&!/rate limit/i.test(err.message||"")){setSh({shSetup:true,shStatus:"El permiso de GitHub no deja guardar en BITACORA-DE-OBRA. Revisa que tenga Contents: Read and write."})}
+  if(err&&err.status===401){clearToken();setSh({shSetup:true,shStatus:"GitHub dice que tu token no es válido o ya venció. Crea uno nuevo y pégalo aquí."})}
+  else if(err&&(err.status===403||err.status===404)&&!/rate limit/i.test(err.message||"")){setSh({shRetry:true,shAgain:true,shStatus:PERM403})}
   else setSh({shRetry:true,shStatus:"Se cortó la subida. Toca “Volver a intentar”: continúa donde se quedó."})}}
 $("btnShareAll").onclick=()=>openShareAll(false);
 $("shNewLink").onclick=()=>{if($("shNewLink").dataset.confirm){delete $("shNewLink").dataset.confirm;$("shNewLink").textContent="Crear link nuevo (el anterior deja de funcionar)";openShareAll(true)}else{$("shNewLink").dataset.confirm="1";$("shNewLink").textContent="Toca otra vez para confirmar: el link anterior dejará de funcionar"}};
@@ -878,7 +887,7 @@ function show(v){$("form").hidden=v!=="new";$("listView").hidden=v!=="list";$("t
 $("tabNew").onclick=()=>show("new");$("tabList").onclick=()=>show("list");
 
 /* ---------- almacenamiento en el teléfono (IndexedDB) ---------- */
-const idb=(()=>{let p;const open=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open("bitacora-obra",1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore("registros",{keyPath:"id"});d.createObjectStore("fotos",{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
+const idb=(()=>{let p;const open=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open("bitacora-obra",2);r.onupgradeneeded=()=>{const d=r.result;["registros","fotos","ajustes"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"})})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
  const tx=async(store,mode,fn)=>{const d=await open();return new Promise((res,rej)=>{const t=d.transaction(store,mode);const s=t.objectStore(store);const r=fn(s);t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})};
  return{put:(s,v)=>tx(s,"readwrite",o=>o.put(v)),del:(s,k)=>tx(s,"readwrite",o=>o.delete(k)),get:(s,k)=>tx(s,"readonly",o=>o.get(k)),all:(s)=>tx(s,"readonly",o=>o.getAll())}})();
 assets={async upload(file){const id="f"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);await idb.put("fotos",{id,blob:file,name:file.name,type:file.type});urlMap.set(id,URL.createObjectURL(file));return{id}},
@@ -906,7 +915,7 @@ $("restoreFile").onchange=async ev=>{const file=ev.target.files[0];ev.target.val
 /* ---------- arranque ---------- */
 resetForm();entries=SAMPLE;renderList();initCfg();loadComments();
 (async()=>{
- try{await loadPhotoUrls();await reload()}catch(e){$("status").textContent="Este navegador no permite guardar datos. Abre la bitácora en Safari, fuera del modo privado."}
+ try{await restoreToken();await loadPhotoUrls();await reload()}catch(e){$("status").textContent="Este navegador no permite guardar datos. Abre la bitácora en Safari, fuera del modo privado."}
  try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}
  const last=lsGet("bit_ultimo_respaldo");$("backupHint").textContent=`Tus registros y fotos se guardan solo en este teléfono. ${last?"Último respaldo: "+fmtFecha(last)+".":"Aún no has descargado ningún respaldo."}`;
  if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
