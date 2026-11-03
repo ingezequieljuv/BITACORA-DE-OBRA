@@ -183,6 +183,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 
 <main class="wrap">
 <p class="status" id="status">Conectando…</p>
+<p class="status" id="syncState" hidden></p>
 
 <!-- ============ FORMULARIO ============ -->
 <form id="form" autocomplete="off">
@@ -486,10 +487,11 @@ $("btnClear").onclick=()=>{resetForm();toast("Formulario limpio")};
 $("form").addEventListener("submit",async ev=>{ev.preventDefault();if(pendingUp){toast("Espera a que terminen de subir las fotos");return}const o=readForm();
  if(!o.f_obra&&!o.f_notas&&!o.f_cad1&&!o.fotos.length){toast("Anota al menos la obra, el cadenamiento o una nota");return}
  o.t=Date.now();const id=editingId||("b"+o.t.toString(36)+Math.random().toString(36).slice(2,6));
+ const prevRec=editingId&&entries.find(x=>x.id===editingId);if(prevRec&&prevRec.share)o.share=prevRec.share;
  lsSet("bit_ultimo",{obra:o.f_obra,tipo});
  try{
   await idb.put("registros",{...o,id});await reload();
-  toast(editingId?"Cambios guardados":"Registro guardado");resetForm(true);
+  toast(editingId?"Cambios guardados":"Registro guardado");resetForm(true);if(typeof autoSync==="function"&&typeof idb!=="undefined")autoSync();
  }catch(err){toast("No se pudo guardar: "+(err&&err.message||"error de conexión")+". Intenta de nuevo.")}
 });
 
@@ -538,7 +540,7 @@ $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("butt
  if(a==="ask"){confirmId=e.id;renderList();return}
  if(a==="nodel"){confirmId=null;renderList();return}
  if(a==="pdf"){makePdf([e]);return}
- if(a==="del"){confirmId=null;try{if(assets)for(const f of e.fotos||[])assets.delete(f.id).catch(()=>{});await idb.del("registros",e.id);await reload();toast("Registro borrado")}catch(err){toast("No se pudo borrar el registro.")}return}
+ if(a==="del"){confirmId=null;try{if(assets)for(const f of e.fotos||[])assets.delete(f.id).catch(()=>{});await idb.del("registros",e.id);await reload();toast("Registro borrado");if(typeof autoSync==="function"&&typeof idb!=="undefined")autoSync()}catch(err){toast("No se pudo borrar el registro.")}return}
  if(a==="edit"){fillForm(e);show("new");window.scrollTo({top:0});return}
  if(a==="dup"){fillForm(e);editingId=null;$("btnSave").textContent="Guardar registro";const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);show("new");window.scrollTo({top:0});toast("Copiado como nuevo registro de hoy");return}
  if(a==="share"){openShare(e,"link");return}
@@ -713,7 +715,7 @@ $("shTokSave").onclick=async()=>{const t=$("shTok").value.trim();if(!t){toast("P
  catch(err){localStorage.removeItem("bit_ghtoken");setSh({shStatus:err===401?"Ese token no es válido. Revisa que lo copiaste completo.":"No se pudo revisar el token. Revisa tu señal."})}
  finally{$("shTokSave").disabled=false;$("shTokSave").textContent="Guardar y crear link"}};
 
-/* ---------- compartir toda la bitácora ---------- */
+/* ---------- compartir toda la bitácora (con actualización automática) ---------- */
 const portUrl=pid=>GH.site+"registros.html#"+pid;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function ghDelete(p,msg){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(!g.ok)return;const sha=(await g.json()).sha;
@@ -725,7 +727,38 @@ function portText(list,pid){const fechas=list.map(e=>e.f_fecha).filter(Boolean).
  L.push(`🗂 ${list.length} registro${list.length===1?"":"s"} · 📷 ${nf} foto${nf===1?"":"s"}`);
  const tipos={};list.forEach(e=>{tipos[e.tipo]=(tipos[e.tipo]||0)+1});L.push(Object.keys(tipos).map(t=>`• ${TIPOS[t]}: ${tipos[t]}`).join("\n"));
  const nom=$("pdfName").value.trim();if(nom)L.push("",nom);
- L.push("","🔗 *Ver todos los registros y descargar fotos originales por rango de fechas:*",portUrl(pid));return L.join("\n")}
+ L.push("","🔗 *Ver todos los registros y descargar fotos originales por rango de fechas:*",portUrl(pid),"","El link se actualiza solo con cada registro nuevo.");return L.join("\n")}
+let syncing=false,syncAgain=false;
+async function syncPortfolio(o={}){const progress=o.progress||(()=>{});
+ if(window.claude||!ghToken())return null;let pid=lsGet("bit_portafolio");if(!pid&&!o.create)return null;
+ if(syncing){syncAgain=true;return{busy:true}}syncing=true;
+ try{const all=(await idb.all("registros")).filter(e=>!e.ejemplo).sort((a,b)=>((a.f_fecha||"")+(a.f_hora||"")).localeCompare((b.f_fecha||"")+(b.f_hora||"")));
+  const pend=all.filter(needsPublish);let i=0;
+  for(const e of pend){i++;await publishRecord(e,msg=>progress(`Registro ${i} de ${pend.length} · ${msg}`))}
+  if(o.newLink&&pid){progress("Desactivando el link anterior…");try{await ghDelete(`indices/${pid}.json`,"Desactiva link anterior de la bitácora")}catch(err){}pid=null;localStorage.removeItem("bit_idxhash")}
+  if(!pid){pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}
+  const fresh=(await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id);const cc=cfgCom();
+  const body={nombre:$("pdfName").value.trim(),...(cc.com?{comentarios:cc.com}:{}),...(cc.wa?{whatsapp:cc.wa}:{}),registros:fresh.map(e=>({id:e.share.id,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",tipo:e.tipo,fotos:(e.fotos||[]).length}))
+   .sort((a,b)=>(a.f_fecha+a.f_hora).localeCompare(b.f_fecha+b.f_hora))};
+  const hash=pid+":"+JSON.stringify(body);let changed=false;
+  if(o.force||lsGet("bit_idxhash")!==hash){progress("Actualizando el índice de la bitácora…");
+   await ghPut(`indices/${pid}.json`,new Blob([JSON.stringify({...body,actualizado:new Date().toISOString()},null,1)],{type:"application/json"}),`Índice de la bitácora (${body.registros.length} registros)`);
+   lsSet("bit_idxhash",hash);changed=true}
+  lsSet("bit_sync_at",new Date().toISOString());if(pend.length)await reload();
+  return{pid,fresh,changed,subidos:pend.length}}
+ finally{syncing=false;if(syncAgain){syncAgain=false;setTimeout(autoSync,800)}}}
+function setSync(t){const el=$("syncState");if(!el)return;el.textContent=t;el.hidden=!t}
+function hora(iso){try{return new Date(iso).toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"})}catch(e){return""}}
+let syncTimer=null;
+function autoSync(){clearTimeout(syncTimer);syncTimer=setTimeout(runAutoSync,1500)}
+async function runAutoSync(){if(window.claude||!ghToken()||!lsGet("bit_portafolio")){setSync("");return}
+ if(!navigator.onLine){const n=(await idb.all("registros")).filter(e=>!e.ejemplo&&needsPublish(e)).length;setSync(n?`⏳ ${n} registro${n===1?"":"s"} por subir a tu link. Se suben solos cuando tengas señal.`:"🔗 Tu link está al día.");return}
+ setSync("🔄 Actualizando tu link…");
+ try{const r=await syncPortfolio({progress:m=>setSync("🔄 "+m)});if(!r||r.busy)return;setSync(`✓ Tu link está al día · ${hora(lsGet("bit_sync_at"))}`)}
+ catch(err){if(err&&err.status===401){setSync("⚠️ Tu permiso de GitHub venció. Toca “Compartir toda mi bitácora” para configurarlo y seguir actualizando tu link.")}
+  else setSync("⚠️ No se pudo actualizar tu link ahorita. Se vuelve a intentar solo.");clearTimeout(syncTimer);syncTimer=setTimeout(runAutoSync,120000)}}
+window.addEventListener("online",autoSync);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")autoSync()});
 async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pdf:null,run};
  $("share").hidden=false;document.body.style.overflow="hidden";
  ["shPdf","shPdfState"].forEach(id=>$(id).hidden=true);$("shWa").classList.add("pri");
@@ -733,24 +766,13 @@ async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pd
  setSh({shSetup:false,shRetry:false,shAgain:false,shNewLink:false,shInfo:"",shStatus:"Preparando…"});$("shText").value="";
  if(window.claude){setSh({shStatus:"El link de toda la bitácora se crea desde la versión de GitHub (ingezequieljuv.github.io/BITACORA-DE-OBRA)."});return}
  if(!ghToken()){setSh({shSetup:true,shStatus:"Falta configurar el permiso de GitHub para crear links."});return}
- try{const all=(await idb.all("registros")).filter(e=>!e.ejemplo).sort((a,b)=>((a.f_fecha||"")+(a.f_hora||"")).localeCompare((b.f_fecha||"")+(b.f_hora||"")));
-  if(!all.length){setSh({shStatus:"Todavía no tienes registros guardados."});return}
-  const pend=all.filter(needsPublish);let i=0;
-  for(const e of pend){i++;if(sh.run!==run)return;await publishRecord(e,msg=>{if(sh.run===run)setSh({shStatus:`Registro ${i} de ${pend.length} · ${msg}`})})}
-  if(sh.run!==run)return;
-  let pid=lsGet("bit_portafolio");
-  if(newLink&&pid){setSh({shStatus:"Desactivando el link anterior…"});try{await ghDelete(`indices/${pid}.json`,"Desactiva link anterior de la bitácora")}catch(err){}pid=null}
-  if(!pid){pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}
-  setSh({shStatus:"Actualizando el índice de la bitácora…"});
-  const fresh=(await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id);
-  const cc=cfgCom();const idx={nombre:$("pdfName").value.trim(),actualizado:new Date().toISOString(),...(cc.com?{comentarios:cc.com}:{}),...(cc.wa?{whatsapp:cc.wa}:{}),registros:fresh.map(e=>({id:e.share.id,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",tipo:e.tipo,fotos:(e.fotos||[]).length}))
-   .sort((a,b)=>(a.f_fecha+a.f_hora).localeCompare(b.f_fecha+b.f_hora))};
-  await ghPut(`indices/${pid}.json`,new Blob([JSON.stringify(idx,null,1)],{type:"application/json"}),`Índice de la bitácora (${idx.registros.length} registros)`);
-  if(sh.run!==run)return;
-  $("shText").value=portText(fresh,pid);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
+ try{if(!(await idb.all("registros")).filter(e=>!e.ejemplo).length){setSh({shStatus:"Todavía no tienes registros guardados."});return}
+  while(syncing){setSh({shStatus:"Terminando de actualizar…"});await sleep(700);if(sh.run!==run)return}
+  const r=await syncPortfolio({create:true,newLink,force:!!newLink,progress:m=>{if(sh.run===run)setSh({shStatus:m})}});if(sh.run!==run||!r)return;
+  $("shText").value=portText(r.fresh,r.pid);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
   $("shWa").classList.remove("off");$("shWa").removeAttribute("aria-disabled");
-  setSh({shStatus:`✓ Link listo con ${fresh.length} registros. Cuando agregues registros nuevos, vuelve a tocar este botón y el mismo link se actualiza.`,shInfo:portUrl(pid),shAgain:true,shNewLink:true});
-  await reload()}
+  setSh({shStatus:`✓ Link listo con ${r.fresh.length} registros. Se actualiza solo cada vez que guardes, edites o borres un registro: no tienes que volver a mandarlo.`,shInfo:portUrl(r.pid),shAgain:true,shNewLink:true});
+  setSync(`✓ Tu link está al día · ${hora(lsGet("bit_sync_at"))}`)}
  catch(err){if(sh.run!==run)return;
   if(err&&err.status===401){localStorage.removeItem("bit_ghtoken");setSh({shSetup:true,shStatus:"El permiso de GitHub no es válido o ya venció. Configúralo otra vez."})}
   else if(err&&(err.status===403||err.status===404)&&!/rate limit/i.test(err.message||"")){setSh({shSetup:true,shStatus:"El permiso de GitHub no deja guardar en BITACORA-DE-OBRA. Revisa que tenga Contents: Read and write."})}
@@ -888,6 +910,7 @@ resetForm();entries=SAMPLE;renderList();initCfg();loadComments();
  try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}
  const last=lsGet("bit_ultimo_respaldo");$("backupHint").textContent=`Tus registros y fotos se guardan solo en este teléfono. ${last?"Último respaldo: "+fmtFecha(last)+".":"Aún no has descargado ningún respaldo."}`;
  if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+ autoSync();
 })();
 })();
 </script>
