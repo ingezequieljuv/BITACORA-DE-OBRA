@@ -318,6 +318,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <select id="fType"><option value="">Todas las actividades</option><option value="concreto">Concreto</option><option value="asfalto">Asfalto</option><option value="terraceria">Terracerías</option><option value="general">General</option></select>
     <button class="btn sm" id="btnCsv" type="button">Exportar a Excel (CSV)</button>
     <button class="btn sm pri" id="btnPdfAll" type="button">PDF / Imprimir lo mostrado</button>
+    <button class="btn sm pri" id="btnShareAll" type="button">🔗 Compartir toda mi bitácora</button>
   </div>
   <div class="toolbar">
     <button class="btn sm" id="btnBackup" type="button">Descargar respaldo</button>
@@ -377,6 +378,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <li>Quien abra el link ve el registro sin poder cambiar nada y puede descargar las fotos en calidad original. No necesita GitHub ni ninguna app.</li>
       <li><b>Link + PDF</b> manda el PDF y el mensaje con el link. Si WhatsApp no pone el mensaje, pégalo: ya está copiado.</li>
     </ul>
+    <button type="button" class="linkbtn" id="shNewLink" hidden>Crear link nuevo (el anterior deja de funcionar)</button>
     <button type="button" class="linkbtn" id="shAgain" hidden>Cambiar permiso de GitHub</button>
   </div>
 </div>
@@ -615,7 +617,8 @@ const ghToken=()=>lsGet("bit_ghtoken")||"";
 async function gh(path,opt={}){return fetch("https://api.github.com/repos/"+GH.repo+path,{...opt,headers:{Accept:"application/vnd.github+json",Authorization:"Bearer "+ghToken(),"X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{})}})}
 const toB64=blob=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(String(f.result).split(",")[1]);f.onerror=rej;f.readAsDataURL(blob)});
 async function ghPut(p,blob,msg,sha){const body={message:msg,content:await toB64(blob),branch:GH.branch};if(sha)body.sha=sha;
- let r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)});
+ let r;for(let a=0;a<4;a++){r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)});
+  if(r.status===403||r.status===429){const ra=+r.headers.get("retry-after")||0;const j=await r.clone().json().catch(()=>({}));if(ra||/rate limit/i.test(j.message||"")){await sleep((ra||45)*1000);continue}}break}
  if(r.status===409||r.status===422){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){body.sha=(await g.json()).sha;r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)})}}
  if(!r.ok){const j=await r.json().catch(()=>({}));throw{status:r.status,message:j.message||""}}return(await r.json()).content.sha}
 function newShareId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join("")+Date.now().toString(36).slice(-4)}
@@ -640,7 +643,7 @@ async function saveShare(e){try{if(typeof idb!=="undefined"){await idb.put("regi
 let sh={e:null,mode:"link",pdf:null,run:0};
 function setSh(o){for(const k in o){const el=$(k);if(!el)continue;const v=o[k];if(typeof v==="boolean")el.hidden=!v;else el.textContent=v}}
 async function openShare(e,mode){const run=++sh.run;sh={e,mode,pdf:null,run};
- $("share").hidden=false;document.body.style.overflow="hidden";
+ $("share").hidden=false;document.body.style.overflow="hidden";["shPdf","shPdfState"].forEach(id=>$(id).hidden=false);setSh({shNewLink:false});
  $("shText").value=shareText(e);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
  $("shWa").classList.toggle("pri",mode==="link");$("shPdf").classList.toggle("pri",mode==="pdf");
  $("shWa").setAttribute("aria-disabled","true");$("shWa").classList.add("off");$("shPdf").disabled=true;
@@ -662,7 +665,7 @@ async function openShare(e,mode){const run=++sh.run;sh={e,mode,pdf:null,run};
 function closeShare(){sh.run++;$("share").hidden=true;document.body.style.overflow="";if(typeof reload==="function")reload()}
 $("shClose").onclick=closeShare;
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&!$("share").hidden)closeShare()});
-$("shRetry").onclick=()=>openShare(sh.e,sh.mode);
+$("shRetry").onclick=()=>sh.mode==="all"?openShareAll(false):openShare(sh.e,sh.mode);
 $("shAgain").onclick=()=>{setSh({shSetup:true})};
 $("shText").addEventListener("input",()=>{$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value)});
 $("shWa").addEventListener("click",ev=>{if($("shWa").classList.contains("off"))ev.preventDefault()});
@@ -672,9 +675,54 @@ $("shPdf").onclick=async()=>{if(!sh.pdf)return;const t=$("shText").value;try{awa
  try{await downloads.save({filename:sh.pdf.name,data:sh.pdf});toast("PDF descargado. El mensaje con el link ya está copiado.")}catch(err){toast("No se pudo guardar el PDF")}};
 $("shTokSave").onclick=async()=>{const t=$("shTok").value.trim();if(!t){toast("Pega el token primero");return}
  $("shTokSave").disabled=true;$("shTokSave").textContent="Revisando…";lsSet("bit_ghtoken",t);
- try{const r=await gh("");if(!r.ok)throw r.status;$("shTok").value="";toast("Permiso guardado");openShare(sh.e,sh.mode)}
+ try{const r=await gh("");if(!r.ok)throw r.status;$("shTok").value="";toast("Permiso guardado");sh.mode==="all"?openShareAll(false):openShare(sh.e,sh.mode)}
  catch(err){localStorage.removeItem("bit_ghtoken");setSh({shStatus:err===401?"Ese token no es válido. Revisa que lo copiaste completo.":"No se pudo revisar el token. Revisa tu señal."})}
  finally{$("shTokSave").disabled=false;$("shTokSave").textContent="Guardar y crear link"}};
+
+/* ---------- compartir toda la bitácora ---------- */
+const portUrl=pid=>GH.site+"registros.html#"+pid;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function ghDelete(p,msg){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(!g.ok)return;const sha=(await g.json()).sha;
+ await gh("/contents/"+p,{method:"DELETE",body:JSON.stringify({message:msg,sha,branch:GH.branch})})}
+function needsPublish(e){if(!e.share||!e.share.at||!e.share.sha)return true;if((e.t||0)>Date.parse(e.share.at))return true;return(e.fotos||[]).some(f=>!(e.share.files||{})[f.id])}
+function portText(list,pid){const fechas=list.map(e=>e.f_fecha).filter(Boolean).sort();const nf=list.reduce((s,e)=>s+(e.fotos||[]).length,0);
+ const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliación Armería – Manzanillo",""];
+ if(fechas.length)L.push(`📅 Del *${fmtFecha(fechas[0])}* al *${fmtFecha(fechas[fechas.length-1])}*`);
+ L.push(`🗂 ${list.length} registro${list.length===1?"":"s"} · 📷 ${nf} foto${nf===1?"":"s"}`);
+ const tipos={};list.forEach(e=>{tipos[e.tipo]=(tipos[e.tipo]||0)+1});L.push(Object.keys(tipos).map(t=>`• ${TIPOS[t]}: ${tipos[t]}`).join("\n"));
+ const nom=$("pdfName").value.trim();if(nom)L.push("",nom);
+ L.push("","🔗 *Ver todos los registros y descargar fotos originales por rango de fechas:*",portUrl(pid));return L.join("\n")}
+async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pdf:null,run};
+ $("share").hidden=false;document.body.style.overflow="hidden";
+ ["shPdf","shPdfState"].forEach(id=>$(id).hidden=true);$("shWa").classList.add("pri");
+ $("shWa").setAttribute("aria-disabled","true");$("shWa").classList.add("off");
+ setSh({shSetup:false,shRetry:false,shAgain:false,shNewLink:false,shInfo:"",shStatus:"Preparando…"});$("shText").value="";
+ if(window.claude){setSh({shStatus:"El link de toda la bitácora se crea desde la versión de GitHub (ingezequieljuv.github.io/BITACORA-DE-OBRA)."});return}
+ if(!ghToken()){setSh({shSetup:true,shStatus:"Falta configurar el permiso de GitHub para crear links."});return}
+ try{const all=(await idb.all("registros")).filter(e=>!e.ejemplo).sort((a,b)=>((a.f_fecha||"")+(a.f_hora||"")).localeCompare((b.f_fecha||"")+(b.f_hora||"")));
+  if(!all.length){setSh({shStatus:"Todavía no tienes registros guardados."});return}
+  const pend=all.filter(needsPublish);let i=0;
+  for(const e of pend){i++;if(sh.run!==run)return;await publishRecord(e,msg=>{if(sh.run===run)setSh({shStatus:`Registro ${i} de ${pend.length} · ${msg}`})})}
+  if(sh.run!==run)return;
+  let pid=lsGet("bit_portafolio");
+  if(newLink&&pid){setSh({shStatus:"Desactivando el link anterior…"});try{await ghDelete(`indices/${pid}.json`,"Desactiva link anterior de la bitácora")}catch(err){}pid=null}
+  if(!pid){pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}
+  setSh({shStatus:"Actualizando el índice de la bitácora…"});
+  const fresh=(await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id);
+  const idx={nombre:$("pdfName").value.trim(),actualizado:new Date().toISOString(),registros:fresh.map(e=>({id:e.share.id,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",tipo:e.tipo,fotos:(e.fotos||[]).length}))
+   .sort((a,b)=>(a.f_fecha+a.f_hora).localeCompare(b.f_fecha+b.f_hora))};
+  await ghPut(`indices/${pid}.json`,new Blob([JSON.stringify(idx,null,1)],{type:"application/json"}),`Índice de la bitácora (${idx.registros.length} registros)`);
+  if(sh.run!==run)return;
+  $("shText").value=portText(fresh,pid);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
+  $("shWa").classList.remove("off");$("shWa").removeAttribute("aria-disabled");
+  setSh({shStatus:`✓ Link listo con ${fresh.length} registros. Cuando agregues registros nuevos, vuelve a tocar este botón y el mismo link se actualiza.`,shInfo:portUrl(pid),shAgain:true,shNewLink:true});
+  await reload()}
+ catch(err){if(sh.run!==run)return;
+  if(err&&err.status===401){localStorage.removeItem("bit_ghtoken");setSh({shSetup:true,shStatus:"El permiso de GitHub no es válido o ya venció. Configúralo otra vez."})}
+  else if(err&&(err.status===403||err.status===404)&&!/rate limit/i.test(err.message||"")){setSh({shSetup:true,shStatus:"El permiso de GitHub no deja guardar en BITACORA-DE-OBRA. Revisa que tenga Contents: Read and write."})}
+  else setSh({shRetry:true,shStatus:"Se cortó la subida. Toca “Volver a intentar”: continúa donde se quedó."})}}
+$("btnShareAll").onclick=()=>openShareAll(false);
+$("shNewLink").onclick=()=>{if($("shNewLink").dataset.confirm){delete $("shNewLink").dataset.confirm;$("shNewLink").textContent="Crear link nuevo (el anterior deja de funcionar)";openShareAll(true)}else{$("shNewLink").dataset.confirm="1";$("shNewLink").textContent="Toca otra vez para confirmar: el link anterior dejará de funcionar"}};
 
 /* ---------- PDF ---------- */
 function exifOrientation(buf){const v=new DataView(buf);if(v.getUint16(0)!==0xFFD8)return 1;let o=2;

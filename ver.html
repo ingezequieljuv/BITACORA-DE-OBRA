@@ -132,6 +132,7 @@ async function main(){
  const gal=(arr,off)=>arr.map((f,i)=>`<figure class="ph" style="margin:0"><div class="img" id="im_${off+i}">Cargando…</div>${f.cap?`<div class="cap">${esc(f.cap)}</div>`:""}<div class="row"><button class="btn sm" data-dl="${off+i}" disabled>Descargar</button><span class="size" id="sz_${off+i}"></span></div></figure>`).join("");
  const all=[...uf,...of];
  $("main").innerHTML=`
+  ${/registros\.html/.test(document.referrer)?`<a class="btn sm" href="#" onclick="history.back();return false" style="align-self:flex-start">← Todos los registros</a>`:""}
   <p class="ro">🔒 Registro de solo lectura</p>
   <section class="card">
    <div class="date">${esc(d.f_dia||dia(d.f_fecha))} ${esc(fmt(d.f_fecha))}</div>
