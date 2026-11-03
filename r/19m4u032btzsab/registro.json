@@ -1,0 +1,87 @@
+{
+ "tipo": "concreto",
+ "qc": [],
+ "f_fecha": "2026-10-19",
+ "f_dia": "Lunes",
+ "f_hora": "11:51",
+ "f_obra": "Puente Jalipa",
+ "f_cad1": "88+900",
+ "f_cuerpo": "Cuerpo B",
+ "f_lat": "19.061000",
+ "f_lng": "-104.269853",
+ "c_elemento": "Talud",
+ "c_concretera": "DCC",
+ "c_fc": "150",
+ "c_rev": "10",
+ "c_vol": "7.0",
+ "c_ollas": "1",
+ "c_remision": "A 20602",
+ "c_tma": "3/4”",
+ "c_hini": "11:22",
+ "c_cil": "0 Cilindros",
+ "c_metodo": "Bomba",
+ "c_vibrado": "Correcto",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km88+900.jpg",
+   "cap": "Ubicación satelital 88+900",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km88+900.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km88+900.jpg",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-03T16:33:27.814Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
