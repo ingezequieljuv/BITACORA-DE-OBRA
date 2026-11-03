@@ -1,0 +1,83 @@
+{
+ "tipo": "concreto",
+ "qc": [],
+ "f_fecha": "2026-10-19",
+ "f_dia": "Lunes",
+ "f_hora": "14:37",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_cad1": "63+790",
+ "f_cad2": "63+830",
+ "f_cuerpo": "Cuerpo B",
+ "f_lat": "18.938783",
+ "f_lng": "-104.101547",
+ "c_elemento": "Cuneta",
+ "c_concretera": "PSM",
+ "c_fc": "150",
+ "c_rev": "14",
+ "c_vol": "4.0",
+ "c_ollas": "1",
+ "c_remision": "2853",
+ "c_tma": "3/4”",
+ "c_hini": "14:27",
+ "c_cil": "O Cilindros",
+ "c_metodo": "Directo de olla",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km63+790.jpg",
+   "cap": "Ubicación satelital ",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km63+790.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km63+790.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-03T17:17:08.784Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
