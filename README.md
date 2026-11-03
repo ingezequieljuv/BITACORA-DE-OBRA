@@ -27,3 +27,7 @@ Todo se guarda **solo en el navegador del teléfono** donde se usa (IndexedDB). 
 | `index.html` | La aplicación completa |
 | `sw.js` | Permite abrirla sin señal |
 | `manifest.webmanifest`, `icon*` | Ícono y nombre en la pantalla de inicio |
+
+## Comentarios de lectores
+
+Quien abre un link puede dejar comentarios visibles para todos y escribir al supervisor por WhatsApp. Los comentarios se guardan en la hoja de Google **Comentarios Bitácora de Obra** mediante el script `comentarios-apps-script.gs` (instrucciones dentro del archivo). Para ocultar un comentario, escribe `NO` en la columna *Visible* de la hoja.

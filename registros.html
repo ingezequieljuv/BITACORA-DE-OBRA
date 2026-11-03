@@ -122,7 +122,7 @@ const mb=b=>(b/1048576).toFixed(b<10485760?1:0)+" MB";
 function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,3000)}
 const isPhone=/iPhone|iPad|iPod|Android/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 const BATCH=20;
-let idx=null,run=0,ready=[],zipBlob=null;
+let idx=null,run=0,ready=[],zipBlob=null,comCount={};
 
 function inRange(){const d1=$("fDesde").value,d2=$("fHasta").value,t=$("fTipo").value,q=$("fQ").value.toLowerCase().trim();
  return idx.registros.filter(r=>(!d1||r.f_fecha>=d1)&&(!d2||r.f_fecha<=d2)&&(!t||r.tipo===t)&&(!q||JSON.stringify(r).toLowerCase().includes(q)))}
@@ -136,7 +136,7 @@ function render(){run++;ready=[];zipBlob=null;$("dlOut").innerHTML="";
   const cc=[r.f_cad1?"Km "+r.f_cad1+(r.f_cad2?" – "+r.f_cad2:""):"",r.f_cuerpo,r.f_carril?"Carril "+r.f_carril:""].filter(Boolean).join(" · ");
   html+=`<a class="item" href="ver.html#${encodeURIComponent(r.id)}"><div class="it-top"><span class="it-t">${esc(TIPOS[r.tipo]||"")}</span><span class="meta">${esc(r.f_hora||"")}</span></div>
    <div class="obra">${esc(r.f_obra||"Sin obra")}</div>${cc?`<div class="meta">${esc(cc)}</div>`:""}${r.f_ubic?`<div class="meta">${esc(r.f_ubic)}</div>`:""}
-   <div class="it-bot"><span class="meta">📷 ${r.fotos||0} foto${r.fotos===1?"":"s"}</span><span class="go">Ver registro →</span></div></a>`}
+   <div class="it-bot"><span class="meta">📷 ${r.fotos||0} foto${r.fotos===1?"":"s"}${comCount[r.id]?` · 💬 ${comCount[r.id]}`:""}</span><span class="go">Ver registro →</span></div></a>`}
  $("list").innerHTML=html}
 
 async function pool(items,n,fn){let i=0;await Promise.all(Array.from({length:Math.min(n,items.length)},async()=>{while(i<items.length){const k=i++;await fn(items[k],k)}}))}
@@ -188,6 +188,8 @@ async function main(){const pid=(location.hash||"").replace(/^#/,"").replace(/[^
   <section class="card">
    <div class="date">${idx.registros.length} registros</div>
    <div class="meta">${first?`Del ${esc(fmt(first))} al ${esc(fmt(lastd))}`:""} · ${nf} fotos</div>
+   ${idx.whatsapp?`<a class="btn" style="margin-top:12px;width:100%" href="https://wa.me/${String(idx.whatsapp).replace(/\D/g,"")}?text=${encodeURIComponent("Hola, tengo un comentario sobre la bitácora de obra:\n"+location.href+"\n\n")}" target="_blank" rel="noopener">💬 Escribir al supervisor por WhatsApp</a>`:""}
+   ${idx.comentarios?`<p class="meta" style="margin:8px 0 0">Para comentar un registro, ábrelo y escribe abajo.</p>`:""}
   </section>
   <section class="card">
    <h2>Elige las fechas</h2>
@@ -208,7 +210,8 @@ async function main(){const pid=(location.hash||"").replace(/^#/,"").replace(/[^
   <section class="list" id="list"></section>
   <footer>Supervisión Ampliación Armería – Manzanillo · JUVISA</footer>`;
  ["fDesde","fHasta","fTipo"].forEach(id=>$(id).addEventListener("change",render));$("fQ").addEventListener("input",render);
- $("dlBtn").onclick=prepare;render()}
+ $("dlBtn").onclick=prepare;render();
+ if(/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(idx.comentarios||"")){try{const r=await fetch(idx.comentarios);const l=await r.json();comCount={};(Array.isArray(l)?l:[]).forEach(x=>{comCount[x.registro]=(comCount[x.registro]||0)+1});const keep=[...$("dlOut").children].length;if(!keep)render()}catch(e){}}}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-batch]");if(b)saveBatch(+b.dataset.batch,b);const z=e.target.closest("#zipBtn");if(z)saveZip(z)});
 window.addEventListener("hashchange",()=>location.reload());
 main();

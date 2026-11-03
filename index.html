@@ -127,6 +127,12 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .e-photos img{width:100%;height:100%;object-fit:cover;display:block}
 .e-photos figure{margin:0;min-width:0}
 .e-photos figcaption{font-size:.7rem;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.cfg{background:var(--paper);border:1px solid var(--line);border-radius:8px;margin-top:10px;padding:10px 14px}
+.cfg summary{cursor:pointer;font-weight:600}
+.cfg-body{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.e-com{margin-top:10px;background:var(--chip);border-radius:6px;padding:8px 10px}
+.e-com summary{cursor:pointer;font-weight:600;font-size:.88rem}
+.e-com p{margin:8px 0 0;font-size:.9rem;overflow-wrap:anywhere}
 .pdfopts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .pdfopts label{flex:1 1 220px}
 .preview{position:fixed;inset:0;z-index:30;background:var(--bg);display:flex;flex-direction:column}
@@ -331,6 +337,15 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <label>Hasta<input type="date" id="dTo"></label>
     <label>Nombre en el PDF<input id="pdfName" placeholder="Supervisor · empresa"></label>
   </div>
+  <details class="cfg">
+    <summary>💬 Comentarios de lectores <span class="e-meta" id="cfgState"></span></summary>
+    <div class="cfg-body">
+      <label>Link de comentarios (Apps Script)<input id="cfgUrl" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <label>Tu WhatsApp para recibir comentarios<input id="cfgWa" inputmode="tel" placeholder="10 dígitos, ej. 3141234567"></label>
+      <p class="hint" id="cfgMsg" style="margin:0"></p>
+      <p class="hint" style="margin:0">Con el link, los lectores dejan comentarios que todos ven en la página. Con tu WhatsApp, también tienen un botón para escribirte. Tu número se verá en los links que compartas.</p>
+    </div>
+  </details>
   <div id="entries"></div>
 </div>
 </main>
@@ -501,6 +516,7 @@ function renderList(){
   ${qcs?`<div class="chips">${qcs}</div>`:""}
   ${e.f_notas?`<div class="notes">${esc(e.f_notas)}</div>`:""}
   ${(e.fotos||[]).length?`<div class="e-photos">${e.fotos.map(f=>`<figure><a href="${blobUrl(f.id)}" target="_blank" rel="noopener"><img src="${blobUrl(f.id)}" alt="${esc(f.cap||"Foto")}" loading="lazy"></a>${f.cap?`<figcaption>${esc(f.cap)}</figcaption>`:""}</figure>`).join("")}</div>`:""}
+  ${comHtml(e)}
   ${e.ejemplo?`<p class="hint" style="margin:10px 0 0">Los botones <b>PDF</b>, Editar y Compartir aparecen en cada registro cuando guardas el primero tuyo.</p>`:`<div class="e-actions">
    ${mapUrl(e)?`<a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">Ver en mapa</a>`:""}
    <button class="btn sm pri" data-act="pdf" data-id="${e.id}">PDF / Imprimir</button>
@@ -596,6 +612,24 @@ async function addSatMap(){
  finally{btn.disabled=false;btn.textContent="🛰 Mapa satelital automático"}}
 $("btnSat").onclick=addSatMap;
 
+/* ---------- comentarios de lectores ---------- */
+function cfgCom(){const u=(lsGet("bit_comurl")||"").trim(),w=String(lsGet("bit_wa")||"").replace(/\D/g,"");
+ return{com:/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u)?u:"",wa:w.length===10?"52"+w:(w.length>=11&&w.length<=13?w:"")}}
+const cfgKey=()=>{const c=cfgCom();return c.com+"|"+c.wa};
+function initCfg(){$("cfgUrl").value=lsGet("bit_comurl")||"";$("cfgWa").value=lsGet("bit_wa")||"";cfgHint()}
+function cfgHint(){const c=cfgCom(),u=$("cfgUrl").value.trim(),w=$("cfgWa").value.replace(/\D/g,"");const m=[];
+ if(u&&!c.com)m.push("El link de comentarios debe empezar con https://script.google.com/macros/s/ y terminar en /exec.");
+ if(w&&!c.wa)m.push("Escribe tu número de 10 dígitos.");
+ $("cfgMsg").textContent=m.join(" ")||((c.com||c.wa)?"Listo. Toca “Compartir toda mi bitácora” para que tus links ya muestren los comentarios.":"");
+ $("cfgState").textContent=c.com&&c.wa?"activos":c.com||c.wa?"activos a medias":"sin configurar"}
+$("cfgUrl").addEventListener("change",()=>{lsSet("bit_comurl",$("cfgUrl").value.trim());cfgHint();loadComments()});
+$("cfgWa").addEventListener("change",()=>{lsSet("bit_wa",$("cfgWa").value.trim());cfgHint()});
+let comMap={};
+async function loadComments(){const c=cfgCom();if(!c.com||window.claude)return;
+ try{const r=await fetch(c.com);if(!r.ok)return;const list=await r.json();comMap={};(Array.isArray(list)?list:[]).forEach(x=>{(comMap[x.registro]=comMap[x.registro]||[]).push(x)});renderList()}catch(e){}}
+function comHtml(e){const l=e.share&&comMap[e.share.id];if(!l||!l.length)return"";
+ return`<details class="e-com"><summary>💬 ${l.length} comentario${l.length===1?"":"s"} de lectores</summary>${l.map(x=>`<p><b>${esc(x.nombre)}</b> <span class="e-meta">${esc(new Date(x.fecha).toLocaleString("es-MX",{dateStyle:"short",timeStyle:"short"}))}</span><br>${esc(x.comentario)}</p>`).join("")}</details>`}
+
 /* ---------- compartir con link ---------- */
 const GH={repo:"ingezequieljuv/BITACORA-DE-OBRA",branch:"registros",site:"https://ingezequieljuv.github.io/BITACORA-DE-OBRA/"};
 const shareUrl=id=>GH.site+"ver.html#"+id;
@@ -635,7 +669,7 @@ async function publishRecord(e,progress){
  progress("Guardando datos del registro…");
  const data={};Object.keys(e).forEach(key=>{if(!["fotos","share","id","t","ejemplo"].includes(key))data[key]=e[key]});
  data.fotos=fotos.filter(f=>share.files[f.id]).map(f=>({file:share.files[f.id],cap:f.cap||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}));
- data.nombre=$("pdfName").value.trim();data.actualizado=new Date().toISOString();
+ data.nombre=$("pdfName").value.trim();data.actualizado=new Date().toISOString();const cc=cfgCom();if(cc.com)data.comentarios=cc.com;if(cc.wa)data.whatsapp=cc.wa;share.cfg=cfgKey();
  share.sha=await ghPut(`r/${share.id}/registro.json`,new Blob([JSON.stringify(data,null,1)],{type:"application/json"}),`Registro ${e.f_fecha||""} ${e.f_cad1||""}`.trim(),share.sha);
  share.at=data.actualizado;e.share=share;await saveShare(e);return share}
 async function saveShare(e){try{if(typeof idb!=="undefined"){await idb.put("registros",e)}else if(col){await col.doc(e.id).update({share:e.share})}}catch(err){}}
@@ -684,7 +718,7 @@ const portUrl=pid=>GH.site+"registros.html#"+pid;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function ghDelete(p,msg){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(!g.ok)return;const sha=(await g.json()).sha;
  await gh("/contents/"+p,{method:"DELETE",body:JSON.stringify({message:msg,sha,branch:GH.branch})})}
-function needsPublish(e){if(!e.share||!e.share.at||!e.share.sha)return true;if((e.t||0)>Date.parse(e.share.at))return true;return(e.fotos||[]).some(f=>!(e.share.files||{})[f.id])}
+function needsPublish(e){if(!e.share||!e.share.at||!e.share.sha)return true;if((e.share.cfg||"|")!==cfgKey())return true;if((e.t||0)>Date.parse(e.share.at))return true;return(e.fotos||[]).some(f=>!(e.share.files||{})[f.id])}
 function portText(list,pid){const fechas=list.map(e=>e.f_fecha).filter(Boolean).sort();const nf=list.reduce((s,e)=>s+(e.fotos||[]).length,0);
  const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliación Armería – Manzanillo",""];
  if(fechas.length)L.push(`📅 Del *${fmtFecha(fechas[0])}* al *${fmtFecha(fechas[fechas.length-1])}*`);
@@ -709,7 +743,7 @@ async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pd
   if(!pid){pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}
   setSh({shStatus:"Actualizando el índice de la bitácora…"});
   const fresh=(await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id);
-  const idx={nombre:$("pdfName").value.trim(),actualizado:new Date().toISOString(),registros:fresh.map(e=>({id:e.share.id,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",tipo:e.tipo,fotos:(e.fotos||[]).length}))
+  const cc=cfgCom();const idx={nombre:$("pdfName").value.trim(),actualizado:new Date().toISOString(),...(cc.com?{comentarios:cc.com}:{}),...(cc.wa?{whatsapp:cc.wa}:{}),registros:fresh.map(e=>({id:e.share.id,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",tipo:e.tipo,fotos:(e.fotos||[]).length}))
    .sort((a,b)=>(a.f_fecha+a.f_hora).localeCompare(b.f_fecha+b.f_hora))};
   await ghPut(`indices/${pid}.json`,new Blob([JSON.stringify(idx,null,1)],{type:"application/json"}),`Índice de la bitácora (${idx.registros.length} registros)`);
   if(sh.run!==run)return;
@@ -848,7 +882,7 @@ $("restoreFile").onchange=async ev=>{const file=ev.target.files[0];ev.target.val
  catch(e){toast("Ese archivo no es un respaldo de la bitácora")}};
 
 /* ---------- arranque ---------- */
-resetForm();entries=SAMPLE;renderList();
+resetForm();entries=SAMPLE;renderList();initCfg();loadComments();
 (async()=>{
  try{await loadPhotoUrls();await reload()}catch(e){$("status").textContent="Este navegador no permite guardar datos. Abre la bitácora en Safari, fuera del modo privado."}
  try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}

@@ -76,6 +76,15 @@ td.y{color:var(--ok);font-weight:600} td.n{color:var(--bad);font-weight:600}
 .ph .size{font:.7rem var(--f-mono);color:var(--muted)}
 .state{text-align:center;color:var(--muted);padding:48px 16px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-size:.9rem;z-index:20;max-width:calc(100% - 32px)}
+.clist{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.cm{border-left:3px solid var(--accent);padding:2px 0 2px 10px}
+.ctext{white-space:pre-wrap;overflow-wrap:anywhere}
+.cform{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;position:relative}
+.cform label{display:flex;flex-direction:column;gap:4px;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.cform input,.cform textarea{font:400 1rem var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;width:100%}
+.cform .meta:empty{display:none}
+#com:empty{display:none}
+#com .btn{width:100%}
 footer{font:.72rem var(--f-mono);color:var(--muted);text-align:center}
 </style>
 </head>
@@ -146,7 +155,9 @@ async function main(){
   ${d.f_notas?`<section class="card"><h2>Notas</h2><div class="notes">${esc(d.f_notas)}</div></section>`:""}
   ${of.length?`<section class="card"><h2>Fotografías (${of.length})</h2><div class="gal">${gal(of,uf.length)}</div></section>`:""}
   ${all.length?`<div class="row"><button class="btn pri" id="dlAll" disabled style="flex:1 1 220px">Descargar todas las fotos (${all.length})</button></div><p class="ro" style="justify-content:center">Las fotos se descargan en su calidad original.</p>`:""}
+  <section class="card" id="com"></section>
   <footer>Supervisión Ampliación Armería – Manzanillo · JUVISA</footer>`;
+ renderComments(d,id);
  let total=0;
  await Promise.all(all.map(async(f,i)=>{try{const r=await fetch(RAW+id+"/"+encodeURIComponent(f.file));if(!r.ok)throw 0;const b=await r.blob();
    const file=new File([b],f.file,{type:b.type&&b.type!=="application/octet-stream"?b.type:(/\.png$/i.test(f.file)?"image/png":"image/jpeg")});files[i]=file;total+=b.size;
@@ -157,6 +168,36 @@ async function main(){
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-dl]");if(b&&files[+b.dataset.dl])save([files[+b.dataset.dl]]);if(e.target.closest("#dlAll"))save(files.filter(Boolean))});
 window.addEventListener("hashchange",()=>location.reload());
+/* ---------- comentarios ---------- */
+const COMOK=u=>/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u||"");
+function waLink(num,text){return`https://wa.me/${String(num).replace(/\D/g,"")}?text=${encodeURIComponent(text)}`}
+function lsGet(k){try{return localStorage.getItem(k)||""}catch(e){return""}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+async function renderComments(d,id){const box=$("com");if(!box)return;const ok=COMOK(d.comentarios);
+ if(!ok&&!d.whatsapp){box.remove();return}
+ const ref=`registro del ${dia(d.f_fecha)} ${fmt(d.f_fecha)}${d.f_cad1?", km "+d.f_cad1:""}`;
+ box.innerHTML=`<h2>Comentarios</h2>
+  ${ok?`<div class="clist" id="clist"><p class="meta">Cargando comentarios…</p></div>
+  <form class="cform" id="cform" autocomplete="off">
+   <label>Tu nombre<input id="cNom" maxlength="60" required placeholder="Nombre y empresa"></label>
+   <label>Comentario<textarea id="cTxt" maxlength="1000" rows="3" required placeholder="Escribe tu comentario sobre este registro"></textarea></label>
+   <input id="cWeb" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+   <button class="btn pri" id="cSend" type="submit">Publicar comentario</button>
+   <p class="meta" id="cMsg" role="status"></p>
+  </form>`:""}
+  ${d.whatsapp?`<a class="btn" href="${waLink(d.whatsapp,`Hola, tengo un comentario sobre el ${ref}:\n${location.href}\n\n`)}" target="_blank" rel="noopener">💬 Escribir al supervisor por WhatsApp</a>`:""}`;
+ if(!ok)return;
+ $("cNom").value=lsGet("bit_lector");
+ const load=async()=>{try{const r=await fetch(d.comentarios+"?registro="+encodeURIComponent(id));const l=await r.json();
+  $("clist").innerHTML=Array.isArray(l)&&l.length?l.map(x=>`<div class="cm"><div><b>${esc(x.nombre)}</b> <span class="meta">${esc(new Date(x.fecha).toLocaleString("es-MX",{dateStyle:"medium",timeStyle:"short"}))}</span></div><div class="ctext">${esc(x.comentario)}</div></div>`).join(""):`<p class="meta">Todavía no hay comentarios. Sé el primero.</p>`}
+  catch(e){$("clist").innerHTML=`<p class="meta">No se pudieron cargar los comentarios.</p>`}};
+ load();
+ $("cform").addEventListener("submit",async ev=>{ev.preventDefault();const nombre=$("cNom").value.trim(),comentario=$("cTxt").value.trim();if(!nombre||!comentario)return;
+  $("cSend").disabled=true;$("cMsg").textContent="Publicando…";lsSet("bit_lector",nombre);
+  try{const r=await fetch(d.comentarios,{method:"POST",body:JSON.stringify({registro:id,nombre,comentario,web:$("cWeb").value,f_fecha:d.f_fecha||"",cad:d.f_cad1||"",url:location.href})});const j=await r.json();if(!j.ok)throw 0;
+   $("cTxt").value="";$("cMsg").textContent="✓ Comentario publicado";await load()}
+  catch(e){$("cMsg").textContent="No se pudo publicar. Revisa tu señal e intenta otra vez."}
+  finally{$("cSend").disabled=false}})}
 main();
 })();
 </script>
