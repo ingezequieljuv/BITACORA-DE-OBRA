@@ -727,7 +727,7 @@ $("shTokSave").onclick=async()=>{const t=$("shTok").value.replace(/\s+/g,"");if(
  $("shTokSave").disabled=true;$("shTokSave").textContent="Revisando…";const prev=tokMem;tokMem=t;
  try{const r=await gh("");if(!r.ok){const j=await r.clone().json().catch(()=>({}));setDetail({status:r.status,message:j.message||"",path:"revisión del token"})}else setDetail(null);
   if(r.status===401)throw"inv";if(r.status===404||r.status===403)throw"repo";if(!r.ok)throw"net";
-  await setToken(t);$("shTok").value="";toast("Token guardado en este teléfono");sh.mode==="all"?openShareAll(false):openShare(sh.e,sh.mode)}
+  await setToken(t);$("shTok").value="";toast("Token guardado en este teléfono");shTop();sh.mode==="all"?openShareAll(false):openShare(sh.e,sh.mode)}
  catch(err){tokMem=prev;setSh({shStatus:err==="inv"?"GitHub dice que ese token no es válido. Revisa que lo copiaste completo.":err==="repo"?"Ese token no tiene acceso a BITACORA-DE-OBRA. En GitHub edita el token y en Repository access elige Only select repositories → BITACORA-DE-OBRA.":"No se pudo revisar el token. Revisa tu señal e intenta otra vez."})}
  finally{$("shTokSave").disabled=false;$("shTokSave").textContent="Guardar y crear link"}};
 
@@ -744,10 +744,12 @@ function portText(list,pid){const fechas=list.map(e=>e.f_fecha).filter(Boolean).
  const tipos={};list.forEach(e=>{tipos[e.tipo]=(tipos[e.tipo]||0)+1});L.push(Object.keys(tipos).map(t=>`• ${TIPOS[t]}: ${tipos[t]}`).join("\n"));
  const nom=$("pdfName").value.trim();if(nom)L.push("",nom);
  L.push("","🔗 *Ver todos los registros y descargar fotos originales por rango de fechas:*",portUrl(pid),"","El link se actualiza solo con cada registro nuevo.");return L.join("\n")}
-let syncing=false,syncAgain=false;
+let syncing=false,syncAgain=false,wakeLock=null;
+async function keepAwake(on){try{if(on&&!wakeLock&&navigator.wakeLock){wakeLock=await navigator.wakeLock.request("screen");wakeLock.addEventListener("release",()=>{wakeLock=null})}else if(!on&&wakeLock){await wakeLock.release();wakeLock=null}}catch(e){}}
+function shTop(){try{document.activeElement&&document.activeElement.blur();const b=document.querySelector("#share .sh-body");if(b)b.scrollTo({top:0,behavior:"smooth"})}catch(e){}}
 async function syncPortfolio(o={}){const progress=o.progress||(()=>{});
  if(window.claude||!ghToken())return null;let pid=lsGet("bit_portafolio");if(!pid&&!o.create)return null;
- if(syncing){syncAgain=true;return{busy:true}}syncing=true;
+ if(syncing){syncAgain=true;return{busy:true}}syncing=true;keepAwake(true);
  try{const all=(await idb.all("registros")).filter(e=>!e.ejemplo).sort((a,b)=>((a.f_fecha||"")+(a.f_hora||"")).localeCompare((b.f_fecha||"")+(b.f_hora||"")));
   const pend=all.filter(needsPublish);let i=0;
   for(const e of pend){i++;await publishRecord(e,msg=>progress(`Registro ${i} de ${pend.length} · ${msg}`))}
@@ -762,7 +764,7 @@ async function syncPortfolio(o={}){const progress=o.progress||(()=>{});
    lsSet("bit_idxhash",hash);changed=true}
   lsSet("bit_sync_at",new Date().toISOString());if(pend.length)await reload();
   return{pid,fresh,changed,subidos:pend.length}}
- finally{syncing=false;if(syncAgain){syncAgain=false;setTimeout(autoSync,800)}}}
+ finally{syncing=false;keepAwake(false);if(syncAgain){syncAgain=false;setTimeout(autoSync,800)}}}
 function setSync(t){const el=$("syncState");if(!el)return;el.textContent=t;el.hidden=!t}
 function hora(iso){try{return new Date(iso).toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"})}catch(e){return""}}
 let syncTimer=null;
@@ -783,8 +785,8 @@ async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pd
  if(window.claude){setSh({shStatus:"El link de toda la bitácora se crea desde la versión de GitHub (ingezequieljuv.github.io/BITACORA-DE-OBRA)."});return}
  if(!ghToken()){setSh({shSetup:true,shStatus:"Falta configurar el permiso de GitHub para crear links."});return}
  try{if(!(await idb.all("registros")).filter(e=>!e.ejemplo).length){setSh({shStatus:"Todavía no tienes registros guardados."});return}
-  while(syncing){setSh({shStatus:"Terminando de actualizar…"});await sleep(700);if(sh.run!==run)return}
-  const r=await syncPortfolio({create:true,newLink,force:!!newLink,progress:m=>{if(sh.run===run)setSh({shStatus:m})}});if(sh.run!==run||!r)return;
+  shTop();while(syncing){setSh({shStatus:"Terminando de actualizar…"});await sleep(700);if(sh.run!==run)return}
+  const r=await syncPortfolio({create:true,newLink,force:!!newLink,progress:m=>{if(sh.run===run)setSh({shStatus:"⏳ "+m+" — no cierres la app ni apagues la pantalla hasta que termine."})}});if(sh.run!==run||!r)return;
   $("shText").value=portText(r.fresh,r.pid);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
   $("shWa").classList.remove("off");$("shWa").removeAttribute("aria-disabled");
   setSh({shStatus:`✓ Link listo con ${r.fresh.length} registros. Se actualiza solo cada vez que guardes, edites o borres un registro: no tienes que volver a mandarlo.`,shInfo:portUrl(r.pid),shAgain:true,shNewLink:true});
