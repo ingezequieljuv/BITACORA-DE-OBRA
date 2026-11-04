@@ -368,6 +368,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
   </div>
   <div class="sh-body">
     <p class="sh-status" id="shStatus" role="status"></p>
+    <p class="hint" id="shDetail" style="margin:0;font-family:var(--f-mono);font-size:.72rem;overflow-wrap:anywhere"></p>
     <div class="setup" id="shSetup" hidden>
       <h3>Configura el link (solo una vez)</h3>
       <ol>
@@ -655,6 +656,12 @@ const ghToken=()=>tokMem||lsGet("bit_ghtoken")||"";
 async function setToken(t){tokMem=t;lsSet("bit_ghtoken",t);try{if(typeof idb!=="undefined")await idb.put("ajustes",{id:"ghtoken",v:t})}catch(e){}}
 async function clearToken(){tokMem="";try{localStorage.removeItem("bit_ghtoken")}catch(e){}try{if(typeof idb!=="undefined")await idb.del("ajustes","ghtoken")}catch(e){}}
 async function restoreToken(){try{if(lsGet("bit_ghtoken")){tokMem=lsGet("bit_ghtoken");return}if(typeof idb==="undefined")return;const r=await idb.get("ajustes","ghtoken");if(r&&r.v){tokMem=r.v;lsSet("bit_ghtoken",r.v)}}catch(e){}}
+function setDetail(err){const el=$("shDetail");if(!el)return;el.textContent=err?`Detalle de GitHub: ${err.status||"sin respuesta"}${err.message?" · "+err.message:""}${err.path?" · "+err.path:""}`:""}
+async function tokenStatus(){try{const r=await gh("");return r.status}catch(e){return 0}}
+async function handle401(err){const st=await tokenStatus();
+ if(st===200){setSh({shRetry:true,shAgain:true,shStatus:"GitHub acepta tu token pero no dejó guardar este archivo. Toca “Volver a intentar”. Si vuelve a salir, mándame captura de esta pantalla."})}
+ else if(st===0){setSh({shRetry:true,shStatus:"No hay conexión con GitHub en este momento. Revisa tu señal y toca “Volver a intentar”. Tu token sigue guardado."})}
+ else{await clearToken();setSh({shSetup:true,shStatus:"El token que tenía guardado ya no sirve (por ejemplo, si lo regeneraste en GitHub). Pega aquí el código nuevo una sola vez."})}}
 const PERM403="Tu token no tiene permiso para guardar. En GitHub entra a Settings → Developer settings → Fine-grained tokens → toca tu token → Edit. Revisa que en Repository access esté BITACORA-DE-OBRA y en Permissions, Contents diga Read and write. Toca Update y luego aquí “Volver a intentar”. No tienes que crear otro token.";
 async function gh(path,opt={}){return fetch("https://api.github.com/repos/"+GH.repo+path,{...opt,headers:{Accept:"application/vnd.github+json",Authorization:"Bearer "+ghToken(),"X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{})}})}
 const toB64=blob=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(String(f.result).split(",")[1]);f.onerror=rej;f.readAsDataURL(blob)});
@@ -662,7 +669,7 @@ async function ghPut(p,blob,msg,sha){const body={message:msg,content:await toB64
  let r;for(let a=0;a<4;a++){r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)});
   if(r.status===403||r.status===429){const ra=+r.headers.get("retry-after")||0;const j=await r.clone().json().catch(()=>({}));if(ra||/rate limit/i.test(j.message||"")){await sleep((ra||45)*1000);continue}}break}
  if(r.status===409||r.status===422){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){body.sha=(await g.json()).sha;r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)})}}
- if(!r.ok){const j=await r.json().catch(()=>({}));throw{status:r.status,message:j.message||""}}return(await r.json()).content.sha}
+ if(!r.ok){const j=await r.json().catch(()=>({}));throw{status:r.status,message:j.message||"",path:p}}return(await r.json()).content.sha}
 function newShareId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join("")+Date.now().toString(36).slice(-4)}
 function extOf(t){return /png/.test(t)?"png":/heic|heif/.test(t)?"heic":"jpg"}
 async function publishRecord(e,progress){
@@ -689,7 +696,7 @@ async function openShare(e,mode){const run=++sh.run;sh={e,mode,pdf:null,run};
  $("shText").value=shareText(e);$("shWa").href="https://wa.me/?text="+encodeURIComponent($("shText").value);
  $("shWa").classList.toggle("pri",mode==="link");$("shPdf").classList.toggle("pri",mode==="pdf");
  $("shWa").setAttribute("aria-disabled","true");$("shWa").classList.add("off");$("shPdf").disabled=true;
- setSh({shSetup:false,shRetry:false,shAgain:false,shInfo:"",shStatus:"Preparando link…"});
+ setSh({shSetup:false,shRetry:false,shAgain:false,shInfo:"",shStatus:"Preparando link…"});setDetail(null);
  if(window.claude){setSh({shStatus:"El link para WhatsApp se crea desde la versión de GitHub (ingezequieljuv.github.io/BITACORA-DE-OBRA). Aquí puedes mandar solo el texto."});$("shWa").classList.remove("off");$("shWa").removeAttribute("aria-disabled");return}
  if(!ghToken()){setSh({shSetup:true,shStatus:"Falta configurar el permiso de GitHub para crear links."});return}
  try{const s=await publishRecord(e,msg=>{if(sh.run===run)setSh({shStatus:msg})});if(sh.run!==run)return;
@@ -700,8 +707,8 @@ async function openShare(e,mode){const run=++sh.run;sh={e,mode,pdf:null,run};
   setSh({shPdfState:"Preparando PDF…"});const r=await buildPdf([fresh],pdfOpt);if(sh.run!==run)return;
   sh.pdf=new File([r.blob],r.fname,{type:"application/pdf"});$("shPdf").disabled=false;setSh({shPdfState:`PDF listo · ${r.pages} pág. · ${(r.blob.size/1048576).toFixed(1)} MB`});
   if(typeof reload==="function")reload()}
- catch(err){if(sh.run!==run)return;
-  if(err&&err.status===401){clearToken();setSh({shSetup:true,shStatus:"GitHub dice que tu token no es válido o ya venció. Crea uno nuevo y pégalo aquí."})}
+ catch(err){if(sh.run!==run)return;setDetail(err);
+  if(err&&err.status===401){await handle401(err)}
   else if(err&&(err.status===403||err.status===404)&&!/rate limit/i.test(err.message||"")){setSh({shRetry:true,shAgain:true,shStatus:PERM403})}
   else setSh({shRetry:true,shStatus:"No se pudo subir. Revisa tu señal y vuelve a intentar."})}}
 function closeShare(){sh.run++;$("share").hidden=true;document.body.style.overflow="";if(typeof reload==="function")reload()}
@@ -718,7 +725,7 @@ $("shPdf").onclick=async()=>{if(!sh.pdf)return;const t=$("shText").value;try{awa
 $("shTokSave").onclick=async()=>{const t=$("shTok").value.replace(/\s+/g,"");if(!t){toast("Pega el token primero");return}
  if(!/^(github_pat_|ghp_)\w{20,}$/.test(t)){setSh({shStatus:"Eso no parece un token de GitHub. Debe empezar con github_pat_ y copiarse completo."});return}
  $("shTokSave").disabled=true;$("shTokSave").textContent="Revisando…";const prev=tokMem;tokMem=t;
- try{const r=await gh("");
+ try{const r=await gh("");if(!r.ok){const j=await r.clone().json().catch(()=>({}));setDetail({status:r.status,message:j.message||"",path:"revisión del token"})}else setDetail(null);
   if(r.status===401)throw"inv";if(r.status===404||r.status===403)throw"repo";if(!r.ok)throw"net";
   await setToken(t);$("shTok").value="";toast("Token guardado en este teléfono");sh.mode==="all"?openShareAll(false):openShare(sh.e,sh.mode)}
  catch(err){tokMem=prev;setSh({shStatus:err==="inv"?"GitHub dice que ese token no es válido. Revisa que lo copiaste completo.":err==="repo"?"Ese token no tiene acceso a BITACORA-DE-OBRA. En GitHub edita el token y en Repository access elige Only select repositories → BITACORA-DE-OBRA.":"No se pudo revisar el token. Revisa tu señal e intenta otra vez."})}
@@ -772,7 +779,7 @@ async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pd
  $("share").hidden=false;document.body.style.overflow="hidden";
  ["shPdf","shPdfState"].forEach(id=>$(id).hidden=true);$("shWa").classList.add("pri");
  $("shWa").setAttribute("aria-disabled","true");$("shWa").classList.add("off");
- setSh({shSetup:false,shRetry:false,shAgain:false,shNewLink:false,shInfo:"",shStatus:"Preparando…"});$("shText").value="";
+ setSh({shSetup:false,shRetry:false,shAgain:false,shNewLink:false,shInfo:"",shStatus:"Preparando…"});setDetail(null);$("shText").value="";
  if(window.claude){setSh({shStatus:"El link de toda la bitácora se crea desde la versión de GitHub (ingezequieljuv.github.io/BITACORA-DE-OBRA)."});return}
  if(!ghToken()){setSh({shSetup:true,shStatus:"Falta configurar el permiso de GitHub para crear links."});return}
  try{if(!(await idb.all("registros")).filter(e=>!e.ejemplo).length){setSh({shStatus:"Todavía no tienes registros guardados."});return}
@@ -782,8 +789,8 @@ async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pd
   $("shWa").classList.remove("off");$("shWa").removeAttribute("aria-disabled");
   setSh({shStatus:`✓ Link listo con ${r.fresh.length} registros. Se actualiza solo cada vez que guardes, edites o borres un registro: no tienes que volver a mandarlo.`,shInfo:portUrl(r.pid),shAgain:true,shNewLink:true});
   setSync(`✓ Tu link está al día · ${hora(lsGet("bit_sync_at"))}`)}
- catch(err){if(sh.run!==run)return;
-  if(err&&err.status===401){clearToken();setSh({shSetup:true,shStatus:"GitHub dice que tu token no es válido o ya venció. Crea uno nuevo y pégalo aquí."})}
+ catch(err){if(sh.run!==run)return;setDetail(err);
+  if(err&&err.status===401){await handle401(err)}
   else if(err&&(err.status===403||err.status===404)&&!/rate limit/i.test(err.message||"")){setSh({shRetry:true,shAgain:true,shStatus:PERM403})}
   else setSh({shRetry:true,shStatus:"Se cortó la subida. Toca “Volver a intentar”: continúa donde se quedó."})}}
 $("btnShareAll").onclick=()=>openShareAll(false);
