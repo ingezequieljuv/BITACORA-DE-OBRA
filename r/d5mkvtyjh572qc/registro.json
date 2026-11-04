@@ -1,0 +1,53 @@
+{
+ "tipo": "general",
+ "qc": [],
+ "f_fecha": "2026-10-20",
+ "f_dia": "Martes",
+ "f_hora": "09:54",
+ "f_obra": "Puente Armeria I",
+ "f_cad1": "45+500",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Alta",
+ "f_lat": "18.934978",
+ "f_lng": "-103.941672",
+ "f_notas": "Armado de Junta Sísmica, se esperan ser coladas al día siguiente, 21 de Octubre del 2026.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km45+500.jpg",
+   "cap": "Ubicación satelital 45+500",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km45+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km45+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km45+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km45+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km45+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km45+500.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km45+500.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-04T12:52:48.968Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
