@@ -1,0 +1,109 @@
+{
+ "tipo": "concreto",
+ "qc": [],
+ "f_fecha": "2026-10-19",
+ "f_dia": "Lunes",
+ "f_hora": "17:00",
+ "f_obra": "Puente Palo Verde I",
+ "f_cad1": "55+950",
+ "f_cuerpo": "Cuerpo A",
+ "f_carril": "Alta",
+ "f_lat": "18.913911",
+ "f_lng": "-104.036933",
+ "c_elemento": "Junta Sismica",
+ "c_concretera": "DCC",
+ "c_fc": "350",
+ "c_rev": "14",
+ "c_vol": "2.0",
+ "c_ollas": "1",
+ "c_remision": "A 20603",
+ "c_tma": "3/4”",
+ "c_hini": "14:40",
+ "c_cil": "0 Cilindros",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
+ "c_curado": "Membrana",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km55+950.jpg",
+   "cap": "Ubicación satelital 55+950",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km55+950.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km55+950.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-04T12:25:34.683Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
