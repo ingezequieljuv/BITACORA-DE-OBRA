@@ -76,6 +76,12 @@ td.y{color:var(--ok);font-weight:600} td.n{color:var(--bad);font-weight:600}
 .ph .size{font:.7rem var(--f-mono);color:var(--muted)}
 .state{text-align:center;color:var(--muted);padding:48px 16px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-size:.9rem;z-index:20;max-width:calc(100% - 32px)}
+.cats{display:flex;flex-wrap:wrap;gap:8px}
+.cat{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:9px 14px;font:600 .9rem var(--f-body);cursor:pointer}
+.cat span{font:500 .75rem var(--f-mono);color:var(--muted)}
+.cat.on{background:var(--asphalt);border-color:var(--asphalt);color:#f3f4f1}
+.cat.on span{color:var(--accent)}
+.cat:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .filters label{display:flex;flex-direction:column;gap:4px;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:0}
 .filters input,.filters select{font:400 1rem var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;width:100%;min-width:0}
@@ -124,17 +130,24 @@ const isPhone=/iPhone|iPad|iPod|Android/.test(navigator.userAgent)||(navigator.p
 const BATCH=20;
 let idx=null,run=0,ready=[],zipBlob=null,comCount={};
 
-function inRange(){const d1=$("fDesde").value,d2=$("fHasta").value,t=$("fTipo").value,q=$("fQ").value.toLowerCase().trim();
- return idx.registros.filter(r=>(!d1||r.f_fecha>=d1)&&(!d2||r.f_fecha<=d2)&&(!t||r.tipo===t)&&(!q||JSON.stringify(r).toLowerCase().includes(q)))}
-function render(){run++;ready=[];zipBlob=null;$("dlOut").innerHTML="";
+const CATS=[["","Todas"],["concreto","Concretos"],["asfalto","Mezclas asfálticas"],["bacheo","Bacheo"],["terraceria","Terracerías"],["general","Supervisión general"]];
+const isBache=r=>/bache/i.test(r.a_capa||"")||/bache/i.test((r.f_ubic||"")+" "+(r.f_obra||""));
+const catOf=r=>r.tipo==="asfalto"&&isBache(r)?"bacheo":r.tipo==="general"&&isBache(r)?"bacheo":r.tipo;
+let cat="";
+function base(){const d1=$("fDesde").value,d2=$("fHasta").value,q=$("fQ").value.toLowerCase().trim();
+ return idx.registros.filter(r=>(!d1||r.f_fecha>=d1)&&(!d2||r.f_fecha<=d2)&&(!q||JSON.stringify(r).toLowerCase().includes(q)))}
+function inRange(){return base().filter(r=>!cat||catOf(r)===cat)}
+function renderCats(){const b=base(),cnt={"":b.length};b.forEach(r=>{const c=catOf(r);cnt[c]=(cnt[c]||0)+1});
+ $("cats").innerHTML=CATS.filter(([k])=>k===""||cnt[k]||cat===k).map(([k,l])=>`<button type="button" class="cat${cat===k?" on":""}" data-cat="${k}" aria-pressed="${cat===k}">${l}<span>${cnt[k]||0}</span></button>`).join("")}
+function render(){renderCats();run++;ready=[];zipBlob=null;$("dlOut").innerHTML="";
  const list=inRange(),nf=list.reduce((s,r)=>s+(r.fotos||0),0);
- $("sum").textContent=`${list.length} registro${list.length===1?"":"s"} · ${nf} foto${nf===1?"":"s"}`;
- $("dlBtn").disabled=!nf;$("dlBtn").textContent=nf?`Descargar las ${nf} fotos de este rango`:"No hay fotos en este rango";$("dlProg").textContent="";
+ $("sum").textContent=`${cat?CATS.find(c=>c[0]===cat)[1]+": ":""}${list.length} registro${list.length===1?"":"s"} · ${nf} foto${nf===1?"":"s"}`;
+ $("dlBtn").disabled=!nf;$("dlBtn").textContent=nf?`Descargar ${nf===1?"la foto":"las "+nf+" fotos"}${cat?" de "+CATS.find(c=>c[0]===cat)[1].toLowerCase():""} de este rango`:"No hay fotos en este rango";$("dlProg").textContent="";
  if(!list.length){$("list").innerHTML=`<div class="state">No hay registros con estos filtros.</div>`;return}
  let html="",last="";
  for(const r of list.slice().reverse()){if(r.f_fecha!==last){last=r.f_fecha;html+=`<h3 class="day">${esc(r.f_dia||dia(r.f_fecha))} ${esc(fmt(r.f_fecha))}</h3>`}
   const cc=[r.f_cad1?"Km "+r.f_cad1+(r.f_cad2?" – "+r.f_cad2:""):"",r.f_cuerpo,r.f_carril?"Carril "+r.f_carril:""].filter(Boolean).join(" · ");
-  html+=`<a class="item" href="ver.html#${encodeURIComponent(r.id)}"><div class="it-top"><span class="it-t">${esc(TIPOS[r.tipo]||"")}</span><span class="meta">${esc(r.f_hora||"")}</span></div>
+  html+=`<a class="item" href="ver.html#${encodeURIComponent(r.id)}"><div class="it-top"><span class="it-t">${esc(catOf(r)==="bacheo"?"Bacheo":TIPOS[r.tipo]||"")}</span><span class="meta">${esc(r.f_hora||"")}</span></div>
    <div class="obra">${esc(r.f_obra||"Sin obra")}</div>${cc?`<div class="meta">${esc(cc)}</div>`:""}${r.f_ubic?`<div class="meta">${esc(r.f_ubic)}</div>`:""}
    <div class="it-bot"><span class="meta">📷 ${r.fotos||0} foto${r.fotos===1?"":"s"}${comCount[r.id]?` · 💬 ${comCount[r.id]}`:""}</span><span class="go">Ver registro →</span></div></a>`}
  $("list").innerHTML=html}
@@ -192,11 +205,12 @@ async function main(){const pid=(location.hash||"").replace(/^#/,"").replace(/[^
    ${idx.comentarios?`<p class="meta" style="margin:8px 0 0">Para comentar un registro, ábrelo y escribe abajo.</p>`:""}
   </section>
   <section class="card">
-   <h2>Elige las fechas</h2>
+   <h2>Elige la actividad</h2>
+   <div class="cats" id="cats" role="group" aria-label="Actividad"></div>
+   <h2 style="margin-top:16px">Elige las fechas</h2>
    <div class="filters">
     <label>Desde<input type="date" id="fDesde" min="${first}" max="${lastd}" value="${first}"></label>
     <label>Hasta<input type="date" id="fHasta" min="${first}" max="${lastd}" value="${lastd}"></label>
-    <label>Actividad<select id="fTipo"><option value="">Todas</option>${Object.keys(TIPOS).map(k=>`<option value="${k}">${TIPOS[k]}</option>`).join("")}</select></label>
     <label>Buscar<input id="fQ" placeholder="Obra, km, ubicación…"></label>
    </div>
    <p class="meta" id="sum" style="margin:10px 0 0"></p>
@@ -209,7 +223,7 @@ async function main(){const pid=(location.hash||"").replace(/^#/,"").replace(/[^
   </section>
   <section class="list" id="list"></section>
   <footer>Supervisión Ampliación Armería – Manzanillo · JUVISA</footer>`;
- ["fDesde","fHasta","fTipo"].forEach(id=>$(id).addEventListener("change",render));$("fQ").addEventListener("input",render);
+ ["fDesde","fHasta"].forEach(id=>$(id).addEventListener("change",render));$("cats").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;cat=b.dataset.cat;render()});$("fQ").addEventListener("input",render);
  $("dlBtn").onclick=prepare;render();
  if(/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(idx.comentarios||"")){try{const r=await fetch(idx.comentarios);const l=await r.json();comCount={};(Array.isArray(l)?l:[]).forEach(x=>{comCount[x.registro]=(comCount[x.registro]||0)+1});const keep=[...$("dlOut").children].length;if(!keep)render()}catch(e){}}}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-batch]");if(b)saveBatch(+b.dataset.batch,b);const z=e.target.closest("#zipBtn");if(z)saveZip(z)});
