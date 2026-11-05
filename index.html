@@ -667,23 +667,26 @@ async function gh(path,opt={}){const ac=new AbortController();const tm=setTimeou
 const toB64=blob=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(String(f.result).split(",")[1]);f.onerror=rej;f.readAsDataURL(blob)});
 async function ghPut(p,blob,msg,sha){const body={message:msg,content:await toB64(blob),branch:GH.branch};if(sha)body.sha=sha;
  const payload=JSON.stringify(body),tmo=Math.max(90000,payload.length/20);let r;
- for(let a=0;a<6;a++){try{r=await gh("/contents/"+p,{method:"PUT",body:payload,timeout:tmo})}catch(e){if(a<5){if(ghPut.onRetry)ghPut.onRetry(a+1);await sleep(4000);continue}throw{status:0,message:"La señal está muy débil y no terminó de subir. Conéctate a wifi o a mejor señal y vuelve a intentar.",path:p}}
+ for(let a=0;a<6;a++){try{r=await gh("/contents/"+p,{method:"PUT",body:payload,timeout:tmo})}catch(e){if(a<5){if(ghPut.onRetry)ghPut.onRetry(a+1);await sleep(4000);
+   if(!body.sha){try{const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){const j=await g.json();if(j&&j.sha&&j.size===blob.size)return j.sha}}catch(x){}}continue}throw{status:0,message:"La señal está muy débil y no terminó de subir. Conéctate a wifi o a mejor señal y vuelve a intentar.",path:p}}
   if(r.status===403||r.status===429){const ra=+r.headers.get("retry-after")||0;const j=await r.clone().json().catch(()=>({}));if(ra||/rate limit/i.test(j.message||"")){await sleep((ra||45)*1000);continue}}
   if(r.status>=500&&a<5){await sleep(4000);continue}break}
  if(r.status===409||r.status===422){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){body.sha=(await g.json()).sha;r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)})}}
  if(!r.ok){const j=await r.json().catch(()=>({}));throw{status:r.status,message:j.message||"",path:p}}return(await r.json()).content.sha}
 function newShareId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join("")+Date.now().toString(36).slice(-4)}
 function extOf(t){return /png/.test(t)?"png":/heic|heif/.test(t)?"heic":"jpg"}
+let syncStats={total:0,done:0};
+const totTxt=()=>syncStats.total?` · en total ${syncStats.done} de ${syncStats.total} fotos ya subidas`:"";
 async function publishRecord(e,progress){
  const share=JSON.parse(JSON.stringify(e.share||{id:newShareId(),files:{}}));share.files=share.files||{};
  const fotos=e.fotos||[],used=new Set(Object.values(share.files));const pend=fotos.filter(f=>!share.files[f.id]);let k=0;
  for(const f of pend){k++;progress(`Subiendo foto ${k} de ${pend.length}…`);
   const r=await fetch(blobUrl(f.id));if(!r.ok)continue;const b=await r.blob();const mbs=(b.size/1048576).toFixed(1);
-  progress(`Subiendo foto ${k} de ${pend.length} (${mbs} MB)…`);ghPut.onRetry=n=>progress(`Subiendo foto ${k} de ${pend.length} (${mbs} MB) · señal débil, reintento ${n} de 5…`);
+  const ya=fotos.length-pend.length;progress(`Subiendo foto ${ya+k} de ${fotos.length} (${mbs} MB)${totTxt()}…`);ghPut.onRetry=n=>progress(`Subiendo foto ${ya+k} de ${fotos.length} (${mbs} MB) · señal débil, reintento ${n} de 5${totTxt()}…`);
   const i=fotos.indexOf(f)+1;let base=f.mapa?"mapa_satelital":f.ubic?"ubicacion_"+i:"foto_"+i;if(e.f_cad1)base+="_km"+e.f_cad1.replace(/[^\w+]/g,"");
   let nm=base+"."+extOf(b.type),n=2;while(used.has(nm))nm=base+"_"+(n++)+"."+extOf(b.type);
   await ghPut(`r/${share.id}/${nm}`,b,`Foto ${nm} del registro ${e.f_fecha||""}`);share.files[f.id]=nm;used.add(nm);
-  e.share=share;await saveShare(e)}
+  e.share=share;await saveShare(e);syncStats.done++}
  progress("Guardando datos del registro…");
  const data={};Object.keys(e).forEach(key=>{if(!["fotos","share","id","t","ejemplo"].includes(key))data[key]=e[key]});
  data.fotos=fotos.filter(f=>share.files[f.id]).map(f=>({file:share.files[f.id],cap:f.cap||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}));
@@ -755,7 +758,8 @@ async function syncPortfolio(o={}){const progress=o.progress||(()=>{});
  if(syncing){syncAgain=true;return{busy:true}}syncing=true;keepAwake(true);
  try{const all=(await idb.all("registros")).filter(e=>!e.ejemplo).sort((a,b)=>((a.f_fecha||"")+(a.f_hora||"")).localeCompare((b.f_fecha||"")+(b.f_hora||"")));
   const pend=all.filter(needsPublish);let i=0;
-  for(const e of pend){i++;await publishRecord(e,msg=>progress(`Registro ${i} de ${pend.length} · ${msg}`))}
+  syncStats={total:all.reduce((n,e)=>n+(e.fotos||[]).length,0),done:all.reduce((n,e)=>n+(e.fotos||[]).filter(f=>e.share&&e.share.files&&e.share.files[f.id]).length,0)};
+  for(const e of pend){i++;await publishRecord(e,msg=>progress(`Registro ${i} de ${pend.length} pendientes · ${msg}`))}
   if(o.newLink&&pid){progress("Desactivando el link anterior…");try{await ghDelete(`indices/${pid}.json`,"Desactiva link anterior de la bitácora")}catch(err){}pid=null;localStorage.removeItem("bit_idxhash")}
   if(!pid){pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}
   const fresh=(await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id);const cc=cfgCom();
