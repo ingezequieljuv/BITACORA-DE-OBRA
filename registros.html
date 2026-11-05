@@ -78,6 +78,8 @@ td.y{color:var(--ok);font-weight:600} td.n{color:var(--bad);font-weight:600}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-size:.9rem;z-index:20;max-width:calc(100% - 32px)}
 .cats{display:flex;flex-wrap:wrap;gap:8px}
 .cat{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:9px 14px;font:600 .9rem var(--f-body);cursor:pointer}
+.day.grp{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:3px solid var(--accent);padding-bottom:4px;margin-top:18px}
+.day.grp span{font:500 .75rem var(--f-mono);text-transform:none;letter-spacing:0;color:var(--muted)}
 .cat span{font:500 .75rem var(--f-mono);color:var(--muted)}
 .cat.on{background:var(--asphalt);border-color:var(--asphalt);color:#f3f4f1}
 .cat.on span{color:var(--accent)}
@@ -130,26 +132,28 @@ const isPhone=/iPhone|iPad|iPod|Android/.test(navigator.userAgent)||(navigator.p
 const BATCH=20;
 let idx=null,run=0,ready=[],zipBlob=null,comCount={};
 
-const CATS=[["","Todas"],["concreto","Concretos"],["asfalto","Mezclas asfálticas"],["bacheo","Bacheo"],["terraceria","Terracerías"],["general","Supervisión general"]];
+const CATS=[["","Todos por fecha"],["*","Todos por actividad"],["concreto","Concretos"],["asfalto","Mezclas asfálticas"],["bacheo","Bacheo"],["terraceria","Terracerías"],["general","Supervisión general"]];
 const isBache=r=>/bache/i.test(r.a_capa||"")||/bache/i.test((r.f_ubic||"")+" "+(r.f_obra||""));
 const catOf=r=>r.tipo==="asfalto"&&isBache(r)?"bacheo":r.tipo==="general"&&isBache(r)?"bacheo":r.tipo;
 let cat="";
 function base(){const d1=$("fDesde").value,d2=$("fHasta").value,q=$("fQ").value.toLowerCase().trim();
  return idx.registros.filter(r=>(!d1||r.f_fecha>=d1)&&(!d2||r.f_fecha<=d2)&&(!q||JSON.stringify(r).toLowerCase().includes(q)))}
-function inRange(){return base().filter(r=>!cat||catOf(r)===cat)}
-function renderCats(){const b=base(),cnt={"":b.length};b.forEach(r=>{const c=catOf(r);cnt[c]=(cnt[c]||0)+1});
- $("cats").innerHTML=CATS.filter(([k])=>k===""||cnt[k]||cat===k).map(([k,l])=>`<button type="button" class="cat${cat===k?" on":""}" data-cat="${k}" aria-pressed="${cat===k}">${l}<span>${cnt[k]||0}</span></button>`).join("")}
+function inRange(){return base().filter(r=>!cat||cat==="*"||catOf(r)===cat)}
+function renderCats(){const b=base(),cnt={"":b.length,"*":b.length};b.forEach(r=>{const c=catOf(r);cnt[c]=(cnt[c]||0)+1});
+ $("cats").innerHTML=CATS.filter(([k])=>k===""||k==="*"||cnt[k]||cat===k).map(([k,l])=>`<button type="button" class="cat${cat===k?" on":""}" data-cat="${k}" aria-pressed="${cat===k}">${l}<span>${cnt[k]||0}</span></button>`).join("")}
 function render(){renderCats();run++;ready=[];zipBlob=null;$("dlOut").innerHTML="";
  const list=inRange(),nf=list.reduce((s,r)=>s+(r.fotos||0),0);
- $("sum").textContent=`${cat?CATS.find(c=>c[0]===cat)[1]+": ":""}${list.length} registro${list.length===1?"":"s"} · ${nf} foto${nf===1?"":"s"}`;
- $("dlBtn").disabled=!nf;$("dlBtn").textContent=nf?`Descargar ${nf===1?"la foto":"las "+nf+" fotos"}${cat?" de "+CATS.find(c=>c[0]===cat)[1].toLowerCase():""} de este rango`:"No hay fotos en este rango";$("dlProg").textContent="";
+ $("sum").textContent=`${cat&&cat!=="*"?CATS.find(c=>c[0]===cat)[1]+": ":""}${list.length} registro${list.length===1?"":"s"} · ${nf} foto${nf===1?"":"s"}`;
+ $("dlBtn").disabled=!nf;$("dlBtn").textContent=nf?`Descargar ${nf===1?"la foto":"las "+nf+" fotos"}${cat&&cat!=="*"?" de "+CATS.find(c=>c[0]===cat)[1].toLowerCase():""} de este rango`:"No hay fotos en este rango";$("dlProg").textContent="";
  if(!list.length){$("list").innerHTML=`<div class="state">No hay registros con estos filtros.</div>`;return}
- let html="",last="";
- for(const r of list.slice().reverse()){if(r.f_fecha!==last){last=r.f_fecha;html+=`<h3 class="day">${esc(r.f_dia||dia(r.f_fecha))} ${esc(fmt(r.f_fecha))}</h3>`}
-  const cc=[r.f_cad1?"Km "+r.f_cad1+(r.f_cad2?" – "+r.f_cad2:""):"",r.f_cuerpo,r.f_carril?"Carril "+r.f_carril:""].filter(Boolean).join(" · ");
-  html+=`<a class="item" href="ver.html#${encodeURIComponent(r.id)}"><div class="it-top"><span class="it-t">${esc(catOf(r)==="bacheo"?"Bacheo":TIPOS[r.tipo]||"")}</span><span class="meta">${esc(r.f_hora||"")}</span></div>
+ const item=r=>{const cc=[r.f_cad1?"Km "+r.f_cad1+(r.f_cad2?" – "+r.f_cad2:""):"",r.f_cuerpo,r.f_carril?"Carril "+r.f_carril:""].filter(Boolean).join(" · ");
+  return`<a class="item" href="ver.html#${encodeURIComponent(r.id)}"><div class="it-top"><span class="it-t">${cat==="*"?esc((r.f_dia||dia(r.f_fecha))+" "+fmt(r.f_fecha)):esc(catOf(r)==="bacheo"?"Bacheo":TIPOS[r.tipo]||"")}</span><span class="meta">${esc(r.f_hora||"")}</span></div>
    <div class="obra">${esc(r.f_obra||"Sin obra")}</div>${cc?`<div class="meta">${esc(cc)}</div>`:""}${r.f_ubic?`<div class="meta">${esc(r.f_ubic)}</div>`:""}
-   <div class="it-bot"><span class="meta">📷 ${r.fotos||0} foto${r.fotos===1?"":"s"}${comCount[r.id]?` · 💬 ${comCount[r.id]}`:""}</span><span class="go">Ver registro →</span></div></a>`}
+   <div class="it-bot"><span class="meta">📷 ${r.fotos||0} foto${r.fotos===1?"":"s"}${comCount[r.id]?` · 💬 ${comCount[r.id]}`:""}</span><span class="go">Ver registro →</span></div></a>`};
+ let html="",last="";
+ if(cat==="*"){for(const [k,l] of CATS.slice(2)){const g=list.filter(r=>catOf(r)===k);if(!g.length)continue;const nfg=g.reduce((n,r)=>n+(r.fotos||0),0);
+   html+=`<h3 class="day grp">${esc(l)} <span>${g.length} registro${g.length===1?"":"s"} · ${nfg} foto${nfg===1?"":"s"}</span></h3>`;g.slice().reverse().forEach(r=>html+=item(r))}}
+ else for(const r of list.slice().reverse()){if(r.f_fecha!==last){last=r.f_fecha;html+=`<h3 class="day">${esc(r.f_dia||dia(r.f_fecha))} ${esc(fmt(r.f_fecha))}</h3>`}html+=item(r)}
  $("list").innerHTML=html}
 
 async function pool(items,n,fn){let i=0;await Promise.all(Array.from({length:Math.min(n,items.length)},async()=>{while(i<items.length){const k=i++;await fn(items[k],k)}}))}
