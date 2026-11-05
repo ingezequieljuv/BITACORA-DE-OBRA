@@ -1,0 +1,156 @@
+{
+ "tipo": "concreto",
+ "qc": [
+  {
+   "p": "Revenimiento",
+   "r": "13.0",
+   "e": "",
+   "ok": "y"
+  }
+ ],
+ "f_fecha": "2026-10-28",
+ "f_dia": "Miércoles",
+ "f_hora": "10:30",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_cad1": "80+240",
+ "f_cuerpo": "Cuerpo B",
+ "f_ubic": "Ampliación",
+ "f_lat": "18.996936",
+ "f_lng": "-104.244156",
+ "c_elemento": "Muro Tapón",
+ "c_concretera": "DCC",
+ "c_fc": "300.0",
+ "c_rev": "14.0",
+ "c_temp": "28.0",
+ "c_vol": "20.0",
+ "c_ollas": "3",
+ "c_remision": "A 20622",
+ "c_tma": "20 mm",
+ "c_hini": "09:50",
+ "c_cil": "4",
+ "c_metodo": "Bomba",
+ "c_vibrado": "Correcto",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240 · Ampliación ",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_26_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_27_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_28_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_29_km80+240.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-05T02:08:59.962Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
