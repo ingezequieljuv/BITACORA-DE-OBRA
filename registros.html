@@ -100,6 +100,9 @@ td.y{color:var(--ok);font-weight:600} td.n{color:var(--bad);font-weight:600}
 .it-top,.it-bot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
 .it-t{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .go{font-weight:600;font-size:.88rem}
+.jefe{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;margin-top:8px;padding-top:12px;border-top:3px solid var(--accent)}
+.jefe span{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.jefe b{font-size:1.02rem}
 footer{font:.72rem var(--f-mono);color:var(--muted);text-align:center}
 </style>
 </head>
@@ -226,6 +229,7 @@ async function main(){const pid=(location.hash||"").replace(/^#/,"").replace(/[^
    <div class="dl-out" id="dlOut"></div>
   </section>
   <section class="list" id="list"></section>
+  <section class="jefe"><span>Jefe de Supervisión</span><b>Ing. Julio César Rojas Miranda</b></section>
   <footer>Supervisión Ampliación Armería – Manzanillo · JUVISA</footer>`;
  ["fDesde","fHasta"].forEach(id=>$(id).addEventListener("change",render));$("cats").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;cat=b.dataset.cat;render()});$("fQ").addEventListener("input",render);
  $("dlBtn").onclick=prepare;render();

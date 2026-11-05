@@ -634,6 +634,7 @@ async function loadComments(){const c=cfgCom();if(!c.com||window.claude)return;
 function comHtml(e){const l=e.share&&comMap[e.share.id];if(!l||!l.length)return"";
  return`<details class="e-com"><summary>💬 ${l.length} comentario${l.length===1?"":"s"} de lectores</summary>${l.map(x=>`<p><b>${esc(x.nombre)}</b> <span class="e-meta">${esc(new Date(x.fecha).toLocaleString("es-MX",{dateStyle:"short",timeStyle:"short"}))}</span><br>${esc(x.comentario)}</p>`).join("")}</details>`}
 
+const JEFE_CARGO="Jefe de Supervisión",JEFE_NOMBRE="Ing. Julio César Rojas Miranda";
 /* ---------- compartir con link ---------- */
 const GH={repo:"ingezequieljuv/BITACORA-DE-OBRA",branch:"registros",site:"https://ingezequieljuv.github.io/BITACORA-DE-OBRA/"};
 const shareUrl=id=>GH.site+"ver.html#"+id;
@@ -647,7 +648,7 @@ function shareText(e){const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliaci
  L.push("",`🔧 *Actividad:* ${TIPOS[e.tipo]}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`• ${LABELS[k]}: ${e[k]}`)});
  if((e.qc||[]).length){L.push("","✅ *Control de calidad*");(e.qc||[]).forEach(r=>L.push(`• ${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" ✔ cumple":r.ok==="n"?" ✘ NO cumple":""}`))}
  if(e.f_notas)L.push("",`📝 *Notas:* ${e.f_notas}`);
- const nom=$("pdfName").value.trim();if(nom)L.push("",nom);
+ const nom=$("pdfName").value.trim();if(nom)L.push("",nom);L.push(`${JEFE_CARGO}: ${JEFE_NOMBRE}`);
  if(e.share&&e.share.id){const n=(e.fotos||[]).length;L.push("",`🔗 *Ver registro${n?" y descargar fotos originales ("+n+")":""}:*`,shareUrl(e.share.id))}
  else if(mapUrl(e))L.push("",mapUrl(e));
  return L.join("\n")}
@@ -748,7 +749,7 @@ function portText(list,pid){const fechas=list.map(e=>e.f_fecha).filter(Boolean).
  if(fechas.length)L.push(`📅 Del *${fmtFecha(fechas[0])}* al *${fmtFecha(fechas[fechas.length-1])}*`);
  L.push(`🗂 ${list.length} registro${list.length===1?"":"s"} · 📷 ${nf} foto${nf===1?"":"s"}`);
  const tipos={};list.forEach(e=>{tipos[e.tipo]=(tipos[e.tipo]||0)+1});L.push(Object.keys(tipos).map(t=>`• ${TIPOS[t]}: ${tipos[t]}`).join("\n"));
- const nom=$("pdfName").value.trim();if(nom)L.push("",nom);
+ const nom=$("pdfName").value.trim();if(nom)L.push("",nom);L.push(`${JEFE_CARGO}: ${JEFE_NOMBRE}`);
  L.push("","🔗 *Ver todos los registros y descargar fotos originales por rango de fechas:*",portUrl(pid),"","El link se actualiza solo con cada registro nuevo.");return L.join("\n")}
 let syncing=false,syncAgain=false,wakeLock=null;
 async function keepAwake(on){try{if(on&&!wakeLock&&navigator.wakeLock){wakeLock=await navigator.wakeLock.request("screen");wakeLock.addEventListener("release",()=>{wakeLock=null})}else if(!on&&wakeLock){await wakeLock.release();wakeLock=null}}catch(e){}}
@@ -856,7 +857,10 @@ async function buildPdf(list,opt){
   if(e.f_notas){y+=2;line("NOTAS",9.5,true,[93,103,108]);y+=1;line(e.f_notas,10)}
   await drawPh(opt.fotos?(e.fotos||[]).filter(f=>!isU(f)):[],"FOTOGRAFÍAS",opt.cols);
  }
- const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(140);doc.text(`Página ${i} de ${pages}`,W-M,H-7,{align:"right"});doc.text(`Generado ${fmtFecha(today().date)}`,M,H-7)}
+ if(y>H-46){doc.addPage();header()}y=H-34;doc.setDrawColor(242,183,5);doc.setLineWidth(.6);doc.line(W/2-45,y,W/2+45,y);doc.setLineWidth(.2);y+=6;
+ doc.setFont("helvetica","bold");doc.setFontSize(10.5);doc.setTextColor(28,34,38);doc.text(JEFE_CARGO.toUpperCase(),W/2,y,{align:"center"});y+=5.5;
+ doc.setFont("helvetica","normal");doc.setFontSize(10.5);doc.text(JEFE_NOMBRE,W/2,y,{align:"center"});y+=4;
+ const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(140);doc.text(`${JEFE_CARGO}: ${JEFE_NOMBRE}`,W/2,H-7,{align:"center"});doc.text(`Página ${i} de ${pages}`,W-M,H-7,{align:"right"});doc.text(`Generado ${fmtFecha(today().date)}`,M,H-7)}
  const f0=list[list.length-1].f_fecha,f1=list[0].f_fecha;const fname=list.length===1?`bitacora_${f0||"registro"}.pdf`:`bitacora_${[f0,f1].sort().join("_a_")}.pdf`;
  return{blob:doc.output("blob"),fname,pages}}
 

@@ -85,6 +85,9 @@ td.y{color:var(--ok);font-weight:600} td.n{color:var(--bad);font-weight:600}
 .cform .meta:empty{display:none}
 #com:empty{display:none}
 #com .btn{width:100%}
+.jefe{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;margin-top:8px;padding-top:12px;border-top:3px solid var(--accent)}
+.jefe span{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.jefe b{font-size:1.02rem}
 footer{font:.72rem var(--f-mono);color:var(--muted);text-align:center}
 </style>
 </head>
@@ -156,6 +159,7 @@ async function main(){
   ${of.length?`<section class="card"><h2>Fotografías (${of.length})</h2><div class="gal">${gal(of,uf.length)}</div></section>`:""}
   ${all.length?`<div class="row"><button class="btn pri" id="dlAll" disabled style="flex:1 1 220px">Descargar todas las fotos (${all.length})</button></div><p class="ro" style="justify-content:center">Las fotos se descargan en su calidad original.</p>`:""}
   <section class="card" id="com"></section>
+  <section class="jefe"><span>Jefe de Supervisión</span><b>Ing. Julio César Rojas Miranda</b></section>
   <footer>Supervisión Ampliación Armería – Manzanillo · JUVISA</footer>`;
  renderComments(d,id);
  let total=0;
