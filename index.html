@@ -663,11 +663,13 @@ async function handle401(err){const st=await tokenStatus();
  else if(st===0){setSh({shRetry:true,shStatus:"No hay conexión con GitHub en este momento. Revisa tu señal y toca “Volver a intentar”. Tu token sigue guardado."})}
  else{await clearToken();setSh({shSetup:true,shStatus:"El token que tenía guardado ya no sirve (por ejemplo, si lo regeneraste en GitHub). Pega aquí el código nuevo una sola vez."})}}
 const PERM403="Tu token no tiene permiso para guardar. En GitHub entra a Settings → Developer settings → Fine-grained tokens → toca tu token → Edit. Revisa que en Repository access esté BITACORA-DE-OBRA y en Permissions, Contents diga Read and write. Toca Update y luego aquí “Volver a intentar”. No tienes que crear otro token.";
-async function gh(path,opt={}){return fetch("https://api.github.com/repos/"+GH.repo+path,{...opt,headers:{Accept:"application/vnd.github+json",Authorization:"Bearer "+ghToken(),"X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{})}})}
+async function gh(path,opt={}){const ac=new AbortController();const tm=setTimeout(()=>ac.abort(),opt.timeout||45000);try{return await fetch("https://api.github.com/repos/"+GH.repo+path,{...opt,signal:ac.signal,headers:{Accept:"application/vnd.github+json",Authorization:"Bearer "+ghToken(),"X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{})}})}finally{clearTimeout(tm)}}
 const toB64=blob=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(String(f.result).split(",")[1]);f.onerror=rej;f.readAsDataURL(blob)});
 async function ghPut(p,blob,msg,sha){const body={message:msg,content:await toB64(blob),branch:GH.branch};if(sha)body.sha=sha;
- let r;for(let a=0;a<4;a++){r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)});
-  if(r.status===403||r.status===429){const ra=+r.headers.get("retry-after")||0;const j=await r.clone().json().catch(()=>({}));if(ra||/rate limit/i.test(j.message||"")){await sleep((ra||45)*1000);continue}}break}
+ const payload=JSON.stringify(body),tmo=Math.max(90000,payload.length/20);let r;
+ for(let a=0;a<6;a++){try{r=await gh("/contents/"+p,{method:"PUT",body:payload,timeout:tmo})}catch(e){if(a<5){if(ghPut.onRetry)ghPut.onRetry(a+1);await sleep(4000);continue}throw{status:0,message:"La señal está muy débil y no terminó de subir. Conéctate a wifi o a mejor señal y vuelve a intentar.",path:p}}
+  if(r.status===403||r.status===429){const ra=+r.headers.get("retry-after")||0;const j=await r.clone().json().catch(()=>({}));if(ra||/rate limit/i.test(j.message||"")){await sleep((ra||45)*1000);continue}}
+  if(r.status>=500&&a<5){await sleep(4000);continue}break}
  if(r.status===409||r.status===422){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){body.sha=(await g.json()).sha;r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)})}}
  if(!r.ok){const j=await r.json().catch(()=>({}));throw{status:r.status,message:j.message||"",path:p}}return(await r.json()).content.sha}
 function newShareId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join("")+Date.now().toString(36).slice(-4)}
@@ -676,7 +678,8 @@ async function publishRecord(e,progress){
  const share=JSON.parse(JSON.stringify(e.share||{id:newShareId(),files:{}}));share.files=share.files||{};
  const fotos=e.fotos||[],used=new Set(Object.values(share.files));const pend=fotos.filter(f=>!share.files[f.id]);let k=0;
  for(const f of pend){k++;progress(`Subiendo foto ${k} de ${pend.length}…`);
-  const r=await fetch(blobUrl(f.id));if(!r.ok)continue;const b=await r.blob();
+  const r=await fetch(blobUrl(f.id));if(!r.ok)continue;const b=await r.blob();const mbs=(b.size/1048576).toFixed(1);
+  progress(`Subiendo foto ${k} de ${pend.length} (${mbs} MB)…`);ghPut.onRetry=n=>progress(`Subiendo foto ${k} de ${pend.length} (${mbs} MB) · señal débil, reintento ${n} de 5…`);
   const i=fotos.indexOf(f)+1;let base=f.mapa?"mapa_satelital":f.ubic?"ubicacion_"+i:"foto_"+i;if(e.f_cad1)base+="_km"+e.f_cad1.replace(/[^\w+]/g,"");
   let nm=base+"."+extOf(b.type),n=2;while(used.has(nm))nm=base+"_"+(n++)+"."+extOf(b.type);
   await ghPut(`r/${share.id}/${nm}`,b,`Foto ${nm} del registro ${e.f_fecha||""}`);share.files[f.id]=nm;used.add(nm);
