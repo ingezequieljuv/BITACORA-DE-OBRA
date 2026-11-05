@@ -1,0 +1,92 @@
+{
+ "tipo": "concreto",
+ "qc": [],
+ "f_fecha": "2026-10-29",
+ "f_dia": "Jueves",
+ "f_hora": "09:53",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "65+000",
+ "f_cuerpo": "Cuerpo A",
+ "f_lat": "18.943892",
+ "f_lng": "-104.110978",
+ "c_elemento": "Cunetas",
+ "c_concretera": "PSM",
+ "c_fc": "150",
+ "c_rev": "12",
+ "c_vol": "6",
+ "c_remision": "2967",
+ "c_tma": "10 mm",
+ "c_hini": "08:11",
+ "c_cil": "0",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
+ "c_curado": "Agua",
+ "f_notas": "EMPRESA: COINBO Y GUERRA.\n\nSe realizó supervisión del proceso de colocación del concreto más no realizamos muestreo de la mezcla.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km65+000.jpg",
+   "cap": "Ubicación satelital 65+000",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km65+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km65+000.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-05T15:48:31.976Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
