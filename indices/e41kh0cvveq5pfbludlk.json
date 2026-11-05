@@ -437,7 +437,22 @@
    "tipo": "asfalto",
    "a_capa": "Bacheo",
    "fotos": 13
+  },
+  {
+   "id": "2okmhuv7gyr05g",
+   "f_fecha": "2026-10-29",
+   "f_dia": "Jueves",
+   "f_hora": "09:53",
+   "f_obra": "Ampliación Armeria - Manzanillo",
+   "f_cad1": "65+000",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo A",
+   "f_carril": "",
+   "f_ubic": "",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 15
   }
  ],
- "actualizado": "2026-11-05T15:36:43.923Z"
+ "actualizado": "2026-11-05T15:48:33.587Z"
 }
