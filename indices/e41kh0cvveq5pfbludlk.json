@@ -487,7 +487,7 @@
    "id": "fi2w2iv1f22et2",
    "f_fecha": "2026-10-29",
    "f_dia": "Jueves",
-   "f_hora": "16:40",
+   "f_hora": "17:11",
    "f_obra": "Ampliación Armeria - Manzanillo",
    "f_cad1": "88+000",
    "f_cad2": "",
@@ -496,7 +496,7 @@
    "f_ubic": "",
    "tipo": "terraceria",
    "a_capa": "",
-   "fotos": 1
+   "fotos": 17
   },
   {
    "id": "sz462j7e99fuk2",
@@ -514,5 +514,5 @@
    "fotos": 17
   }
  ],
- "actualizado": "2026-11-06T13:46:14.541Z"
+ "actualizado": "2026-11-06T14:09:08.995Z"
 }
