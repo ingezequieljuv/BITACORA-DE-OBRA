@@ -1,0 +1,118 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-29",
+ "f_dia": "Jueves",
+ "f_hora": "15:00",
+ "f_obra": "Puente Jalipa",
+ "f_cad1": "40+080",
+ "f_cad2": "40+120",
+ "f_lat": "19.098822",
+ "f_lng": "-104.285653",
+ "a_capa": "Base negra",
+ "a_planta": "El Colomo",
+ "a_tten": "150",
+ "a_esp": "12",
+ "a_ancho": "4.15",
+ "a_equipo": "Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático.",
+ "f_notas": "EMPRESA: GACSA\n\nCamión 3: NP-3815-D\nAncho: 4.15 m\nEspesor Suelto: 12 cm\nTemperatura de tendido: 150 °C\nHora: 15:30",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km40+080.jpg",
+   "cap": "Ubicación satelital 40+080",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km40+080.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km40+080.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-06T03:40:37.023Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
