@@ -484,6 +484,21 @@
    "fotos": 23
   },
   {
+   "id": "fi2w2iv1f22et2",
+   "f_fecha": "2026-10-29",
+   "f_dia": "Jueves",
+   "f_hora": "16:40",
+   "f_obra": "Ampliación Armeria - Manzanillo",
+   "f_cad1": "88+000",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "Baja",
+   "f_ubic": "",
+   "tipo": "terraceria",
+   "a_capa": "",
+   "fotos": 1
+  },
+  {
    "id": "sz462j7e99fuk2",
    "f_fecha": "2026-10-29",
    "f_dia": "Jueves",
@@ -499,5 +514,5 @@
    "fotos": 17
   }
  ],
- "actualizado": "2026-11-06T13:46:03.297Z"
+ "actualizado": "2026-11-06T13:46:14.541Z"
 }
