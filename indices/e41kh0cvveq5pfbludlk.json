@@ -467,7 +467,37 @@
    "tipo": "asfalto",
    "a_capa": "Carpeta asfáltica",
    "fotos": 55
+  },
+  {
+   "id": "ktbp38mrrzal1v",
+   "f_fecha": "2026-10-29",
+   "f_dia": "Jueves",
+   "f_hora": "15:00",
+   "f_obra": "Puente Jalipa",
+   "f_cad1": "40+080",
+   "f_cad2": "40+120",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "",
+   "tipo": "asfalto",
+   "a_capa": "Base negra",
+   "fotos": 23
+  },
+  {
+   "id": "sz462j7e99fuk2",
+   "f_fecha": "2026-10-29",
+   "f_dia": "Jueves",
+   "f_hora": "17:50",
+   "f_obra": "Puente Jalipa",
+   "f_cad1": "",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "Gasa 10",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 17
   }
  ],
- "actualizado": "2026-11-06T03:36:33.070Z"
+ "actualizado": "2026-11-06T13:46:03.297Z"
 }
