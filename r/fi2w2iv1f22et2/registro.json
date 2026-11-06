@@ -1,0 +1,27 @@
+{
+ "tipo": "terraceria",
+ "qc": [],
+ "f_fecha": "2026-10-29",
+ "f_dia": "Jueves",
+ "f_hora": "16:40",
+ "f_obra": "Ampliación Armeria - Manzanillo",
+ "f_cad1": "88+000",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Baja",
+ "f_lat": "19.053403",
+ "f_lng": "-104.268739",
+ "t_capa": "Base hidráulica",
+ "t_esp": "28",
+ "t_hum": "6",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km88+000.jpg",
+   "cap": "Ubicación satelital 88+000",
+   "mapa": true
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-06T13:46:10.572Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
