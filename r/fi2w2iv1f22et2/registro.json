@@ -3,7 +3,7 @@
  "qc": [],
  "f_fecha": "2026-10-29",
  "f_dia": "Jueves",
- "f_hora": "16:40",
+ "f_hora": "17:11",
  "f_obra": "Ampliación Armeria - Manzanillo",
  "f_cad1": "88+000",
  "f_cuerpo": "Cuerpo B",
@@ -13,15 +13,82 @@
  "t_capa": "Base hidráulica",
  "t_esp": "28",
  "t_hum": "6",
+ "t_gc": "94",
+ "t_gcreq": "100",
+ "f_notas": "EMPRESA: PLACOSA\nCONTROL DE CALIDAD: IMPROYEC\n\nLa capa no cumple con el grado de compactación requerido, se recomendó dejarse orear y darle trabajada con el vibro Compactador, se volverá a checar el día de mañana, en caso de que siga con un porcentaje muy bajo será necesario levantar la capa y trabajarla nuevamente extendiéndole y homogeneizándola hasta alcanzar la compactación necesaria.",
  "fotos": [
   {
    "file": "mapa_satelital_km88+000.jpg",
    "cap": "Ubicación satelital 88+000",
    "mapa": true
+  },
+  {
+   "file": "foto_2_km88+000.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km88+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km88+000.heic",
+   "cap": ""
   }
  ],
  "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
- "actualizado": "2026-11-06T13:46:10.572Z",
+ "actualizado": "2026-11-06T14:09:07.814Z",
  "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
  "whatsapp": "523121767989"
 }
