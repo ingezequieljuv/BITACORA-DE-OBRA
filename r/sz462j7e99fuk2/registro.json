@@ -1,0 +1,100 @@
+{
+ "tipo": "concreto",
+ "qc": [],
+ "f_fecha": "2026-10-29",
+ "f_dia": "Jueves",
+ "f_hora": "17:50",
+ "f_obra": "Puente Jalipa",
+ "f_ubic": "Gasa 10",
+ "f_lat": "19.098900",
+ "f_lng": "-104.286331",
+ "c_elemento": "Cuneta",
+ "c_concretera": "DCC",
+ "c_fc": "150",
+ "c_rev": "10",
+ "c_temp": "30",
+ "c_vol": "7",
+ "c_ollas": "1",
+ "c_remision": "A 194786",
+ "c_tma": "20 mm",
+ "c_hini": "15:56",
+ "c_cil": "4 Especimenes",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
+ "f_notas": "EMPRESA: GACSA",
+ "fotos": [
+  {
+   "file": "mapa_satelital.jpg",
+   "cap": "Ubicación satelital Gasa 10",
+   "mapa": true
+  },
+  {
+   "file": "foto_2.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-06T13:46:01.518Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
