@@ -452,7 +452,22 @@
    "tipo": "concreto",
    "a_capa": "",
    "fotos": 15
+  },
+  {
+   "id": "vv8rlh3iaqn6md",
+   "f_fecha": "2026-10-29",
+   "f_dia": "Jueves",
+   "f_hora": "10:50",
+   "f_obra": "Ampliación Armeria - Manzanillo",
+   "f_cad1": "80+080",
+   "f_cad2": "80+100",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "Rampa San José Mesina",
+   "tipo": "asfalto",
+   "a_capa": "Carpeta asfáltica",
+   "fotos": 55
   }
  ],
- "actualizado": "2026-11-05T15:48:33.587Z"
+ "actualizado": "2026-11-06T03:36:33.070Z"
 }
