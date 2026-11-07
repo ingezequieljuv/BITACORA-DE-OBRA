@@ -512,7 +512,22 @@
    "tipo": "concreto",
    "a_capa": "",
    "fotos": 17
+  },
+  {
+   "id": "sxfo9etwus13fv",
+   "f_fecha": "2026-10-30",
+   "f_dia": "Viernes",
+   "f_hora": "09:15",
+   "f_obra": "Puente Jalipa",
+   "f_cad1": "",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "Gasa 60",
+   "tipo": "asfalto",
+   "a_capa": "Bacheo",
+   "fotos": 13
   }
  ],
- "actualizado": "2026-11-06T14:09:08.995Z"
+ "actualizado": "2026-11-07T11:47:12.574Z"
 }
