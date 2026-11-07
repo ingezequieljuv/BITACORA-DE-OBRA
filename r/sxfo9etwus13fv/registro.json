@@ -1,0 +1,79 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-30",
+ "f_dia": "Viernes",
+ "f_hora": "09:15",
+ "f_obra": "Puente Jalipa",
+ "f_ubic": "Gasa 60",
+ "f_lat": "19.098586",
+ "f_lng": "-104.285561",
+ "a_capa": "Bacheo",
+ "a_planta": "El Colomo GSI",
+ "a_tipo": "PG 64-22",
+ "a_tten": "156",
+ "a_esp": "10",
+ "a_ancho": "3",
+ "a_liga": "0.8",
+ "a_equipo": "Cortadora de Concreto, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático.",
+ "f_notas": "EMPRESAS: GACSA",
+ "fotos": [
+  {
+   "file": "mapa_satelital.jpg",
+   "cap": "Ubicación satelital Gasa 60",
+   "mapa": true
+  },
+  {
+   "file": "foto_2.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-07T11:47:11.449Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
