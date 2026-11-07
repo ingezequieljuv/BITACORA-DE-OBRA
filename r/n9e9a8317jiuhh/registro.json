@@ -1,0 +1,97 @@
+{
+ "tipo": "asfalto",
+ "qc": [],
+ "f_fecha": "2026-10-30",
+ "f_dia": "Viernes",
+ "f_hora": "09:30",
+ "f_obra": "Puente Jalipa",
+ "f_cad1": "40+100",
+ "f_cad2": "40+120",
+ "f_ubic": "Gasa 40",
+ "f_lat": "19.098758",
+ "f_lng": "-104.285583",
+ "a_capa": "Carpeta asfáltica",
+ "a_planta": "El Colomo GSI",
+ "a_tipo": "PG 64-22",
+ "a_tten": "152",
+ "a_esp": "12",
+ "a_ancho": "3.4",
+ "a_liga": "0.8",
+ "a_equipo": "Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático.",
+ "f_notas": "EMPRESA: GACSA\nPROGRAMACIÓN DE TENDIDO\nCarpeta Asfáltica: 150 Toneladas.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km40+100.jpg",
+   "cap": "Ubicación satelital 40+100 · Gasa 40",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km40+100.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km40+100.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-07T11:55:26.557Z",
+ "comentarios": "https://script.google.com/macros/s/AKfycbx-GOiOpYBIjAXJAsSlAKajkXxuLpOEyn-s4T0rKK3njxJt-D2eOD-r5RjVrp680ve7/exec",
+ "whatsapp": "523121767989"
+}
