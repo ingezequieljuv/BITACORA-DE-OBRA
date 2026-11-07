@@ -542,7 +542,22 @@
    "tipo": "asfalto",
    "a_capa": "Carpeta asfáltica",
    "fotos": 17
+  },
+  {
+   "id": "n48yjpgudqtf2c",
+   "f_fecha": "2026-10-30",
+   "f_dia": "Viernes",
+   "f_hora": "10:30",
+   "f_obra": "PSV Panteones",
+   "f_cad1": "87+760",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "",
+   "f_ubic": "Ampliacion",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 37
   }
  ],
- "actualizado": "2026-11-07T11:55:27.657Z"
+ "actualizado": "2026-11-07T12:06:09.973Z"
 }
