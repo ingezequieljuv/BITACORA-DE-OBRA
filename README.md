@@ -31,3 +31,7 @@ Todo se guarda **solo en el navegador del teléfono** donde se usa (IndexedDB). 
 ## Comentarios de lectores
 
 Quien abre un link puede dejar comentarios visibles para todos y escribir al supervisor por WhatsApp. Los comentarios se guardan en la hoja de Google **Comentarios Bitácora de Obra** mediante el script `comentarios-apps-script.gs` (instrucciones dentro del archivo). Para ocultar un comentario, escribe `NO` en la columna *Visible* de la hoja.
+
+## Respaldo en la nube y varios dispositivos
+
+Con el token de GitHub pegado en **Registros → ☁️ Respaldo en la nube**, cada dispositivo sube lo que guarda y trae lo que se agregó en los demás. Los registros se juntan por fecha y hora; si el mismo registro se edita en dos dispositivos, queda la versión más reciente. Los borrados se marcan con su hora para que no regresen. El link compartido, el nombre y la configuración de comentarios se guardan en `config.json` de la rama `registros`, así todos los dispositivos usan el mismo link. Las fotos traídas de otro dispositivo se muestran desde la nube sin ocupar espacio en el teléfono.

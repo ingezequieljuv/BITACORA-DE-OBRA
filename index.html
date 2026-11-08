@@ -342,6 +342,16 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <label>Hasta<input type="date" id="dTo"></label>
     <label>Nombre en el PDF<input id="pdfName" placeholder="Supervisor · empresa"></label>
   </div>
+  <details class="cfg" id="cloudBox">
+    <summary>☁️ Respaldo en la nube <span class="e-meta" id="cloudState"></span></summary>
+    <div class="cfg-body">
+      <p class="hint" style="margin:0">Con el respaldo activo, todo lo que guardes aquí se sube a tu GitHub, y lo que agregues en tus otros dispositivos llega aquí solo. Nada se pierde: se juntan por fecha y hora.</p>
+      <label>Token de GitHub (el mismo en todos tus dispositivos)<input id="cloudTok" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <button type="button" class="btn pri" id="cloudSave">Activar respaldo</button>
+      <button type="button" class="btn" id="cloudNow">Sincronizar ahora</button>
+      <p class="hint" id="cloudMsg" style="margin:0"></p>
+    </div>
+  </details>
   <details class="cfg">
     <summary>💬 Comentarios de lectores <span class="e-meta" id="cfgState"></span></summary>
     <div class="cfg-body">
@@ -541,13 +551,13 @@ function renderList(){
  $("obras").innerHTML=uniq("f_obra")||"<option>Carretera Manzanillo–Cihuatlán</option><option>Autopista Armería–Manzanillo</option>";$("concreteras").innerHTML=uniq("c_concretera");$("contratistas").innerHTML=uniq("f_contratista");$("plantas").innerHTML=uniq("a_planta");
 }
 $("q").oninput=renderList;$("dFrom").onchange=renderList;$("dTo").onchange=renderList;
-$("pdfName").value=lsGet("bit_nombre")||"Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA";$("pdfName").onchange=()=>lsSet("bit_nombre",$("pdfName").value.trim());
+$("pdfName").value=lsGet("bit_nombre")||"Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA";$("pdfName").onchange=()=>{lsSet("bit_nombre",$("pdfName").value.trim());lsSet("bit_cfg_t",Date.now());if(typeof autoSync==="function")autoSync()};
 window.__shown=()=>{const q=$("q").value.toLowerCase().trim(),ft=$("fType").value,df=$("dFrom").value,dt=$("dTo").value;return entries.filter(e=>!e.ejemplo&&(!ft||e.tipo===ft)&&(!df||(e.f_fecha||"")>=df)&&(!dt||(e.f_fecha||"")<=dt)&&(!q||JSON.stringify(e).toLowerCase().includes(q)))};$("fType").onchange=renderList;
 $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("button[data-act]");if(!b)return;const e=entries.find(x=>x.id===b.dataset.id);const a=b.dataset.act;
  if(a==="ask"){confirmId=e.id;renderList();return}
  if(a==="nodel"){confirmId=null;renderList();return}
  if(a==="pdf"){makePdf([e]);return}
- if(a==="del"){confirmId=null;try{if(assets)for(const f of e.fotos||[])assets.delete(f.id).catch(()=>{});await idb.del("registros",e.id);await reload();toast("Registro borrado");if(typeof autoSync==="function"&&typeof idb!=="undefined")autoSync()}catch(err){toast("No se pudo borrar el registro.")}return}
+ if(a==="del"){confirmId=null;try{if(e.share&&e.share.id)addTomb(e.share.id);if(assets)for(const f of e.fotos||[])assets.delete(f.id).catch(()=>{});await idb.del("registros",e.id);await reload();toast("Registro borrado");if(typeof autoSync==="function"&&typeof idb!=="undefined")autoSync()}catch(err){toast("No se pudo borrar el registro.")}return}
  if(a==="edit"){fillForm(e);show("new");window.scrollTo({top:0});return}
  if(a==="dup"){fillForm(e);editingId=null;$("btnSave").textContent="Guardar registro";const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);show("new");window.scrollTo({top:0});toast("Copiado como nuevo registro de hoy");return}
  if(a==="share"){openShare(e,"link");return}
@@ -631,14 +641,19 @@ function cfgHint(){const c=cfgCom(),u=$("cfgUrl").value.trim(),w=$("cfgWa").valu
  if(w&&!c.wa)m.push("Escribe tu número de 10 dígitos.");
  $("cfgMsg").textContent=m.join(" ")||((c.com||c.wa)?"Listo. Toca “Compartir toda mi bitácora” para que tus links ya muestren los comentarios.":"");
  $("cfgState").textContent=c.com&&c.wa?"activos":c.com||c.wa?"activos a medias":"sin configurar"}
-$("cfgUrl").addEventListener("change",()=>{lsSet("bit_comurl",$("cfgUrl").value.trim());cfgHint();loadComments()});
-$("cfgWa").addEventListener("change",()=>{lsSet("bit_wa",$("cfgWa").value.trim());cfgHint()});
+$("cfgUrl").addEventListener("change",()=>{lsSet("bit_comurl",$("cfgUrl").value.trim());lsSet("bit_cfg_t",Date.now());if(typeof autoSync==="function")autoSync();cfgHint();loadComments()});
+$("cfgWa").addEventListener("change",()=>{lsSet("bit_wa",$("cfgWa").value.trim());lsSet("bit_cfg_t",Date.now());if(typeof autoSync==="function")autoSync();cfgHint()});
 let comMap={};
 async function loadComments(){const c=cfgCom();if(!c.com||window.claude)return;
  try{const r=await fetch(c.com);if(!r.ok)return;const list=await r.json();comMap={};(Array.isArray(list)?list:[]).forEach(x=>{(comMap[x.registro]=comMap[x.registro]||[]).push(x)});renderList()}catch(e){}}
 function comHtml(e){const l=e.share&&comMap[e.share.id];if(!l||!l.length)return"";
  return`<details class="e-com"><summary>💬 ${l.length} comentario${l.length===1?"":"s"} de lectores</summary>${l.map(x=>`<p><b>${esc(x.nombre)}</b> <span class="e-meta">${esc(new Date(x.fecha).toLocaleString("es-MX",{dateStyle:"short",timeStyle:"short"}))}</span><br>${esc(x.comentario)}</p>`).join("")}</details>`}
 
+function cloudUi(){const el=$("cloudState");if(!el)return;const on=!window.claude&&!!ghToken();
+ el.textContent=window.claude?"en la versión de GitHub":on?"activo":"sin activar";
+ const t=ghToken();$("cloudTok").placeholder=on?`Token guardado: ${t.slice(0,15)}…${t.slice(-4)}`:"github_pat_…";
+ $("cloudSave").textContent=on?"Cambiar token":"Activar respaldo";$("cloudNow").hidden=!on;
+ if(on&&lsGet("bit_sync_at"))$("cloudMsg").textContent=`Última sincronización: ${new Date(lsGet("bit_sync_at")).toLocaleString("es-MX",{dateStyle:"medium",timeStyle:"short"})}`}
 const JEFE_CARGO="Jefe de Supervisión",JEFE_NOMBRE="Ing. Julio César Rojas Miranda";
 /* ---------- compartir con link ---------- */
 const GH={repo:"ingezequieljuv/BITACORA-DE-OBRA",branch:"registros",site:"https://ingezequieljuv.github.io/BITACORA-DE-OBRA/"};
@@ -669,15 +684,15 @@ async function handle401(err){const st=await tokenStatus();
  else if(st===0){setSh({shRetry:true,shStatus:"No hay conexión con GitHub en este momento. Revisa tu señal y toca “Volver a intentar”. Tu token sigue guardado."})}
  else{await clearToken();setSh({shSetup:true,shStatus:"El token que tenía guardado ya no sirve (por ejemplo, si lo regeneraste en GitHub). Pega aquí el código nuevo una sola vez."})}}
 const PERM403="Tu token no tiene permiso para guardar. En GitHub entra a Settings → Developer settings → Fine-grained tokens → toca tu token → Edit. Revisa que en Repository access esté BITACORA-DE-OBRA y en Permissions, Contents diga Read and write. Toca Update y luego aquí “Volver a intentar”. No tienes que crear otro token.";
-async function gh(path,opt={}){const ac=new AbortController();const tm=setTimeout(()=>ac.abort(),opt.timeout||45000);try{return await fetch("https://api.github.com/repos/"+GH.repo+path,{...opt,signal:ac.signal,headers:{Accept:"application/vnd.github+json",Authorization:"Bearer "+ghToken(),"X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{})}})}finally{clearTimeout(tm)}}
+async function gh(path,opt={}){const ac=new AbortController();const tm=setTimeout(()=>ac.abort(),opt.timeout||45000);try{return await fetch("https://api.github.com/repos/"+GH.repo+path,{cache:"no-store",...opt,signal:ac.signal,headers:{Accept:"application/vnd.github+json",Authorization:"Bearer "+ghToken(),"X-GitHub-Api-Version":"2022-11-28",...(opt.body?{"Content-Type":"application/json"}:{})}})}finally{clearTimeout(tm)}}
 const toB64=blob=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(String(f.result).split(",")[1]);f.onerror=rej;f.readAsDataURL(blob)});
-async function ghPut(p,blob,msg,sha){const body={message:msg,content:await toB64(blob),branch:GH.branch};if(sha)body.sha=sha;
+async function ghPut(p,blob,msg,sha,strict){const body={message:msg,content:await toB64(blob),branch:GH.branch};if(sha)body.sha=sha;
  const payload=JSON.stringify(body),tmo=Math.max(90000,payload.length/20);let r;
  for(let a=0;a<6;a++){try{r=await gh("/contents/"+p,{method:"PUT",body:payload,timeout:tmo})}catch(e){if(a<5){if(ghPut.onRetry)ghPut.onRetry(a+1);await sleep(4000);
    if(!body.sha){try{const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){const j=await g.json();if(j&&j.sha&&j.size===blob.size)return j.sha}}catch(x){}}continue}throw{status:0,message:"La señal está muy débil y no terminó de subir. Conéctate a wifi o a mejor señal y vuelve a intentar.",path:p}}
   if(r.status===403||r.status===429){const ra=+r.headers.get("retry-after")||0;const j=await r.clone().json().catch(()=>({}));if(ra||/rate limit/i.test(j.message||"")){await sleep((ra||45)*1000);continue}}
   if(r.status>=500&&a<5){await sleep(4000);continue}break}
- if(r.status===409||r.status===422){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){body.sha=(await g.json()).sha;r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)})}}
+ if((r.status===409||r.status===422)&&!strict){const g=await gh("/contents/"+p+"?ref="+GH.branch);if(g.ok){body.sha=(await g.json()).sha;r=await gh("/contents/"+p,{method:"PUT",body:JSON.stringify(body)})}}
  if(!r.ok){const j=await r.json().catch(()=>({}));throw{status:r.status,message:j.message||"",path:p}}return(await r.json()).content.sha}
 function newShareId(){const a=new Uint8Array(10);crypto.getRandomValues(a);return Array.from(a,b=>(b%36).toString(36)).join("")+Date.now().toString(36).slice(-4)}
 function extOf(t){return /png/.test(t)?"png":/heic|heif/.test(t)?"heic":"jpg"}
@@ -696,7 +711,7 @@ async function publishRecord(e,progress){
  progress("Guardando datos del registro…");
  const data={};Object.keys(e).forEach(key=>{if(!["fotos","share","id","t","ejemplo"].includes(key))data[key]=e[key]});
  data.fotos=fotos.filter(f=>share.files[f.id]).map(f=>({file:share.files[f.id],cap:f.cap||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}));
- data.nombre=$("pdfName").value.trim();data.actualizado=new Date().toISOString();const cc=cfgCom();if(cc.com)data.comentarios=cc.com;if(cc.wa)data.whatsapp=cc.wa;share.cfg=cfgKey();
+ data.nombre=$("pdfName").value.trim();data.actualizado=new Date().toISOString();data.t=e.t||Date.now();const cc=cfgCom();if(cc.com)data.comentarios=cc.com;if(cc.wa)data.whatsapp=cc.wa;share.cfg=cfgKey();
  share.sha=await ghPut(`r/${share.id}/registro.json`,new Blob([JSON.stringify(data,null,1)],{type:"application/json"}),`Registro ${e.f_fecha||""} ${e.f_cad1||""}`.trim(),share.sha);
  share.at=data.actualizado;e.share=share;await saveShare(e);return share}
 async function saveShare(e){try{if(typeof idb!=="undefined"){await idb.put("registros",e)}else if(col){await col.doc(e.id).update({share:e.share})}}catch(err){}}
@@ -743,6 +758,14 @@ $("shTokSave").onclick=async()=>{const t=$("shTok").value.replace(/\s+/g,"");if(
  catch(err){tokMem=prev;setSh({shStatus:err==="inv"?"GitHub dice que ese token no es válido. Revisa que lo copiaste completo.":err==="repo"?"Ese token no tiene acceso a BITACORA-DE-OBRA. En GitHub edita el token y en Repository access elige Only select repositories → BITACORA-DE-OBRA.":"No se pudo revisar el token. Revisa tu señal e intenta otra vez."})}
  finally{$("shTokSave").disabled=false;$("shTokSave").textContent="Guardar y crear link"}};
 
+$("cloudSave").onclick=async()=>{if(window.claude){$("cloudMsg").textContent="El respaldo en la nube funciona en la versión de GitHub (ingezequieljuv.github.io/BITACORA-DE-OBRA).";return}
+ const t=$("cloudTok").value.replace(/\s+/g,"");if(!/^(github_pat_|ghp_)\w{20,}$/.test(t)){$("cloudMsg").textContent="Pega el token completo; empieza con github_pat_.";return}
+ $("cloudSave").disabled=true;$("cloudMsg").textContent="Revisando el token…";const prev=tokMem;tokMem=t;
+ try{const r=await gh("");if(r.status===401)throw"inv";if(r.status===403||r.status===404)throw"repo";if(!r.ok)throw"net";
+  await setToken(t);$("cloudTok").value="";$("cloudMsg").textContent="✓ Respaldo activado. Sincronizando…";cloudUi();autoSync()}
+ catch(e){tokMem=prev;$("cloudMsg").textContent=e==="inv"?"GitHub dice que ese token no es válido. Revisa que lo copiaste completo.":e==="repo"?"Ese token no tiene acceso a BITACORA-DE-OBRA.":"No se pudo revisar el token. Revisa tu señal."}
+ finally{$("cloudSave").disabled=false}};
+$("cloudNow").onclick=()=>{$("cloudMsg").textContent="Sincronizando…";runAutoSync()};
 /* ---------- compartir toda la bitácora (con actualización automática) ---------- */
 const portUrl=pid=>GH.site+"registros.html#"+pid;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -759,35 +782,82 @@ function portText(list,pid){const fechas=list.map(e=>e.f_fecha).filter(Boolean).
 let syncing=false,syncAgain=false,wakeLock=null;
 async function keepAwake(on){try{if(on&&!wakeLock&&navigator.wakeLock){wakeLock=await navigator.wakeLock.request("screen");wakeLock.addEventListener("release",()=>{wakeLock=null})}else if(!on&&wakeLock){await wakeLock.release();wakeLock=null}}catch(e){}}
 function shTop(){try{document.activeElement&&document.activeElement.blur();const b=document.querySelector("#share .sh-body");if(b)b.scrollTo({top:0,behavior:"smooth"})}catch(e){}}
+/* ---------- nube: sincronización en dos sentidos ---------- */
+const RAWB=`https://raw.githubusercontent.com/${GH.repo}/${GH.branch}/`;
+async function ghGetJson(path){const r=await gh("/contents/"+path+"?ref="+GH.branch);
+ if(r.status===404)return null;if(!r.ok){const j=await r.json().catch(()=>({}));throw{status:r.status,message:j.message||"",path}}
+ const j=await r.json();let txt;
+ if(j.content&&j.encoding==="base64"){const bin=atob(j.content.replace(/\s/g,""));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);txt=new TextDecoder().decode(u)}
+ else{const d=await fetch(j.download_url+"?t="+Date.now(),{cache:"no-store"});txt=await d.text()}
+ return{data:JSON.parse(txt),sha:j.sha}}
+const tombs=()=>lsGet("bit_borrados")||{};
+function addTomb(id){if(!id)return;const t=tombs();t[id]=Date.now();lsSet("bit_borrados",t)}
+const jblob=o=>new Blob([JSON.stringify(o,null,1)],{type:"application/json"});
+async function syncConfig(create,newPid){const c=await ghGetJson("config.json");const cfg=c?{...c.data}:{};let changed=false;let pid=lsGet("bit_portafolio");
+ if(newPid){pid=newPid;lsSet("bit_portafolio",pid);cfg.portafolio=pid;changed=true}
+ else if(cfg.portafolio){if(pid!==cfg.portafolio){pid=cfg.portafolio;lsSet("bit_portafolio",pid)}}
+ else{if(!pid){if(!create)return{pid:null};pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}cfg.portafolio=pid;changed=true}
+ const lc=lsGet("bit_comurl")||"",lw=lsGet("bit_wa")||"",ln=$("pdfName").value.trim();const stamp=lsGet("bit_cfg_t")||((lc||lw)?1:0);
+ if((cfg.t||0)>stamp){if(cfg.comurl!==undefined)lsSet("bit_comurl",cfg.comurl);if(cfg.wa!==undefined)lsSet("bit_wa",cfg.wa);if(cfg.nombre){$("pdfName").value=cfg.nombre;lsSet("bit_nombre",cfg.nombre)}lsSet("bit_cfg_t",cfg.t);initCfg()}
+ else if(stamp>(cfg.t||0)){cfg.comurl=lc;cfg.wa=lw;cfg.nombre=ln;cfg.t=stamp;changed=true}
+ if(changed)await ghPut("config.json",jblob(cfg),"Configuración de la bitácora",c&&c.sha);
+ return{pid}}
+async function saveRemoteRecord(sid,g,L){const d=g.data;const t=d.t||Date.parse(d.actualizado)||Date.now();
+ const rev={};if(L&&L.share&&L.share.files)for(const k in L.share.files)rev[L.share.files[k]]=k;
+ const fotos=(d.fotos||[]).map(f=>({id:rev[f.file]||("r_"+sid+"_"+f.file),cap:f.cap||"",name:f.file,...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}));
+ for(const f of fotos){if(!(await idb.get("fotos",f.id))){const u=RAWB+"r/"+sid+"/"+encodeURIComponent(f.name);await idb.put("fotos",{id:f.id,remote:u,name:f.name});urlMap.set(f.id,u)}}
+ const rec={};Object.keys(d).forEach(k=>{if(!["fotos","nombre","actualizado","comentarios","whatsapp","t"].includes(k))rec[k]=d[k]});
+ rec.id=L?L.id:"g"+sid;rec.t=t;rec.fotos=fotos;rec.share={id:sid,files:Object.fromEntries(fotos.map(f=>[f.id,f.name])),sha:g.sha,at:new Date(Math.max(t,Date.now())).toISOString(),cfg:cfgKey()};
+ await idb.put("registros",rec)}
+async function pullRemote(pid,progress){const idx=await ghGetJson(`indices/${pid}.json`);if(!idx)return{added:0,updated:0,deleted:0};
+ const remote=idx.data,bySid={};(await idb.all("registros")).filter(e=>!e.ejemplo).forEach(e=>{if(e.share&&e.share.id)bySid[e.share.id]=e});
+ let added=0,updated=0,deleted=0;const borr=remote.borrados||{},lt=tombs();
+ for(const sid in borr){const L=bySid[sid];if(L&&(L.t||0)<=borr[sid]){await idb.del("registros",L.id);delete bySid[sid];deleted++}}
+ const todo=(remote.registros||[]).filter(r=>{const L=bySid[r.id];if(!L)return !lt[r.id];return (r.t||0)>(L.t||0)});
+ let k=0;for(const r of todo){k++;progress(`Trayendo registros de tus otros dispositivos (${k} de ${todo.length})…`);
+  const g=await ghGetJson(`r/${r.id}/registro.json`);if(!g)continue;const L=bySid[r.id];await saveRemoteRecord(r.id,g,L);L?updated++:added++}
+ return{added,updated,deleted}}
+const entryOf=e=>({id:e.share.id,t:e.t||0,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",f_contratista:e.f_contratista||"",tipo:e.tipo,a_capa:e.tipo==="asfalto"?(e.a_capa||""):"",fotos:(e.fotos||[]).length});
+async function writeIndex(pid,force,progress){for(let a=0;a<5;a++){
+  const cur=await ghGetJson(`indices/${pid}.json`);const remote=cur?cur.data:{};const map={};(remote.registros||[]).forEach(r=>{map[r.id]=r});
+  const borr={...(remote.borrados||{})},lt=tombs();for(const id in lt)borr[id]=Math.max(borr[id]||0,lt[id]);
+  for(const e of (await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id)){const en=entryOf(e),ex=map[en.id];if(!ex||(en.t||0)>=(ex.t||0))map[en.id]=en}
+  for(const id in borr){if(map[id]&&(map[id].t||0)<=borr[id])delete map[id]}
+  const cc=cfgCom();const body={nombre:$("pdfName").value.trim(),...(cc.com?{comentarios:cc.com}:{}),...(cc.wa?{whatsapp:cc.wa}:{}),
+   registros:Object.values(map).sort((x,y)=>((x.f_fecha||"")+(x.f_hora||"")).localeCompare((y.f_fecha||"")+(y.f_hora||""))),borrados:borr};
+  const {actualizado,...rest}=remote;if(cur&&!force&&JSON.stringify(rest)===JSON.stringify(body))return{body,changed:false};
+  progress("Actualizando el índice de la bitácora…");
+  try{await ghPut(`indices/${pid}.json`,jblob({...body,actualizado:new Date().toISOString()}),`Índice de la bitácora (${body.registros.length} registros)`,cur&&cur.sha,true);return{body,changed:true}}
+  catch(err){if(err&&(err.status===409||err.status===422)){await sleep(1200);continue}throw err}}
+ throw{status:409,message:"Otro dispositivo estaba guardando al mismo tiempo. Se vuelve a intentar solo."}}
 async function syncPortfolio(o={}){const progress=o.progress||(()=>{});
- if(window.claude||!ghToken())return null;let pid=lsGet("bit_portafolio");if(!pid&&!o.create)return null;
+ if(window.claude||!ghToken()||typeof idb==="undefined")return null;
  if(syncing){syncAgain=true;return{busy:true}}syncing=true;keepAwake(true);
- try{const all=(await idb.all("registros")).filter(e=>!e.ejemplo).sort((a,b)=>((a.f_fecha||"")+(a.f_hora||"")).localeCompare((b.f_fecha||"")+(b.f_hora||"")));
+ try{let newPid=null,oldPid=lsGet("bit_portafolio");
+  if(o.newLink&&oldPid){newPid=newShareId()+newShareId().slice(0,6)}
+  progress("Revisando la nube…");const {pid}=await syncConfig(true,newPid);
+  const pr=newPid?{added:0,updated:0,deleted:0}:await pullRemote(pid,progress);if(pr.added||pr.updated||pr.deleted)await reload();
+  const all=(await idb.all("registros")).filter(e=>!e.ejemplo).sort((a,b)=>((a.f_fecha||"")+(a.f_hora||"")).localeCompare((b.f_fecha||"")+(b.f_hora||"")));
   const pend=all.filter(needsPublish);let i=0;
   syncStats={total:all.reduce((n,e)=>n+(e.fotos||[]).length,0),done:all.reduce((n,e)=>n+(e.fotos||[]).filter(f=>e.share&&e.share.files&&e.share.files[f.id]).length,0)};
   for(const e of pend){i++;await publishRecord(e,msg=>progress(`Registro ${i} de ${pend.length} pendientes · ${msg}`))}
-  if(o.newLink&&pid){progress("Desactivando el link anterior…");try{await ghDelete(`indices/${pid}.json`,"Desactiva link anterior de la bitácora")}catch(err){}pid=null;localStorage.removeItem("bit_idxhash")}
-  if(!pid){pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}
-  const fresh=(await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id);const cc=cfgCom();
-  const body={nombre:$("pdfName").value.trim(),...(cc.com?{comentarios:cc.com}:{}),...(cc.wa?{whatsapp:cc.wa}:{}),registros:fresh.map(e=>({id:e.share.id,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",f_contratista:e.f_contratista||"",tipo:e.tipo,a_capa:e.tipo==="asfalto"?(e.a_capa||""):"",fotos:(e.fotos||[]).length}))
-   .sort((a,b)=>(a.f_fecha+a.f_hora).localeCompare(b.f_fecha+b.f_hora))};
-  const hash=pid+":"+JSON.stringify(body);let changed=false;
-  if(o.force||lsGet("bit_idxhash")!==hash){progress("Actualizando el índice de la bitácora…");
-   await ghPut(`indices/${pid}.json`,new Blob([JSON.stringify({...body,actualizado:new Date().toISOString()},null,1)],{type:"application/json"}),`Índice de la bitácora (${body.registros.length} registros)`);
-   lsSet("bit_idxhash",hash);changed=true}
-  lsSet("bit_sync_at",new Date().toISOString());if(pend.length)await reload();
-  return{pid,fresh,changed,subidos:pend.length}}
+  const w=await writeIndex(pid,o.force||!!newPid,progress);
+  if(newPid&&oldPid){progress("Desactivando el link anterior…");try{await ghDelete(`indices/${oldPid}.json`,"Desactiva link anterior de la bitácora")}catch(err){}}
+  const fresh=(await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id);
+  lsSet("bit_sync_at",new Date().toISOString());await reload();
+  return{pid,fresh,changed:w.changed,subidos:pend.length,...pr}}
  finally{syncing=false;keepAwake(false);if(syncAgain){syncAgain=false;setTimeout(autoSync,800)}}}
 function setSync(t){const el=$("syncState");if(!el)return;el.textContent=t;el.hidden=!t}
 function hora(iso){try{return new Date(iso).toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"})}catch(e){return""}}
 let syncTimer=null;
 function autoSync(){clearTimeout(syncTimer);syncTimer=setTimeout(runAutoSync,1500)}
-async function runAutoSync(){if(window.claude||!ghToken()||!lsGet("bit_portafolio")){setSync("");return}
- if(!navigator.onLine){const n=(await idb.all("registros")).filter(e=>!e.ejemplo&&needsPublish(e)).length;setSync(n?`⏳ ${n} registro${n===1?"":"s"} por subir a tu link. Se suben solos cuando tengas señal.`:"🔗 Tu link está al día.");return}
- setSync("🔄 Actualizando tu link…");
- try{const r=await syncPortfolio({progress:m=>setSync("🔄 "+m)});if(!r||r.busy)return;setSync(`✓ Tu link está al día · ${hora(lsGet("bit_sync_at"))}`)}
- catch(err){if(err&&err.status===401){setSync("⚠️ Tu permiso de GitHub venció. Toca “Compartir toda mi bitácora” para configurarlo y seguir actualizando tu link.")}
-  else setSync("⚠️ No se pudo actualizar tu link ahorita. Se vuelve a intentar solo.");clearTimeout(syncTimer);syncTimer=setTimeout(runAutoSync,120000)}}
+async function runAutoSync(){if(window.claude||!ghToken()||typeof idb==="undefined"){setSync("");cloudUi();return}
+ if(!navigator.onLine){const n=(await idb.all("registros")).filter(e=>!e.ejemplo&&needsPublish(e)).length;setSync(n?`⏳ ${n} registro${n===1?"":"s"} por respaldar en la nube. Se suben solos cuando tengas señal.`:"☁️ Todo está respaldado en la nube.");return}
+ setSync("🔄 Sincronizando con la nube…");
+ try{const r=await syncPortfolio({progress:m=>setSync("🔄 "+m)});if(!r||r.busy)return;setSync(`☁️ Respaldado en la nube y al día · ${hora(lsGet("bit_sync_at"))}`);cloudUi();
+  const n=(r.added||0)+(r.updated||0);if(n||r.deleted)toast([n?`${n} registro${n===1?"":"s"} nuevo${n===1?"":"s"} o actualizado${n===1?"":"s"} de tus otros dispositivos`:"",r.deleted?`${r.deleted} borrado${r.deleted===1?"":"s"}`:""].filter(Boolean).join(" · "))}
+ catch(err){if(err&&err.status===401){setSync("⚠️ Tu permiso de GitHub venció o cambió. Pega el token nuevo en Registros → ☁️ Respaldo en la nube.")}
+  else setSync("⚠️ No se pudo sincronizar con la nube ahorita. Tus datos siguen guardados en este dispositivo; se vuelve a intentar solo.");clearTimeout(syncTimer);syncTimer=setTimeout(runAutoSync,120000)}}
 window.addEventListener("online",autoSync);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")autoSync()});
 async function openShareAll(newLink){const run=++sh.run;sh={e:null,mode:"all",pdf:null,run};
@@ -921,24 +991,24 @@ downloads={async save({filename,data}){const blob=data instanceof Blob?data:new 
  const file=new File([blob],filename,{type:blob.type||"application/octet-stream"});
  if(/iPhone|iPad|iPod/.test(navigator.userAgent)&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:filename});return}catch(e){if(e&&e.name==="AbortError")throw{code:"declined"}}}
  const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
-async function loadPhotoUrls(){for(const f of await idb.all("fotos")){if(!urlMap.has(f.id))urlMap.set(f.id,URL.createObjectURL(f.blob))}}
+async function loadPhotoUrls(){for(const f of await idb.all("fotos")){if(!urlMap.has(f.id))urlMap.set(f.id,f.blob?URL.createObjectURL(f.blob):f.remote)}}
 async function reload(){const list=(await idb.all("registros")).sort((a,b)=>((b.f_fecha||"")+(b.f_hora||"")).localeCompare((a.f_fecha||"")+(a.f_hora||""))||(b.t||0)-(a.t||0));
  entries=list.length?list:SAMPLE;renderList();$("status").textContent=`Guardado en este teléfono · ${list.length} registro${list.length===1?"":"s"}`}
 
 /* ---------- respaldo ---------- */
 const b64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)});
-$("btnBackup").onclick=async()=>{try{toast("Preparando respaldo…");const regs=await idb.all("registros");const fotos=[];for(const f of await idb.all("fotos"))fotos.push({id:f.id,name:f.name,type:f.type,data:await b64(f.blob)});
+$("btnBackup").onclick=async()=>{try{toast("Preparando respaldo…");const regs=await idb.all("registros");const fotos=[];for(const f of await idb.all("fotos"))fotos.push(f.blob?{id:f.id,name:f.name,type:f.type,data:await b64(f.blob)}:{id:f.id,name:f.name,remote:f.remote});
  const json=JSON.stringify({app:"bitacora-obra",version:1,fecha:new Date().toISOString(),registros:regs,fotos});
  await downloads.save({filename:`respaldo_bitacora_${today().date}.json`,data:new Blob([json],{type:"application/json"})});lsSet("bit_ultimo_respaldo",today().date);toast("Respaldo listo")}catch(e){if(!(e&&e.code==="declined"))toast("No se pudo crear el respaldo")}};
 $("restoreFile").onchange=async ev=>{const file=ev.target.files[0];ev.target.value="";if(!file)return;
  try{const d=JSON.parse(await file.text());if(d.app!=="bitacora-obra")throw 0;let n=0;
-  for(const f of d.fotos||[]){const blob=await (await fetch(f.data)).blob();await idb.put("fotos",{id:f.id,blob,name:f.name,type:f.type});n++}
+  for(const f of d.fotos||[]){if(f.remote){if(!(await idb.get("fotos",f.id)))await idb.put("fotos",{id:f.id,remote:f.remote,name:f.name});n++;continue}const blob=await (await fetch(f.data)).blob();await idb.put("fotos",{id:f.id,blob,name:f.name,type:f.type});n++}
   for(const r of d.registros||[])await idb.put("registros",r);
-  await loadPhotoUrls();await reload();toast(`Restaurados ${(d.registros||[]).length} registros y ${n} fotos`)}
+  await loadPhotoUrls();await reload();autoSync();toast(`Restaurados ${(d.registros||[]).length} registros y ${n} fotos`)}
  catch(e){toast("Ese archivo no es un respaldo de la bitácora")}};
 
 /* ---------- arranque ---------- */
-resetForm();entries=SAMPLE;renderList();initCfg();loadComments();
+resetForm();entries=SAMPLE;renderList();initCfg();loadComments();cloudUi();
 (async()=>{
  try{await restoreToken();await loadPhotoUrls();await reload()}catch(e){$("status").textContent="Este navegador no permite guardar datos. Abre la bitácora en Safari, fuera del modo privado."}
  try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}
