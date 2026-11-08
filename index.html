@@ -229,6 +229,10 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <button type="button" class="type" data-t="terraceria" aria-pressed="false">Terracerías</button>
       <button type="button" class="type" data-t="general" aria-pressed="false">Supervisión general</button>
     </div>
+    <div class="grid" style="padding-top:0">
+      <label class="full">Empresa contratista / que ejecuta<input id="f_contratista" list="contratistas" placeholder="Nombre de la empresa que realiza el trabajo"></label>
+      <datalist id="contratistas"></datalist>
+    </div>
   </section>
 
   <section class="card" id="sec_concreto">
@@ -408,7 +412,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 const $=id=>document.getElementById(id);
 const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 const TIPOS={concreto:"Colado de concreto",asfalto:"Mezcla asfáltica",terraceria:"Terracerías",general:"Supervisión general"};
-const FIELDS=["f_fecha","f_dia","f_hora","f_obra","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb",
+const FIELDS=["f_fecha","f_dia","f_hora","f_obra","f_contratista","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb",
  "c_elemento","c_concretera","c_fc","c_rev","c_temp","c_vol","c_ollas","c_remision","c_tma","c_aditivo","c_hini","c_hfin","c_cil","c_metodo","c_vibrado","c_curado",
  "a_capa","a_planta","a_ca","a_tipo","a_tprod","a_tten","a_tcomp","a_esp","a_ancho","a_ton","a_viajes","a_liga","a_equipo",
  "t_capa","t_banco","t_esp","t_hum","t_gc","t_gcreq","f_notas"];
@@ -475,7 +479,7 @@ function mapUrl(e){return e.f_lat&&e.f_lng?`https://maps.google.com/?q=${e.f_lat
 /* ---------- formulario ---------- */
 $("f_fecha").addEventListener("change",()=>{$("f_dia").value=diaDe($("f_fecha").value)});
 function resetForm(keep){
- const prev=keep?{f_obra:$("f_obra").value,c_concretera:$("c_concretera").value,a_planta:$("a_planta").value}:{};
+ const prev=keep?{f_obra:$("f_obra").value,f_contratista:$("f_contratista").value,c_concretera:$("c_concretera").value,a_planta:$("a_planta").value}:{};
  FIELDS.forEach(f=>{const el=$(f);if(el.tagName==="SELECT")el.selectedIndex=0;else el.value=""});
  Object.assign(prev,{});for(const k in prev)$(k).value=prev[k]||"";
  const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);
@@ -515,6 +519,7 @@ function renderList(){
   return`<article class="entry ${e.tipo}">
   <div class="e-h"><div class="e-date">${esc(e.f_dia||diaDe(e.f_fecha))} ${esc(fmtFecha(e.f_fecha))}${e.ejemplo?'<span class="badge-ej">EJEMPLO</span>':""}</div><div class="e-meta">${esc(e.f_hora||"")} · ${TIPOS[e.tipo]}</div></div>
   <div class="e-obra">${esc(e.f_obra||"Sin obra")}</div>
+  ${e.f_contratista?`<div class="e-meta">🏢 ${esc(e.f_contratista)}</div>`:""}
   <div class="e-meta">${e.f_cad1?"Km "+esc(e.f_cad1)+(e.f_cad2?" – "+esc(e.f_cad2):""):""}${e.f_cuerpo?" · "+esc(e.f_cuerpo):""}${e.f_carril?" · Carril "+esc(e.f_carril):""}${e.f_ubic?" · "+esc(e.f_ubic):""}</div>
   ${kvFor(e)?`<dl class="kv">${kvFor(e)}</dl>`:""}
   ${qcs?`<div class="chips">${qcs}</div>`:""}
@@ -533,7 +538,7 @@ function renderList(){
   </div>`}</article>`}).join("");
  // sugerencias
  const uniq=k=>[...new Set(real.map(e=>e[k]).filter(Boolean))].slice(0,20).map(v=>`<option>${esc(v)}</option>`).join("");
- $("obras").innerHTML=uniq("f_obra")||"<option>Carretera Manzanillo–Cihuatlán</option><option>Autopista Armería–Manzanillo</option>";$("concreteras").innerHTML=uniq("c_concretera");$("plantas").innerHTML=uniq("a_planta");
+ $("obras").innerHTML=uniq("f_obra")||"<option>Carretera Manzanillo–Cihuatlán</option><option>Autopista Armería–Manzanillo</option>";$("concreteras").innerHTML=uniq("c_concretera");$("contratistas").innerHTML=uniq("f_contratista");$("plantas").innerHTML=uniq("a_planta");
 }
 $("q").oninput=renderList;$("dFrom").onchange=renderList;$("dTo").onchange=renderList;
 $("pdfName").value=lsGet("bit_nombre")||"Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA";$("pdfName").onchange=()=>lsSet("bit_nombre",$("pdfName").value.trim());
@@ -552,8 +557,8 @@ $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("butt
 
 /* ---------- CSV ---------- */
 $("btnCsv").onclick=async()=>{const real=entries.filter(e=>!e.ejemplo);if(!real.length){toast("No hay registros para exportar");return}
- const cols=["f_fecha","f_dia","f_hora","f_obra","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","f_notas"];
- const head=["Fecha","Día","Hora","Obra","Cad. del","Cad. al","Cuerpo","Carril","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Notas"];
+ const cols=["f_fecha","f_dia","f_hora","f_obra","f_contratista","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","f_notas"];
+ const head=["Fecha","Día","Hora","Obra","Empresa contratista","Cad. del","Cad. al","Cuerpo","Carril","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Notas"];
  const cell=v=>`"${String(v??"").replace(/"/g,'""')}"`;
  const rows=real.slice().sort((a,b)=>(a.f_fecha||"").localeCompare(b.f_fecha||"")).map(e=>cols.map(c=>c==="qc"?(e.qc||[]).map(r=>`${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" cumple":r.ok==="n"?" NO cumple":""}`).join(" | "):c==="tipo"?TIPOS[e.tipo]:e[c]).map(cell).join(","));
  const csv="﻿"+[head.map(cell).join(","),...rows].join("\r\n");
@@ -645,7 +650,7 @@ function shareText(e){const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliaci
  const cc=[e.f_cuerpo,e.f_carril?"Carril "+e.f_carril:""].filter(Boolean).join(" · ");if(cc)L.push(`↔️ ${cc}`);
  if(e.f_ubic)L.push(`🗺 ${e.f_ubic}`);
  const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C":""].filter(Boolean).join(" · ");if(amb)L.push(`🌤 ${amb}`);
- L.push("",`🔧 *Actividad:* ${TIPOS[e.tipo]}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`• ${LABELS[k]}: ${e[k]}`)});
+ L.push("",`🔧 *Actividad:* ${TIPOS[e.tipo]}`);if(e.f_contratista)L.push(`🏢 *Empresa contratista:* ${e.f_contratista}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`• ${LABELS[k]}: ${e[k]}`)});
  if((e.qc||[]).length){L.push("","✅ *Control de calidad*");(e.qc||[]).forEach(r=>L.push(`• ${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" ✔ cumple":r.ok==="n"?" ✘ NO cumple":""}`))}
  if(e.f_notas)L.push("",`📝 *Notas:* ${e.f_notas}`);
  const nom=$("pdfName").value.trim();if(nom)L.push("",nom);L.push(`${JEFE_CARGO}: ${JEFE_NOMBRE}`);
@@ -764,7 +769,7 @@ async function syncPortfolio(o={}){const progress=o.progress||(()=>{});
   if(o.newLink&&pid){progress("Desactivando el link anterior…");try{await ghDelete(`indices/${pid}.json`,"Desactiva link anterior de la bitácora")}catch(err){}pid=null;localStorage.removeItem("bit_idxhash")}
   if(!pid){pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}
   const fresh=(await idb.all("registros")).filter(e=>!e.ejemplo&&e.share&&e.share.id);const cc=cfgCom();
-  const body={nombre:$("pdfName").value.trim(),...(cc.com?{comentarios:cc.com}:{}),...(cc.wa?{whatsapp:cc.wa}:{}),registros:fresh.map(e=>({id:e.share.id,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",tipo:e.tipo,a_capa:e.tipo==="asfalto"?(e.a_capa||""):"",fotos:(e.fotos||[]).length}))
+  const body={nombre:$("pdfName").value.trim(),...(cc.com?{comentarios:cc.com}:{}),...(cc.wa?{whatsapp:cc.wa}:{}),registros:fresh.map(e=>({id:e.share.id,f_fecha:e.f_fecha||"",f_dia:e.f_dia||"",f_hora:e.f_hora||"",f_obra:e.f_obra||"",f_cad1:e.f_cad1||"",f_cad2:e.f_cad2||"",f_cuerpo:e.f_cuerpo||"",f_carril:e.f_carril||"",f_ubic:e.f_ubic||"",f_contratista:e.f_contratista||"",tipo:e.tipo,a_capa:e.tipo==="asfalto"?(e.a_capa||""):"",fotos:(e.fotos||[]).length}))
    .sort((a,b)=>(a.f_fecha+a.f_hora).localeCompare(b.f_fecha+b.f_hora))};
   const hash=pid+":"+JSON.stringify(body);let changed=false;
   if(o.force||lsGet("bit_idxhash")!==hash){progress("Actualizando el índice de la bitácora…");
@@ -847,7 +852,7 @@ async function buildPdf(list,opt){
   if(e.share&&e.share.id){need(5);doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(30,90,160);doc.textWithLink("Registro en línea y fotos originales: "+shareUrl(e.share.id),M,y,{url:shareUrl(e.share.id)});y+=4.5}
   const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C ambiente":""].filter(Boolean).join(" · ");if(amb)line(amb,9.5,false,[93,103,108]);
   const uf=(e.fotos||[]).filter(isU);if(uf.length){await drawPh(uf,"UBICACIÓN",uf.length>1?2:1,90);y+=1}
-  y+=2;line("ACTIVIDAD: "+TIPOS[e.tipo].toUpperCase(),9.5,true,[93,103,108]);y+=1;
+  y+=2;line("ACTIVIDAD: "+TIPOS[e.tipo].toUpperCase(),9.5,true,[93,103,108]);if(e.f_contratista){y+=.5;line("Empresa contratista: "+e.f_contratista,10,true)}y+=1;
   const kv=Object.keys(LABELS).filter(k=>k.startsWith(PREFIX[e.tipo])&&e[k]);
   if(kv.length){const cw=CW/2;doc.setFontSize(9.5);for(let i=0;i<kv.length;i+=2){need(6);[kv[i],kv[i+1]].forEach((k,j)=>{if(!k)return;doc.setFont("helvetica","normal");doc.setTextColor(93,103,108);doc.text(LABELS[k]+":",M+j*cw,y);doc.setTextColor(28,34,38);doc.setFont("helvetica","bold");doc.text(doc.splitTextToSize(cl(e[k]),cw-48)[0],M+j*cw+46,y)});y+=5.2}}
   if((e.qc||[]).length){y+=2;need(14);line("CONTROL DE CALIDAD",9.5,true,[93,103,108]);y+=1;

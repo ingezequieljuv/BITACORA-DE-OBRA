@@ -151,7 +151,7 @@ function render(){renderCats();run++;ready=[];zipBlob=null;$("dlOut").innerHTML=
  if(!list.length){$("list").innerHTML=`<div class="state">No hay registros con estos filtros.</div>`;return}
  const item=r=>{const cc=[r.f_cad1?"Km "+r.f_cad1+(r.f_cad2?" – "+r.f_cad2:""):"",r.f_cuerpo,r.f_carril?"Carril "+r.f_carril:""].filter(Boolean).join(" · ");
   return`<a class="item" href="ver.html#${encodeURIComponent(r.id)}"><div class="it-top"><span class="it-t">${cat==="*"?esc((r.f_dia||dia(r.f_fecha))+" "+fmt(r.f_fecha)):esc(catOf(r)==="bacheo"?"Bacheo":TIPOS[r.tipo]||"")}</span><span class="meta">${esc(r.f_hora||"")}</span></div>
-   <div class="obra">${esc(r.f_obra||"Sin obra")}</div>${cc?`<div class="meta">${esc(cc)}</div>`:""}${r.f_ubic?`<div class="meta">${esc(r.f_ubic)}</div>`:""}
+   <div class="obra">${esc(r.f_obra||"Sin obra")}</div>${r.f_contratista?`<div class="meta">🏢 ${esc(r.f_contratista)}</div>`:""}${cc?`<div class="meta">${esc(cc)}</div>`:""}${r.f_ubic?`<div class="meta">${esc(r.f_ubic)}</div>`:""}
    <div class="it-bot"><span class="meta">📷 ${r.fotos||0} foto${r.fotos===1?"":"s"}${comCount[r.id]?` · 💬 ${comCount[r.id]}`:""}</span><span class="go">Ver registro →</span></div></a>`};
  let html="",last="";
  if(cat==="*"){for(const [k,l] of CATS.slice(2)){const g=list.filter(r=>catOf(r)===k);if(!g.length)continue;const nfg=g.reduce((n,r)=>n+(r.fotos||0),0);
@@ -218,7 +218,7 @@ async function main(){const pid=(location.hash||"").replace(/^#/,"").replace(/[^
    <div class="filters">
     <label>Desde<input type="date" id="fDesde" min="${first}" max="${lastd}" value="${first}"></label>
     <label>Hasta<input type="date" id="fHasta" min="${first}" max="${lastd}" value="${lastd}"></label>
-    <label>Buscar<input id="fQ" placeholder="Obra, km, ubicación…"></label>
+    <label>Buscar<input id="fQ" placeholder="Obra, km, empresa, ubicación…"></label>
    </div>
    <p class="meta" id="sum" style="margin:10px 0 0"></p>
   </section>
