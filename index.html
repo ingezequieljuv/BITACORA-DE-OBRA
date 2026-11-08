@@ -349,6 +349,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <label>Token de GitHub (el mismo en todos tus dispositivos)<input id="cloudTok" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
       <button type="button" class="btn pri" id="cloudSave">Activar respaldo</button>
       <button type="button" class="btn" id="cloudNow">Sincronizar ahora</button>
+      <button type="button" class="btn" id="cloudCopy" hidden>Copiar mi token (para pasarlo a otro dispositivo)</button>
       <p class="hint" id="cloudMsg" style="margin:0"></p>
     </div>
   </details>
@@ -652,7 +653,7 @@ function comHtml(e){const l=e.share&&comMap[e.share.id];if(!l||!l.length)return"
 function cloudUi(){const el=$("cloudState");if(!el)return;const on=!window.claude&&!!ghToken();
  el.textContent=window.claude?"en la versión de GitHub":on?"activo":"sin activar";
  const t=ghToken();$("cloudTok").placeholder=on?`Token guardado: ${t.slice(0,15)}…${t.slice(-4)}`:"github_pat_…";
- $("cloudSave").textContent=on?"Cambiar token":"Activar respaldo";$("cloudNow").hidden=!on;
+ $("cloudSave").textContent=on?"Cambiar token":"Activar respaldo";$("cloudNow").hidden=!on;$("cloudCopy").hidden=!on;
  if(on&&lsGet("bit_sync_at"))$("cloudMsg").textContent=`Última sincronización: ${new Date(lsGet("bit_sync_at")).toLocaleString("es-MX",{dateStyle:"medium",timeStyle:"short"})}`}
 const JEFE_CARGO="Jefe de Supervisión",JEFE_NOMBRE="Ing. Julio César Rojas Miranda";
 /* ---------- compartir con link ---------- */
@@ -765,6 +766,7 @@ $("cloudSave").onclick=async()=>{if(window.claude){$("cloudMsg").textContent="El
   await setToken(t);$("cloudTok").value="";$("cloudMsg").textContent="✓ Respaldo activado. Sincronizando…";cloudUi();autoSync()}
  catch(e){tokMem=prev;$("cloudMsg").textContent=e==="inv"?"GitHub dice que ese token no es válido. Revisa que lo copiaste completo.":e==="repo"?"Ese token no tiene acceso a BITACORA-DE-OBRA.":"No se pudo revisar el token. Revisa tu señal."}
  finally{$("cloudSave").disabled=false}};
+$("cloudCopy").onclick=async()=>{const t=ghToken();if(!t)return;try{await navigator.clipboard.writeText(t);$("cloudMsg").textContent="✓ Token copiado. Mándatelo por WhatsApp o correo a ti mismo y pégalo en la app de tu otro dispositivo."}catch(e){$("cloudTok").value=t;$("cloudTok").select();$("cloudMsg").textContent="Selecciona el texto del campo y cópialo."}};
 $("cloudNow").onclick=()=>{$("cloudMsg").textContent="Sincronizando…";runAutoSync()};
 /* ---------- compartir toda la bitácora (con actualización automática) ---------- */
 const portUrl=pid=>GH.site+"registros.html#"+pid;
