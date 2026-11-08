@@ -88,6 +88,8 @@ td.y{color:var(--ok);font-weight:600} td.n{color:var(--bad);font-weight:600}
 .jefe{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;margin-top:8px;padding-top:12px;border-top:3px solid var(--accent)}
 .jefe span{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .jefe b{font-size:1.02rem}
+.mus{display:flex;flex-direction:column;gap:10px}
+.mu{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--bg)}
 footer{font:.72rem var(--f-mono);color:var(--muted);text-align:center}
 </style>
 </head>
@@ -155,6 +157,7 @@ async function main(){
   ${uf.length?`<section class="card"><h2>Ubicación</h2><div class="gal">${gal(uf,0)}</div></section>`:""}
   ${kv?`<section class="card"><h2>${esc(TIPOS[d.tipo])}</h2><dl class="kv" style="margin:0">${kv}</dl></section>`:""}
   ${(d.qc||[]).length?`<section class="card"><h2>Control de calidad</h2><div class="tbl"><table><thead><tr><th>Prueba</th><th>Resultado</th><th>Especificación</th><th>Cumple</th></tr></thead><tbody>${d.qc.map(r=>`<tr><td>${esc(r.p)}</td><td>${esc(r.r)}</td><td>${esc(r.e)}</td><td class="${r.ok||""}">${r.ok==="y"?"Sí":r.ok==="n"?"No":"—"}</td></tr>`).join("")}</tbody></table></div></section>`:""}
+  ${(d.muestreo||[]).length?`<section class="card"><h2>Muestreo (${d.muestreo.length})</h2><div class="mus">${d.muestreo.map(m=>`<div class="mu"><b>${esc(m.id||"Muestra")}</b><dl class="kv" style="margin:6px 0 0">${(m.datos||[]).map(([l,v])=>`<div><dt>${esc(l)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl></div>`).join("")}</div></section>`:""}
   ${d.f_notas?`<section class="card"><h2>Notas</h2><div class="notes">${esc(d.f_notas)}</div></section>`:""}
   ${of.length?`<section class="card"><h2>Fotografías (${of.length})</h2><div class="gal">${gal(of,uf.length)}</div></section>`:""}
   ${all.length?`<div class="row"><button class="btn pri" id="dlAll" disabled style="flex:1 1 220px">Descargar todas las fotos (${all.length})</button></div><p class="ro" style="justify-content:center">Las fotos se descargan en su calidad original.</p>`:""}

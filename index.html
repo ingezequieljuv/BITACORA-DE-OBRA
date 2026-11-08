@@ -84,6 +84,10 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .btn:disabled{opacity:.55;cursor:default}
 .hint{font-size:.8rem;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
 .qc{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+.mu{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--bg)}
+.mu-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.mu-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px}
+.mu-g .mu-w{grid-column:1/-1}
 .qcrow{display:grid;grid-template-columns:1.4fr 1fr 1fr auto auto;gap:8px;align-items:end}
 @media (max-width:560px){.qcrow{grid-template-columns:1fr 1fr}.qcrow .pr{grid-column:1/-1}}
 .cumple{display:flex;gap:4px}
@@ -297,6 +301,12 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <div style="padding:0 14px 14px"><button type="button" class="btn sm" id="addQc">+ Agregar prueba</button></div>
   </section>
 
+  <section class="card">
+    <div class="sec-h"><span class="tag q"></span><h2 id="muTitle">Muestreo</h2></div>
+    <div class="qc" id="muList" style="padding-top:14px"></div>
+    <div style="padding:0 14px 14px"><button type="button" class="btn sm" id="addMu">+ Agregar muestra</button></div>
+  </section>
+
   <section class="card" id="sec_fotos">
     <div class="sec-h"><span class="tag" style="background:var(--muted)"></span><h2>Fotografías</h2></div>
     <div class="addph">
@@ -446,8 +456,28 @@ function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 
 /* ---------- tipo de actividad ---------- */
-function setTipo(t){tipo=t;document.querySelectorAll(".type").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
- ["concreto","asfalto","terraceria"].forEach(k=>$("sec_"+k).hidden=k!==t);}
+/* ---------- muestreo ---------- */
+const MU={
+ concreto:{titulo:"Especímenes de concreto",campos:[["id","Muestra / ID","text","M-1"],["hora","Hora de muestreo","time"],["remision","Olla / remisión"],["elemento","Elemento / ubicación"],["piezas","No. de especímenes","number"],["tipo","Tipo de espécimen","select",["Cilindro 15×30 cm","Cilindro 10×20 cm","Viga 15×15×50 cm","Cubo"]],["rev","Revenimiento cm","number"],["temp","Temp. del concreto °C","number"],["edades","Edades de ensaye (días)","text","7, 14, 28"],["curado","Curado inicial","select",["En obra","Cuarto de curado","Pileta"]],["lab","Laboratorio"],["res","Resistencias obtenidas kg/cm²","text","7d: 180 · 28d: 255"],["obs","Observaciones"]]},
+ asfalto:{titulo:"Muestras de mezcla asfáltica",campos:[["id","Muestra / ID","text","MA-1"],["hora","Hora de muestreo","time"],["lugar","Lugar de muestreo","select",["Planta","Camión","Tendido (detrás de la pavimentadora)","Núcleo / corazón"]],["camion","Camión / viaje / remisión"],["cad","Cadenamiento"],["temp","Temp. de la muestra °C","number"],["peso","Peso de la muestra kg","number"],["ensayes","Ensayes solicitados","text","Marshall, extracción, granulometría"],["lab","Laboratorio"],["ca","Contenido asfáltico obtenido %","number"],["estab","Estabilidad kg","number"],["flujo","Flujo mm","number"],["vacios","Vacíos %","number"],["vam","VAM %","number"],["dens","Peso volumétrico kg/m³","number"],["gc","Grado de compactación %","number"],["esp","Espesor del núcleo cm","number"],["obs","Observaciones"]]},
+ terraceria:{titulo:"Muestras y calas de terracerías",campos:[["id","Muestra / ID","text","T-1"],["hora","Hora","time"],["cad","Cadenamiento"],["lado","Lado / carril"],["capa","Capa"],["prueba","Prueba","select",["Cala de compactación","Humedad","P.V.S.M. (Proctor)","Granulometría","Límites de consistencia","VRS","Equivalente de arena","Otra"]],["prof","Profundidad cm","number"],["hum","Humedad %","number"],["pvs","P.V. seco del lugar kg/m³","number"],["pvsm","P.V.S.M. kg/m³","number"],["gc","Grado de compactación %","number"],["lab","Laboratorio"],["obs","Observaciones"]]},
+ general:{titulo:"Muestras",campos:[["id","Muestra / ID","text","G-1"],["hora","Hora","time"],["material","Material"],["cad","Cadenamiento"],["prueba","Prueba"],["lab","Laboratorio"],["res","Resultado"],["obs","Observaciones"]]}};
+let mu=[];
+const muDef=t=>MU[t]||MU.general;
+function muPairs(t,s){return muDef(t).campos.filter(([k])=>s[k]!==undefined&&String(s[k]).trim()!=="").map(([k,l])=>[l,String(s[k])])}
+function renderMu(){const d=muDef(tipo),box=$("muList");$("muTitle").textContent="Muestreo · "+d.titulo.toLowerCase();
+ if(!mu.length){box.innerHTML=`<p class="hint" style="margin:0">Sin muestras. Toca “Agregar muestra” para anotar ${tipo==="concreto"?"los especímenes (cilindros, vigas)":tipo==="asfalto"?"la muestra de mezcla o el núcleo":tipo==="terraceria"?"la cala o la muestra de material":"la muestra"} y sus datos.</p>`;return}
+ box.innerHTML=mu.map((s,i)=>`<div class="mu"><div class="mu-h"><b>Muestra ${i+1}</b><button type="button" class="btn sm" data-murm="${i}" aria-label="Quitar muestra">✕</button></div><div class="mu-g">${d.campos.map(([k,l,ty,op])=>{const v=esc(s[k]??""),id=`mu_${i}_${k}`;
+  if(ty==="select")return`<label>${l}<select id="${id}"><option value="">—</option>${op.map(o=>`<option${s[k]===o?" selected":""}>${esc(o)}</option>`).join("")}${s[k]&&!op.includes(s[k])?`<option selected>${v}</option>`:""}</select></label>`;
+  return`<label${k==="obs"||k==="ensayes"||k==="res"?' class="mu-w"':""}>${l}<input id="${id}" type="${ty==="number"?"number":ty==="time"?"time":"text"}"${ty==="number"?' step="any" inputmode="decimal"':""} value="${v}"${op?` placeholder="${esc(op)}"`:""}></label>`}).join("")}</div></div>`).join("")}
+function syncMu(){const d=muDef(tipo);mu.forEach((s,i)=>d.campos.forEach(([k])=>{const el=$(`mu_${i}_${k}`);if(el)s[k]=el.value.trim()}))}
+$("muList").addEventListener("click",e=>{const b=e.target.closest("[data-murm]");if(!b)return;syncMu();mu.splice(+b.dataset.murm,1);renderMu()});
+$("addMu").onclick=()=>{syncMu();const pre={concreto:"M-",asfalto:"MA-",terraceria:"T-",general:"G-"}[tipo]||"M-";
+ const s={id:pre+(mu.length+1),hora:today().time};if(tipo==="concreto"){s.rev=$("c_rev").value;s.temp=$("c_temp").value;s.remision=$("c_remision").value;s.elemento=$("c_elemento").value}
+ if(tipo==="asfalto"){s.cad=$("f_cad1").value}if(tipo==="terraceria"){s.cad=$("f_cad1").value;s.capa=$("t_capa").value}
+ mu.push(s);renderMu()};
+function setTipo(t){try{if(document.getElementById("muList").querySelector(".mu"))syncMu()}catch(e){}tipo=t;document.querySelectorAll(".type").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
+ ["concreto","asfalto","terraceria"].forEach(k=>$("sec_"+k).hidden=k!==t);if(typeof renderMu==="function")renderMu()}
 $("types").addEventListener("click",e=>{const b=e.target.closest(".type");if(b)setTipo(b.dataset.t)});
 
 /* ---------- control de calidad ---------- */
@@ -494,12 +524,12 @@ function resetForm(keep){
  FIELDS.forEach(f=>{const el=$(f);if(el.tagName==="SELECT")el.selectedIndex=0;else el.value=""});
  Object.assign(prev,{});for(const k in prev)$(k).value=prev[k]||"";
  const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);
- qc=[];renderQc();photos=[];renderPhotos();editingId=null;$("btnSave").textContent="Guardar registro";
+ qc=[];renderQc();mu=[];renderMu();photos=[];renderPhotos();editingId=null;$("btnSave").textContent="Guardar registro";
  const last=lsGet("bit_ultimo");if(last){if(!$("f_obra").value)$("f_obra").value=last.obra||"";setTipo(last.tipo||"concreto")}else setTipo("concreto");
 }
-function readForm(){syncQc();syncPh();const o={tipo,qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v)o[f]=v});
+function readForm(){syncQc();syncPh();syncMu();const o={tipo,mu:mu.filter(x=>Object.keys(x).some(k=>k!=="id"&&k!=="hora"&&String(x[k]||"").trim())),qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v)o[f]=v});
  const pre=PREFIX[tipo];Object.keys(o).forEach(k=>{if(/^[cat]_/.test(k)&&!k.startsWith(pre))delete o[k]});return o}
-function fillForm(e){resetForm();FIELDS.forEach(f=>{if(e[f]!=null)$(f).value=e[f]});setTipo(e.tipo||"general");qc=(e.qc||[]).map(r=>({...r}));renderQc();photos=(e.fotos||[]).map(f=>({...f}));renderPhotos();editingId=e.id;$("btnSave").textContent="Guardar cambios"}
+function fillForm(e){resetForm();FIELDS.forEach(f=>{if(e[f]!=null)$(f).value=e[f]});setTipo(e.tipo||"general");qc=(e.qc||[]).map(r=>({...r}));renderQc();mu=(e.mu||[]).map(x=>({...x}));renderMu();photos=(e.fotos||[]).map(f=>({...f}));renderPhotos();editingId=e.id;$("btnSave").textContent="Guardar cambios"}
 $("btnClear").onclick=()=>{resetForm();toast("Formulario limpio")};
 $("form").addEventListener("submit",async ev=>{ev.preventDefault();if(pendingUp){toast("Espera a que terminen de subir las fotos");return}const o=readForm();
  if(!o.f_obra&&!o.f_notas&&!o.f_cad1&&!o.fotos.length){toast("Anota al menos la obra, el cadenamiento o una nota");return}
@@ -534,6 +564,7 @@ function renderList(){
   <div class="e-meta">${e.f_cad1?"Km "+esc(e.f_cad1)+(e.f_cad2?" – "+esc(e.f_cad2):""):""}${e.f_cuerpo?" · "+esc(e.f_cuerpo):""}${e.f_carril?" · Carril "+esc(e.f_carril):""}${e.f_ubic?" · "+esc(e.f_ubic):""}</div>
   ${kvFor(e)?`<dl class="kv">${kvFor(e)}</dl>`:""}
   ${qcs?`<div class="chips">${qcs}</div>`:""}
+  ${(e.mu||[]).length?`<div class="chips">${e.mu.map(x=>`<span class="chip">🧪 ${esc(x.id||"Muestra")}${x.piezas?" · "+esc(x.piezas)+" pzas":""}${x.prueba?" · "+esc(x.prueba):""}${x.lugar?" · "+esc(x.lugar):""}</span>`).join("")}</div>`:""}
   ${e.f_notas?`<div class="notes">${esc(e.f_notas)}</div>`:""}
   ${(e.fotos||[]).length?`<div class="e-photos">${e.fotos.map(f=>`<figure><a href="${blobUrl(f.id)}" target="_blank" rel="noopener"><img src="${blobUrl(f.id)}" alt="${esc(f.cap||"Foto")}" loading="lazy"></a>${f.cap?`<figcaption>${esc(f.cap)}</figcaption>`:""}</figure>`).join("")}</div>`:""}
   ${comHtml(e)}
@@ -568,10 +599,10 @@ $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("butt
 
 /* ---------- CSV ---------- */
 $("btnCsv").onclick=async()=>{const real=entries.filter(e=>!e.ejemplo);if(!real.length){toast("No hay registros para exportar");return}
- const cols=["f_fecha","f_dia","f_hora","f_obra","f_contratista","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","f_notas"];
- const head=["Fecha","Día","Hora","Obra","Empresa contratista","Cad. del","Cad. al","Cuerpo","Carril","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Notas"];
+ const cols=["f_fecha","f_dia","f_hora","f_obra","f_contratista","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","mu","f_notas"];
+ const head=["Fecha","Día","Hora","Obra","Empresa contratista","Cad. del","Cad. al","Cuerpo","Carril","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Muestreo","Notas"];
  const cell=v=>`"${String(v??"").replace(/"/g,'""')}"`;
- const rows=real.slice().sort((a,b)=>(a.f_fecha||"").localeCompare(b.f_fecha||"")).map(e=>cols.map(c=>c==="qc"?(e.qc||[]).map(r=>`${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" cumple":r.ok==="n"?" NO cumple":""}`).join(" | "):c==="tipo"?TIPOS[e.tipo]:e[c]).map(cell).join(","));
+ const rows=real.slice().sort((a,b)=>(a.f_fecha||"").localeCompare(b.f_fecha||"")).map(e=>cols.map(c=>c==="mu"?(e.mu||[]).map(x=>muPairs(e.tipo,x).map(([l,v])=>l+": "+v).join("; ")).join(" | "):c==="qc"?(e.qc||[]).map(r=>`${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" cumple":r.ok==="n"?" NO cumple":""}`).join(" | "):c==="tipo"?TIPOS[e.tipo]:e[c]).map(cell).join(","));
  const csv="﻿"+[head.map(cell).join(","),...rows].join("\r\n");
  try{await downloads.save({filename:`bitacora_${today().date}.csv`,data:new Blob([csv],{type:"text/csv"})});toast("Archivo listo")}catch(err){if(err&&err.code!=="declined")toast("No se pudo descargar el archivo")}};
 
@@ -667,6 +698,7 @@ function shareText(e){const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliaci
  if(e.f_ubic)L.push(`🗺 ${e.f_ubic}`);
  const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C":""].filter(Boolean).join(" · ");if(amb)L.push(`🌤 ${amb}`);
  L.push("",`🔧 *Actividad:* ${TIPOS[e.tipo]}`);if(e.f_contratista)L.push(`🏢 *Empresa contratista:* ${e.f_contratista}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`• ${LABELS[k]}: ${e[k]}`)});
+ if((e.mu||[]).length){L.push("",`🧪 *Muestreo (${e.mu.length})*`);e.mu.forEach(x=>{const pr=muPairs(e.tipo,x).filter(([l])=>!/^Muestra/.test(l));L.push(`• ${x.id||"Muestra"}: ${pr.map(([l,v])=>l+" "+v).join(" · ")}`)})}
  if((e.qc||[]).length){L.push("","✅ *Control de calidad*");(e.qc||[]).forEach(r=>L.push(`• ${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" ✔ cumple":r.ok==="n"?" ✘ NO cumple":""}`))}
  if(e.f_notas)L.push("",`📝 *Notas:* ${e.f_notas}`);
  const nom=$("pdfName").value.trim();if(nom)L.push("",nom);L.push(`${JEFE_CARGO}: ${JEFE_NOMBRE}`);
@@ -712,7 +744,7 @@ async function publishRecord(e,progress){
  progress("Guardando datos del registro…");
  const data={};Object.keys(e).forEach(key=>{if(!["fotos","share","id","t","ejemplo"].includes(key))data[key]=e[key]});
  data.fotos=fotos.filter(f=>share.files[f.id]).map(f=>({file:share.files[f.id],cap:f.cap||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}));
- data.nombre=$("pdfName").value.trim();data.actualizado=new Date().toISOString();data.t=e.t||Date.now();const cc=cfgCom();if(cc.com)data.comentarios=cc.com;if(cc.wa)data.whatsapp=cc.wa;share.cfg=cfgKey();
+ data.nombre=$("pdfName").value.trim();data.actualizado=new Date().toISOString();data.t=e.t||Date.now();data.muestreo=(e.mu||[]).map(x=>({id:x.id||"",datos:muPairs(e.tipo,x).filter(([l])=>!/^Muestra/.test(l))}));const cc=cfgCom();if(cc.com)data.comentarios=cc.com;if(cc.wa)data.whatsapp=cc.wa;share.cfg=cfgKey();
  share.sha=await ghPut(`r/${share.id}/registro.json`,new Blob([JSON.stringify(data,null,1)],{type:"application/json"}),`Registro ${e.f_fecha||""} ${e.f_cad1||""}`.trim(),share.sha);
  share.at=data.actualizado;e.share=share;await saveShare(e);return share}
 async function saveShare(e){try{if(typeof idb!=="undefined"){await idb.put("registros",e)}else if(col){await col.doc(e.id).update({share:e.share})}}catch(err){}}
@@ -808,7 +840,7 @@ async function saveRemoteRecord(sid,g,L){const d=g.data;const t=d.t||Date.parse(
  const rev={};if(L&&L.share&&L.share.files)for(const k in L.share.files)rev[L.share.files[k]]=k;
  const fotos=(d.fotos||[]).map(f=>({id:rev[f.file]||("r_"+sid+"_"+f.file),cap:f.cap||"",name:f.file,...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}));
  for(const f of fotos){if(!(await idb.get("fotos",f.id))){const u=RAWB+"r/"+sid+"/"+encodeURIComponent(f.name);await idb.put("fotos",{id:f.id,remote:u,name:f.name});urlMap.set(f.id,u)}}
- const rec={};Object.keys(d).forEach(k=>{if(!["fotos","nombre","actualizado","comentarios","whatsapp","t"].includes(k))rec[k]=d[k]});
+ const rec={};Object.keys(d).forEach(k=>{if(!["fotos","nombre","actualizado","comentarios","whatsapp","t","muestreo"].includes(k))rec[k]=d[k]});
  rec.id=L?L.id:"g"+sid;rec.t=t;rec.fotos=fotos;rec.share={id:sid,files:Object.fromEntries(fotos.map(f=>[f.id,f.name])),sha:g.sha,at:new Date(Math.max(t,Date.now())).toISOString(),cfg:cfgKey()};
  await idb.put("registros",rec)}
 async function pullRemote(pid,progress){const idx=await ghGetJson(`indices/${pid}.json`);if(!idx)return{added:0,updated:0,deleted:0};
@@ -931,6 +963,9 @@ async function buildPdf(list,opt){
    const cols=[[M,"Prueba",62],[M+64,"Resultado",40],[M+106,"Especificación",50],[M+158,"Cumple",30]];
    doc.setFillColor(236,238,233);doc.rect(M,y-4,CW,6,"F");doc.setFontSize(8.5);doc.setFont("helvetica","bold");doc.setTextColor(28,34,38);cols.forEach(c=>doc.text(c[1],c[0]+1,y));y+=5.5;doc.setFont("helvetica","normal");
    for(const r of e.qc){need(6);const vals=[r.p,r.r,r.e,r.ok==="y"?"Sí":r.ok==="n"?"NO":"—"];cols.forEach((c,i)=>{doc.setTextColor(...(i===3&&r.ok==="n"?[179,54,44]:i===3&&r.ok==="y"?[47,125,79]:[28,34,38]));doc.text(doc.splitTextToSize(cl(vals[i]||""),c[2]-2)[0]||"",c[0]+1,y)});doc.setDrawColor(225);doc.line(M,y+1.8,W-M,y+1.8);y+=6}}
+  if((e.mu||[]).length){y+=2;need(14);line(`MUESTREO · ${muDef(e.tipo).titulo.toUpperCase()} (${e.mu.length})`,9.5,true,[93,103,108]);y+=1;
+   for(const x of e.mu){const pr=muPairs(e.tipo,x).filter(([l])=>!/^Muestra/.test(l));need(10);doc.setFillColor(236,238,233);doc.rect(M,y-4,CW,6,"F");doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(28,34,38);doc.text(cl(x.id||"Muestra"),M+1,y);y+=5.5;
+    const cw=CW/2;for(let i=0;i<pr.length;i+=2){need(5.5);[pr[i],pr[i+1]].forEach((q,j)=>{if(!q)return;doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(93,103,108);doc.text(cl(q[0])+":",M+1+j*cw,y);doc.setTextColor(28,34,38);doc.setFont("helvetica","bold");doc.text(doc.splitTextToSize(cl(q[1]),cw-50)[0]||"",M+1+j*cw+48,y)});y+=4.8}y+=1.5}}
   if(e.f_notas){y+=2;line("NOTAS",9.5,true,[93,103,108]);y+=1;line(e.f_notas,10)}
   await drawPh(opt.fotos?(e.fotos||[]).filter(f=>!isU(f)):[],"FOTOGRAFÍAS",opt.cols);
  }
