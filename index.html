@@ -139,6 +139,9 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .pick{margin-bottom:6px;font-size:.92rem;background:var(--paper)}
 .emp-list .grp-h{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:none;padding-top:10px}
 .row-acts{display:flex;gap:6px;flex:none}
+.drop{margin:0 14px 14px;border:2px dashed var(--line);border-radius:8px;padding:14px;font-size:.85rem;color:var(--muted);text-align:center;transition:background .15s,border-color .15s}
+.drop.on{border-color:var(--accent);background:var(--chip);color:var(--ink)}
+@media (hover:none){.drop{display:none}}
 .cfg{background:var(--paper);border:1px solid var(--line);border-radius:8px;margin-top:10px;padding:10px 14px}
 .cfg summary{cursor:pointer;font-weight:600}
 .cfg-body{display:flex;flex-direction:column;gap:10px;margin-top:10px}
@@ -328,7 +331,11 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <input type="file" id="phCam" accept="image/*" capture="environment">
       <label class="btn" for="phLib" style="flex-direction:row;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--ink)">🖼 Elegir de la galería</label>
       <input type="file" id="phLib" accept="image/*" multiple>
-      <span class="hint" id="phHint">Se guardan en resolución original, sin compresión, en este teléfono.</span>
+      <a class="btn" id="phGPhotos" href="https://photos.google.com/" target="_blank" rel="noopener" style="text-decoration:none">🌐 Abrir Google Fotos</a>
+      <span class="hint" id="phHint">Se guardan en resolución original, sin compresión.</span>
+    </div>
+    <div class="drop" id="phDrop">
+      <b>En la computadora:</b> abre Google Fotos, descarga las fotos (⋮ → <i>Descargar</i>) y <b>arrástralas aquí</b> desde Descargas, o elígelas con “Elegir de la galería”. También puedes pegar una imagen con <b>Ctrl + V</b>.
     </div>
     <div class="photos" id="phList"></div>
   </section>
@@ -759,6 +766,11 @@ async function addFiles(files,ubic){if(!assets){toast("No se pueden subir fotos 
  photos=photos.filter(f=>f.id||!f.err||true);}
 $("phCam").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
 $("phLib").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
+(()=>{const z=$("sec_fotos"),d=$("phDrop");const imgs=l=>[...(l||[])].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png|heic|heif|webp)$/i.test(f.name));
+ ["dragenter","dragover"].forEach(ev=>z.addEventListener(ev,e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes("Files")){e.preventDefault();d.classList.add("on")}}));
+ ["dragleave","drop"].forEach(ev=>z.addEventListener(ev,e=>{if(ev==="dragleave"&&z.contains(e.relatedTarget))return;d.classList.remove("on")}));
+ z.addEventListener("drop",e=>{e.preventDefault();const f=imgs(e.dataTransfer&&e.dataTransfer.files);if(f.length){addFiles(f);toast(`${f.length} foto${f.length===1?"":"s"} agregada${f.length===1?"":"s"}`)}else toast("Arrastra el archivo de la foto descargado; desde la página de Google Fotos no se puede tomar en calidad original.")});
+ document.addEventListener("paste",e=>{if($("form").hidden)return;const f=imgs([...(e.clipboardData&&e.clipboardData.files||[])]);if(f.length){e.preventDefault();addFiles(f);toast("Imagen pegada en Fotografías")}})})();
 $("ubicFile").onchange=e=>{addFiles([...e.target.files],true);e.target.value="";$("satHint").textContent="Captura agregada a la ubicación. Escríbele una descripción si quieres."};
 $("btnEarth").addEventListener("click",()=>{const lat=parseFloat($("f_lat").value),lng=parseFloat($("f_lng").value),u=$("f_ubic").value.trim();
  $("btnEarth").href=isFinite(lat)&&isFinite(lng)?`https://earth.google.com/web/@${lat},${lng},120a,700d,35y,0h,0t,0r`:u?`https://earth.google.com/web/search/${encodeURIComponent(u)}`:"https://earth.google.com/web/"});
