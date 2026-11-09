@@ -16,7 +16,7 @@
  "f_clima": "Soleado",
  "a_capa": "Riego de impregnación",
  "a_tten": "75",
- "a_ancho": "4",
+ "a_ancho": "4.7",
  "a_liga": "1.5",
  "a_equipo": "Petrolizadora.",
  "fotos": [
@@ -99,7 +99,7 @@
   }
  ],
  "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
- "actualizado": "2026-11-09T06:21:54.047Z",
- "t": 1794205265998,
+ "actualizado": "2026-11-09T06:22:45.188Z",
+ "t": 1794205363143,
  "muestreo": []
 }
