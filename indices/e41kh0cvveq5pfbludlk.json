@@ -646,8 +646,25 @@
    "tipo": "terraceria",
    "a_capa": "",
    "fotos": 14
+  },
+  {
+   "id": "rt9ft104sxhpao",
+   "t": 1794205265998,
+   "f_fecha": "2026-10-30",
+   "f_dia": "Viernes",
+   "f_hora": "12:50",
+   "f_obra": "Ampliación Armería - Manzanillo",
+   "f_cad1": "88+570",
+   "f_cad2": "88+850",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "Media",
+   "f_ubic": "",
+   "f_contratista": "PLACOSA",
+   "tipo": "asfalto",
+   "a_capa": "Riego de impregnación",
+   "fotos": 19
   }
  ],
  "borrados": {},
- "actualizado": "2026-11-09T06:11:04.372Z"
+ "actualizado": "2026-11-09T06:21:55.687Z"
 }
