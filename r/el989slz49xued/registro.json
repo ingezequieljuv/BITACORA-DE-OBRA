@@ -1,0 +1,28 @@
+{
+ "tipo": "concreto",
+ "mu": [],
+ "qc": [],
+ "f_fecha": "2026-10-30",
+ "f_dia": "Viernes",
+ "f_hora": "14:17",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "80+240",
+ "f_cuerpo": "Cuerpo B",
+ "f_ubic": "Ampliacion.",
+ "f_lat": "19.000983",
+ "f_lng": "-104.245667",
+ "f_clima": "Soleado",
+ "c_elemento": "Escamas",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240 · Ampliacion.",
+   "mapa": true
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-09T15:53:36.743Z",
+ "t": 1794239611444,
+ "muestreo": []
+}
