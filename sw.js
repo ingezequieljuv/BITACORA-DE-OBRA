@@ -1,5 +1,5 @@
 // Guarda la bitácora en el teléfono para que abra sin señal en la obra.
-const CACHE = "bitacora-v26";
+const CACHE = "bitacora-v27";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png",
   "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
@@ -20,7 +20,7 @@ self.addEventListener("fetch", e => {
   // Solo la app y sus librerías; los registros compartidos, GitHub y los mapas van directo a internet.
   if (u.origin !== location.origin && !/cdnjs\.cloudflare\.com|fonts\.(googleapis|gstatic)\.com/.test(u.host)) return;
   e.respondWith(
-    fetch(u.origin === location.origin ? new Request(e.request, { cache: "no-cache" }) : e.request).then(r => {
+    (u.origin === location.origin ? (e.request.mode === "navigate" ? fetch(e.request.url, { cache: "no-cache", credentials: "same-origin" }) : fetch(e.request.url, { cache: "no-cache" })) : fetch(e.request)).then(r => {
       if (r.ok || r.type === "opaque") { const copy = r.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
       return r;
     }).catch(() => caches.match(e.request).then(r => r || caches.match("index.html")))
