@@ -682,6 +682,23 @@
    "fotos": 19
   },
   {
+   "id": "el989slz49xued",
+   "t": 1794239611444,
+   "f_fecha": "2026-10-30",
+   "f_dia": "Viernes",
+   "f_hora": "14:17",
+   "f_obra": "PSFFCC Tepalcates I",
+   "f_cad1": "80+240",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "",
+   "f_ubic": "Ampliacion.",
+   "f_contratista": "PLACOSA",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 1
+  },
+  {
    "id": "94hl5b563wv6f9",
    "t": 1794209250209,
    "f_fecha": "2026-10-30",
@@ -700,5 +717,5 @@
   }
  ],
  "borrados": {},
- "actualizado": "2026-11-09T07:27:37.701Z"
+ "actualizado": "2026-11-09T15:53:39.539Z"
 }
