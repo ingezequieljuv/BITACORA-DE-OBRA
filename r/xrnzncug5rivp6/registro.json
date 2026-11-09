@@ -1,0 +1,39 @@
+{
+ "tipo": "terraceria",
+ "mu": [],
+ "qc": [
+  {
+   "p": "Grado de compactación (cala)",
+   "r": "94%",
+   "e": "Se recomienda dejar orear la capa ya que presenta un poco de humedad arriba del optimo.",
+   "ok": ""
+  }
+ ],
+ "f_fecha": "2026-11-08",
+ "f_dia": "Domingo",
+ "f_hora": "22:48",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "88+020",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Media",
+ "f_lat": "19.053583",
+ "f_lng": "-104.268700",
+ "f_clima": "Soleado",
+ "t_capa": "Base hidráulica",
+ "t_esp": "24",
+ "t_hum": "7",
+ "t_gc": "94",
+ "t_gcreq": "100",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km88+020.jpg",
+   "cap": "Ubicación satelital 88+020",
+   "mapa": true
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-09T05:54:07.773Z",
+ "t": 1794203639303,
+ "muestreo": []
+}
