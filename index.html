@@ -17,21 +17,15 @@
 <style>
 /* Layout: libreta de campo — barra superior tipo señalamiento, formulario por secciones plegables, registros como hojas apiladas */
 :root{
-  --bg:#f3f4f1; --paper:#ffffff; --ink:#1c2226; --muted:#5d676c; --line:#d9ddd8;
+  --bg:#ffffff; --paper:#ffffff; --field:#f6f7f5; --ink:#1c2226; --muted:#5d676c; --line:#d9ddd8;
   --accent:#f2b705; --accent-ink:#1c2226; --asphalt:#2b3136; --concrete:#8a9499;
   --ok:#2f7d4f; --bad:#b3362c; --chip:#eceee9;
   --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#14181b; --paper:#1d2327; --ink:#e8ebe7; --muted:#9aa4a8; --line:#323a3f;
-  --accent:#f5c22b; --accent-ink:#14181b; --asphalt:#0d1012; --concrete:#7d878c;
-  --ok:#5bbf84; --bad:#ef7a6f; --chip:#262d31; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#14181b; --paper:#1d2327; --ink:#e8ebe7; --muted:#9aa4a8; --line:#323a3f;
-  --accent:#f5c22b; --accent-ink:#14181b; --asphalt:#0d1012; --concrete:#7d878c;
-  --ok:#5bbf84; --bad:#ef7a6f; --chip:#262d31; color-scheme:dark}
+/* Siempre fondo blanco, aunque el teléfono esté en modo oscuro */
+:root{color-scheme:light}
 *{box-sizing:border-box}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0}
@@ -62,7 +56,7 @@ section.card{background:var(--paper);border:1px solid var(--line);border-radius:
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:14px}
 .full{grid-column:1/-1}
 label{display:flex;flex-direction:column;gap:4px;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:0}
-input,select,textarea{font:400 1rem var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;width:100%;min-width:0}
+input,select,textarea{font:400 1rem var(--f-body);color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:6px;padding:10px;width:100%;min-width:0}
 input[type=number],.mono{font-family:var(--f-mono)}
 textarea{min-height:84px;resize:vertical}
 input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
