@@ -131,6 +131,11 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .e-photos img{width:100%;height:100%;object-fit:cover;display:block}
 .e-photos figure{margin:0;min-width:0}
 .e-photos figcaption{font-size:.7rem;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.emp-new{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.emp-new input{flex:1 1 200px;width:auto}
+.emp-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.emp-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.emp-list li span{min-width:0;overflow-wrap:anywhere}
 .cfg{background:var(--paper);border:1px solid var(--line);border-radius:8px;margin-top:10px;padding:10px 14px}
 .cfg summary{cursor:pointer;font-weight:600}
 .cfg-body{display:flex;flex-direction:column;gap:10px;margin-top:10px}
@@ -234,8 +239,12 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <button type="button" class="type" data-t="general" aria-pressed="false">Supervisión general</button>
     </div>
     <div class="grid" style="padding-top:0">
-      <label class="full">Empresa contratista / que ejecuta<input id="f_contratista" list="contratistas" placeholder="Nombre de la empresa que realiza el trabajo"></label>
-      <datalist id="contratistas"></datalist>
+      <label class="full">Empresa contratista / que ejecuta<select id="f_contratista"><option value="">— Elige la empresa —</option></select></label>
+      <div class="full emp-new" id="empNewRow" hidden>
+        <input id="empNew" placeholder="Nombre de la empresa nueva" aria-label="Nombre de la empresa nueva">
+        <button type="button" class="btn pri sm" id="empNewOk">Guardar en la lista</button>
+        <button type="button" class="btn sm" id="empNewCancel">Cancelar</button>
+      </div>
     </div>
   </section>
 
@@ -352,6 +361,14 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <label>Hasta<input type="date" id="dTo"></label>
     <label>Nombre en el PDF<input id="pdfName" placeholder="Supervisor · empresa"></label>
   </div>
+  <details class="cfg">
+    <summary>🏢 Empresas contratistas <span class="e-meta" id="empCount"></span></summary>
+    <div class="cfg-body">
+      <p class="hint" style="margin:0">Estas empresas aparecen en la lista desplegable de cada registro. Se guardan en todos tus dispositivos.</p>
+      <ul class="emp-list" id="empItems"></ul>
+      <div class="emp-new"><input id="empAddName" placeholder="Nombre de la empresa" aria-label="Nombre de la empresa"><button type="button" class="btn pri sm" id="empAdd">Agregar</button></div>
+    </div>
+  </details>
   <details class="cfg" id="cloudBox">
     <summary>☁️ Respaldo en la nube <span class="e-meta" id="cloudState"></span></summary>
     <div class="cfg-body">
@@ -476,6 +493,20 @@ $("addMu").onclick=()=>{syncMu();const pre={concreto:"M-",asfalto:"MA-",terracer
  const s={id:pre+(mu.length+1),hora:today().time};if(tipo==="concreto"){s.rev=$("c_rev").value;s.temp=$("c_temp").value;s.remision=$("c_remision").value;s.elemento=$("c_elemento").value}
  if(tipo==="asfalto"){s.cad=$("f_cad1").value}if(tipo==="terraceria"){s.cad=$("f_cad1").value;s.capa=$("t_capa").value}
  mu.push(s);renderMu()};
+/* ---------- inventario de empresas ---------- */
+const empList=()=>{const l=lsGet("bit_empresas");return Array.isArray(l)?l:[]};
+function empSave(l,touch=true){const u=[...new Set(l.map(x=>String(x).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"es"));lsSet("bit_empresas",u);if(touch){lsSet("bit_cfg_t",Date.now());if(typeof autoSync==="function")autoSync()}renderEmpresas();renderEmpMgr();return u}
+function renderEmpresas(sel){const s=$("f_contratista");const cur=sel!==undefined?sel:s.value;const l=empList();if(cur&&cur!=="__nueva__"&&!l.includes(cur))l.push(cur);
+ s.innerHTML=`<option value="">— Elige la empresa —</option>${l.sort((a,b)=>a.localeCompare(b,"es")).map(x=>`<option${x===cur?" selected":""}>${esc(x)}</option>`).join("")}<option value="__nueva__">➕ Agregar empresa nueva…</option>`;
+ if(cur&&cur!=="__nueva__")s.value=cur;$("empNewRow").hidden=true}
+function renderEmpMgr(){const l=empList();$("empCount").textContent=`(${l.length})`;
+ $("empItems").innerHTML=l.length?l.map((x,i)=>`<li><span>${esc(x)}</span><button type="button" class="btn sm" data-empdel="${i}" aria-label="Quitar ${esc(x)}">Quitar</button></li>`).join(""):`<li class="hint">Todavía no hay empresas. Agrega la primera abajo.</li>`}
+$("f_contratista").addEventListener("change",()=>{if($("f_contratista").value==="__nueva__"){$("empNewRow").hidden=false;$("empNew").value="";$("empNew").focus()}else $("empNewRow").hidden=true});
+$("empNewOk").onclick=()=>{const n=$("empNew").value.trim();if(!n){$("empNew").focus();return}empSave([...empList(),n]);renderEmpresas(n);toast("Empresa agregada a la lista")};
+$("empNewCancel").onclick=()=>renderEmpresas("");
+$("empAdd").onclick=()=>{const n=$("empAddName").value.trim();if(!n)return;empSave([...empList(),n]);$("empAddName").value="";toast("Empresa agregada")};
+$("empItems").addEventListener("click",e=>{const b=e.target.closest("[data-empdel]");if(!b)return;if(!b.dataset.ok){b.dataset.ok=1;b.textContent="¿Seguro? Quitar";return}const l=empList();l.splice(+b.dataset.empdel,1);empSave(l);toast("Empresa quitada de la lista (los registros no cambian)")});
+function initEmpresas(){if(!lsGet("bit_empresas")){const seed=[...new Set((entries||[]).filter(e=>!e.ejemplo).map(e=>e.f_contratista).filter(Boolean))];if(seed.length)empSave(seed,false)}renderEmpresas();renderEmpMgr()}
 function setTipo(t){try{if(document.getElementById("muList").querySelector(".mu"))syncMu()}catch(e){}tipo=t;document.querySelectorAll(".type").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
  ["concreto","asfalto","terraceria"].forEach(k=>$("sec_"+k).hidden=k!==t);if(typeof renderMu==="function")renderMu()}
 $("types").addEventListener("click",e=>{const b=e.target.closest(".type");if(b)setTipo(b.dataset.t)});
@@ -527,9 +558,9 @@ function resetForm(keep){
  qc=[];renderQc();mu=[];renderMu();photos=[];renderPhotos();editingId=null;$("btnSave").textContent="Guardar registro";
  const last=lsGet("bit_ultimo");if(last){if(!$("f_obra").value)$("f_obra").value=last.obra||"";setTipo(last.tipo||"concreto")}else setTipo("concreto");
 }
-function readForm(){syncQc();syncPh();syncMu();const o={tipo,mu:mu.filter(x=>Object.keys(x).some(k=>k!=="id"&&k!=="hora"&&String(x[k]||"").trim())),qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v)o[f]=v});
+function readForm(){syncQc();syncPh();syncMu();const o={tipo,mu:mu.filter(x=>Object.keys(x).some(k=>k!=="id"&&k!=="hora"&&String(x[k]||"").trim())),qc:qc.filter(r=>r.p||r.r),fotos:photos.filter(f=>f.id).map(f=>({id:f.id,cap:f.cap||"",name:f.name||"",...(f.mapa?{mapa:true}:{}),...(f.ubic?{ubic:true}:{})}))};FIELDS.forEach(f=>{const v=$(f).value.trim();if(v&&v!=="__nueva__")o[f]=v});
  const pre=PREFIX[tipo];Object.keys(o).forEach(k=>{if(/^[cat]_/.test(k)&&!k.startsWith(pre))delete o[k]});return o}
-function fillForm(e){resetForm();FIELDS.forEach(f=>{if(e[f]!=null)$(f).value=e[f]});setTipo(e.tipo||"general");qc=(e.qc||[]).map(r=>({...r}));renderQc();mu=(e.mu||[]).map(x=>({...x}));renderMu();photos=(e.fotos||[]).map(f=>({...f}));renderPhotos();editingId=e.id;$("btnSave").textContent="Guardar cambios"}
+function fillForm(e){resetForm();renderEmpresas(e.f_contratista||"");FIELDS.forEach(f=>{if(e[f]!=null)$(f).value=e[f]});setTipo(e.tipo||"general");qc=(e.qc||[]).map(r=>({...r}));renderQc();mu=(e.mu||[]).map(x=>({...x}));renderMu();photos=(e.fotos||[]).map(f=>({...f}));renderPhotos();editingId=e.id;$("btnSave").textContent="Guardar cambios"}
 $("btnClear").onclick=()=>{resetForm();toast("Formulario limpio")};
 $("form").addEventListener("submit",async ev=>{ev.preventDefault();if(pendingUp){toast("Espera a que terminen de subir las fotos");return}const o=readForm();
  if(!o.f_obra&&!o.f_notas&&!o.f_cad1&&!o.fotos.length){toast("Anota al menos la obra, el cadenamiento o una nota");return}
@@ -580,7 +611,7 @@ function renderList(){
   </div>`}</article>`}).join("");
  // sugerencias
  const uniq=k=>[...new Set(real.map(e=>e[k]).filter(Boolean))].slice(0,20).map(v=>`<option>${esc(v)}</option>`).join("");
- $("obras").innerHTML=uniq("f_obra")||"<option>Carretera Manzanillo–Cihuatlán</option><option>Autopista Armería–Manzanillo</option>";$("concreteras").innerHTML=uniq("c_concretera");$("contratistas").innerHTML=uniq("f_contratista");$("plantas").innerHTML=uniq("a_planta");
+ $("obras").innerHTML=uniq("f_obra")||"<option>Carretera Manzanillo–Cihuatlán</option><option>Autopista Armería–Manzanillo</option>";$("concreteras").innerHTML=uniq("c_concretera");$("plantas").innerHTML=uniq("a_planta");
 }
 $("q").oninput=renderList;$("dFrom").onchange=renderList;$("dTo").onchange=renderList;
 $("pdfName").value=lsGet("bit_nombre")||"Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA";$("pdfName").onchange=()=>{lsSet("bit_nombre",$("pdfName").value.trim());lsSet("bit_cfg_t",Date.now());if(typeof autoSync==="function")autoSync()};
@@ -831,9 +862,9 @@ async function syncConfig(create,newPid){const c=await ghGetJson("config.json");
  if(newPid){pid=newPid;lsSet("bit_portafolio",pid);cfg.portafolio=pid;changed=true}
  else if(cfg.portafolio){if(pid!==cfg.portafolio){pid=cfg.portafolio;lsSet("bit_portafolio",pid)}}
  else{if(!pid){if(!create)return{pid:null};pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}cfg.portafolio=pid;changed=true}
- const lc=lsGet("bit_comurl")||"",lw=lsGet("bit_wa")||"",ln=$("pdfName").value.trim();const stamp=lsGet("bit_cfg_t")||((lc||lw)?1:0);
- if((cfg.t||0)>stamp){if(cfg.comurl!==undefined)lsSet("bit_comurl",cfg.comurl);if(cfg.wa!==undefined)lsSet("bit_wa",cfg.wa);if(cfg.nombre){$("pdfName").value=cfg.nombre;lsSet("bit_nombre",cfg.nombre)}lsSet("bit_cfg_t",cfg.t);initCfg()}
- else if(stamp>(cfg.t||0)){cfg.comurl=lc;cfg.wa=lw;cfg.nombre=ln;cfg.t=stamp;changed=true}
+ const lc=lsGet("bit_comurl")||"",lw=lsGet("bit_wa")||"",ln=$("pdfName").value.trim();const stamp=lsGet("bit_cfg_t")||((lc||lw||empList().length)?1:0);
+ if((cfg.t||0)>stamp){if(Array.isArray(cfg.empresas)){lsSet("bit_empresas",cfg.empresas);renderEmpresas();renderEmpMgr()}if(cfg.comurl!==undefined)lsSet("bit_comurl",cfg.comurl);if(cfg.wa!==undefined)lsSet("bit_wa",cfg.wa);if(cfg.nombre){$("pdfName").value=cfg.nombre;lsSet("bit_nombre",cfg.nombre)}lsSet("bit_cfg_t",cfg.t);initCfg()}
+ else if(stamp>(cfg.t||0)){cfg.comurl=lc;cfg.wa=lw;cfg.nombre=ln;cfg.empresas=empList();cfg.t=stamp;changed=true}
  if(changed)await ghPut("config.json",jblob(cfg),"Configuración de la bitácora",c&&c.sha);
  return{pid}}
 async function saveRemoteRecord(sid,g,L){const d=g.data;const t=d.t||Date.parse(d.actualizado)||Date.now();
@@ -1030,7 +1061,7 @@ downloads={async save({filename,data}){const blob=data instanceof Blob?data:new 
  const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}};
 async function loadPhotoUrls(){for(const f of await idb.all("fotos")){if(!urlMap.has(f.id))urlMap.set(f.id,f.blob?URL.createObjectURL(f.blob):f.remote)}}
 async function reload(){const list=(await idb.all("registros")).sort((a,b)=>((b.f_fecha||"")+(b.f_hora||"")).localeCompare((a.f_fecha||"")+(a.f_hora||""))||(b.t||0)-(a.t||0));
- entries=list.length?list:SAMPLE;renderList();$("status").textContent=`Guardado en este teléfono · ${list.length} registro${list.length===1?"":"s"}`}
+ entries=list.length?list:SAMPLE;if(!lsGet("bit_empresas")&&list.length&&typeof initEmpresas==="function")initEmpresas();renderList();$("status").textContent=`Guardado en este teléfono · ${list.length} registro${list.length===1?"":"s"}`}
 
 /* ---------- respaldo ---------- */
 const b64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)});
@@ -1045,7 +1076,7 @@ $("restoreFile").onchange=async ev=>{const file=ev.target.files[0];ev.target.val
  catch(e){toast("Ese archivo no es un respaldo de la bitácora")}};
 
 /* ---------- arranque ---------- */
-resetForm();entries=SAMPLE;renderList();initCfg();loadComments();cloudUi();
+resetForm();entries=SAMPLE;renderList();initCfg();loadComments();cloudUi();initEmpresas();
 (async()=>{
  try{await restoreToken();await loadPhotoUrls();await reload()}catch(e){$("status").textContent="Este navegador no permite guardar datos. Abre la bitácora en Safari, fuera del modo privado."}
  try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}
