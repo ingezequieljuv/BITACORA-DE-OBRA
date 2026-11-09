@@ -1193,7 +1193,8 @@ initInv();resetForm();entries=SAMPLE;renderList();initCfg();loadComments();cloud
  try{await restoreToken();await loadPhotoUrls();await reload()}catch(e){$("status").textContent="Este navegador no permite guardar datos. Abre la bitácora en Safari, fuera del modo privado."}
  try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}
  const last=lsGet("bit_ultimo_respaldo");$("backupHint").textContent=`Tus registros y fotos se guardan solo en este teléfono. ${last?"Último respaldo: "+fmtFecha(last)+".":"Aún no has descargado ningún respaldo."}`;
- if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+ if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update().catch(()=>{});document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{})})}).catch(()=>{});
+  let reloaded=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(reloaded||syncing)return;reloaded=true;toast("Actualizando la app…");setTimeout(()=>location.reload(),600)})}
  autoSync();
 })();
 })();
