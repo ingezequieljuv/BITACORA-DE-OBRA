@@ -1,12 +1,33 @@
 {
  "tipo": "asfalto",
- "mu": [],
+ "mu": [
+  {
+   "id": "MBN-3010",
+   "hora": "13:10",
+   "cad": "94+158",
+   "lugar": "Camión",
+   "camion": "C17868",
+   "temp": "163",
+   "peso": "14",
+   "ensayes": "Lavado, Granulometria y Marshall.",
+   "lab": "JUVISA INGENIERIA",
+   "ca": "",
+   "estab": "",
+   "flujo": "",
+   "vacios": "",
+   "vam": "",
+   "dens": "",
+   "gc": "",
+   "esp": "",
+   "obs": "Queda pendiente recabar información de las pruebas."
+  }
+ ],
  "qc": [
   {
    "p": "Temperatura de tendido",
-   "r": "1+",
-   "e": "",
-   "ok": ""
+   "r": "163 ºC",
+   "e": "168 ºC",
+   "ok": "y"
   }
  ],
  "f_fecha": "2026-10-30",
@@ -35,7 +56,49 @@
   }
  ],
  "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
- "actualizado": "2026-11-09T06:29:41.409Z",
- "t": 1794205777170,
- "muestreo": []
+ "actualizado": "2026-11-09T06:34:10.558Z",
+ "t": 1794206048145,
+ "muestreo": [
+  {
+   "id": "MBN-3010",
+   "datos": [
+    [
+     "Hora de muestreo",
+     "13:10"
+    ],
+    [
+     "Lugar de muestreo",
+     "Camión"
+    ],
+    [
+     "Camión / viaje / remisión",
+     "C17868"
+    ],
+    [
+     "Cadenamiento",
+     "94+158"
+    ],
+    [
+     "Temp. de la muestra °C",
+     "163"
+    ],
+    [
+     "Peso de la muestra kg",
+     "14"
+    ],
+    [
+     "Ensayes solicitados",
+     "Lavado, Granulometria y Marshall."
+    ],
+    [
+     "Laboratorio",
+     "JUVISA INGENIERIA"
+    ],
+    [
+     "Observaciones",
+     "Queda pendiente recabar información de las pruebas."
+    ]
+   ]
+  }
+ ]
 }
