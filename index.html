@@ -136,6 +136,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .emp-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .emp-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
 .emp-list li span{min-width:0;overflow-wrap:anywhere}
+.pick{margin-bottom:6px;font-size:.92rem;background:var(--paper)}
 .cfg{background:var(--paper);border:1px solid var(--line);border-radius:8px;margin-top:10px;padding:10px 14px}
 .cfg summary{cursor:pointer;font-weight:600}
 .cfg-body{display:flex;flex-direction:column;gap:10px;margin-top:10px}
@@ -186,6 +187,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
   <nav class="tabs" role="tablist">
     <button class="tab" id="tabNew" role="tab" aria-selected="true">Nueva</button>
     <button class="tab" id="tabList" role="tab" aria-selected="false">Registros <span id="count"></span></button>
+    <button class="tab" id="tabInv" role="tab" aria-selected="false">Inventario</button>
   </nav>
   <div class="hsub"><span class="proy">Supervisión Ampliación Armería – Manzanillo</span><span class="sup">Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA</span></div>
 </div></header>
@@ -202,7 +204,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <label>Fecha<input type="date" id="f_fecha" required></label>
       <label>Día<select id="f_dia"><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option><option>Sábado</option><option>Domingo</option></select></label>
       <label>Hora<input type="time" id="f_hora"></label>
-      <label class="full">Obra / tramo<input id="f_obra" list="obras" placeholder="Carretera Manzanillo–Cihuatlán"></label>
+      <label class="full">Obra / tramo<select id="pickObra" class="pick" aria-label="Elegir obra del inventario"></select><input id="f_obra" list="obras" placeholder="O escríbela aquí"></label>
       <datalist id="obras"></datalist>
       <label>Cadenamiento del<input id="f_cad1" class="mono" placeholder="17+800"></label>
       <label>Cadenamiento al<input id="f_cad2" class="mono" placeholder="18+120"></label>
@@ -239,6 +241,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <button type="button" class="type" data-t="general" aria-pressed="false">Supervisión general</button>
     </div>
     <div class="grid" style="padding-top:0">
+      <label class="full">Residente / encargado / jefe directo<select id="pickRes" class="pick" aria-label="Elegir persona del inventario"></select><input id="f_residente" placeholder="O escribe el nombre aquí"></label>
       <label class="full">Empresa contratista / que ejecuta<select id="f_contratista"><option value="">— Elige la empresa —</option></select></label>
       <div class="full emp-new" id="empNewRow" hidden>
         <input id="empNew" placeholder="Nombre de la empresa nueva" aria-label="Nombre de la empresa nueva">
@@ -361,14 +364,6 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <label>Hasta<input type="date" id="dTo"></label>
     <label>Nombre en el PDF<input id="pdfName" placeholder="Supervisor · empresa"></label>
   </div>
-  <details class="cfg">
-    <summary>🏢 Empresas contratistas <span class="e-meta" id="empCount"></span></summary>
-    <div class="cfg-body">
-      <p class="hint" style="margin:0">Estas empresas aparecen en la lista desplegable de cada registro. Se guardan en todos tus dispositivos.</p>
-      <ul class="emp-list" id="empItems"></ul>
-      <div class="emp-new"><input id="empAddName" placeholder="Nombre de la empresa" aria-label="Nombre de la empresa"><button type="button" class="btn pri sm" id="empAdd">Agregar</button></div>
-    </div>
-  </details>
   <details class="cfg" id="cloudBox">
     <summary>☁️ Respaldo en la nube <span class="e-meta" id="cloudState"></span></summary>
     <div class="cfg-body">
@@ -390,6 +385,40 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     </div>
   </details>
   <div id="entries"></div>
+</div>
+<div id="invView" hidden>
+  <section class="card">
+    <div class="sec-h"><span class="tag"></span><h2>Obras por cadenamiento <span class="e-meta" id="invObrasN"></span></h2></div>
+    <div class="qc" style="padding-top:12px">
+      <ul class="emp-list" id="invObras"></ul>
+      <div class="grid" style="padding:0">
+        <label class="full">Nombre de la obra<input id="invObraN" placeholder="Ej. Ampliación cuerpo B, paso superior km 24"></label>
+        <label>Cadenamiento del<input id="invObraC1" class="mono" placeholder="24+000"></label>
+        <label>Cadenamiento al<input id="invObraC2" class="mono" placeholder="24+800"></label>
+      </div>
+      <button type="button" class="btn pri sm" id="invObraAdd" style="align-self:flex-start">+ Agregar obra</button>
+    </div>
+  </section>
+  <section class="card">
+    <div class="sec-h"><span class="tag"></span><h2>Empresas que ejecutan <span class="e-meta" id="empCount"></span></h2></div>
+    <div class="qc" style="padding-top:12px">
+      <ul class="emp-list" id="empItems"></ul>
+      <div class="emp-new"><input id="empAddName" placeholder="Nombre de la empresa" aria-label="Nombre de la empresa"><button type="button" class="btn pri sm" id="empAdd">+ Agregar</button></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="sec-h"><span class="tag"></span><h2>Residentes, encargados y jefes <span class="e-meta" id="invPersN"></span></h2></div>
+    <div class="qc" style="padding-top:12px">
+      <ul class="emp-list" id="invPers"></ul>
+      <div class="grid" style="padding:0">
+        <label class="full">Nombre<input id="invPersN2" placeholder="Ej. Ing. Juan Pérez López"></label>
+        <label>Cargo<select id="invPersCargo"><option>Residente de obra</option><option>Encargado / sobrestante</option><option>Jefe directo</option><option>Superintendente</option><option>Supervisor</option><option>Laboratorista</option><option>Otro</option></select></label>
+        <label>Empresa<select id="invPersEmp"></select></label>
+      </div>
+      <button type="button" class="btn pri sm" id="invPersAdd" style="align-self:flex-start">+ Agregar persona</button>
+    </div>
+  </section>
+  <p class="hint" style="margin-top:12px">Todo lo del inventario aparece en listas desplegables al llenar un registro, y se guarda en todos tus dispositivos con el respaldo en la nube.</p>
 </div>
 </main>
 <div class="preview" id="preview" hidden role="dialog" aria-modal="true" aria-label="Vista previa del PDF">
@@ -450,7 +479,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 const $=id=>document.getElementById(id);
 const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 const TIPOS={concreto:"Colado de concreto",asfalto:"Mezcla asfáltica",terraceria:"Terracerías",general:"Supervisión general"};
-const FIELDS=["f_fecha","f_dia","f_hora","f_obra","f_contratista","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb",
+const FIELDS=["f_fecha","f_dia","f_hora","f_obra","f_contratista","f_residente","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb",
  "c_elemento","c_concretera","c_fc","c_rev","c_temp","c_vol","c_ollas","c_remision","c_tma","c_aditivo","c_hini","c_hfin","c_cil","c_metodo","c_vibrado","c_curado",
  "a_capa","a_planta","a_ca","a_tipo","a_tprod","a_tten","a_tcomp","a_esp","a_ancho","a_ton","a_viajes","a_liga","a_equipo",
  "t_capa","t_banco","t_esp","t_hum","t_gc","t_gcreq","f_notas"];
@@ -495,7 +524,7 @@ $("addMu").onclick=()=>{syncMu();const pre={concreto:"M-",asfalto:"MA-",terracer
  mu.push(s);renderMu()};
 /* ---------- inventario de empresas ---------- */
 const empList=()=>{const l=lsGet("bit_empresas");return Array.isArray(l)?l:[]};
-function empSave(l,touch=true){const u=[...new Set(l.map(x=>String(x).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"es"));lsSet("bit_empresas",u);if(touch){lsSet("bit_cfg_t",Date.now());if(typeof autoSync==="function")autoSync()}renderEmpresas();renderEmpMgr();return u}
+function empSave(l,touch=true){const u=[...new Set(l.map(x=>String(x).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"es"));lsSet("bit_empresas",u);if(touch){lsSet("bit_cfg_t",Date.now());if(typeof autoSync==="function")autoSync()}renderEmpresas();renderEmpMgr();if(typeof renderInv==="function")renderInv();return u}
 function renderEmpresas(sel){const s=$("f_contratista");const cur=sel!==undefined?sel:s.value;const l=empList();if(cur&&cur!=="__nueva__"&&!l.includes(cur))l.push(cur);
  s.innerHTML=`<option value="">— Elige la empresa —</option>${l.sort((a,b)=>a.localeCompare(b,"es")).map(x=>`<option${x===cur?" selected":""}>${esc(x)}</option>`).join("")}<option value="__nueva__">➕ Agregar empresa nueva…</option>`;
  if(cur&&cur!=="__nueva__")s.value=cur;$("empNewRow").hidden=true}
@@ -507,6 +536,35 @@ $("empNewCancel").onclick=()=>renderEmpresas("");
 $("empAdd").onclick=()=>{const n=$("empAddName").value.trim();if(!n)return;empSave([...empList(),n]);$("empAddName").value="";toast("Empresa agregada")};
 $("empItems").addEventListener("click",e=>{const b=e.target.closest("[data-empdel]");if(!b)return;if(!b.dataset.ok){b.dataset.ok=1;b.textContent="¿Seguro? Quitar";return}const l=empList();l.splice(+b.dataset.empdel,1);empSave(l);toast("Empresa quitada de la lista (los registros no cambian)")});
 function initEmpresas(){if(!lsGet("bit_empresas")){const seed=[...new Set((entries||[]).filter(e=>!e.ejemplo).map(e=>e.f_contratista).filter(Boolean))];if(seed.length)empSave(seed,false)}renderEmpresas();renderEmpMgr()}
+/* ---------- inventario: obras y personas ---------- */
+const obrasInv=()=>{const l=lsGet("bit_obras");return Array.isArray(l)?l:[]};
+const persInv=()=>{const l=lsGet("bit_personas");return Array.isArray(l)?l:[]};
+const CARGOS=["Residente de obra","Encargado / sobrestante","Jefe directo","Superintendente","Supervisor","Laboratorista","Otro"];
+function invTouch(){lsSet("bit_cfg_t",Date.now());if(typeof autoSync==="function")autoSync()}
+function cadNum(c){const m=String(c||"").match(/(\d+)\s*\+\s*(\d+(?:\.\d+)?)/);return m?(+m[1])*1000+(+m[2]):Infinity}
+function obraLabel(o){return`${o.n}${o.c1?` · km ${o.c1}${o.c2?" – "+o.c2:""}`:""}`}
+function saveObras(l,touch=true){l=l.filter(o=>o&&o.n).sort((a,b)=>cadNum(a.c1)-cadNum(b.c1)||a.n.localeCompare(b.n,"es"));lsSet("bit_obras",l);if(touch)invTouch();renderInv();renderPickers()}
+function savePers(l,touch=true){l=l.filter(p=>p&&p.n).sort((a,b)=>CARGOS.indexOf(a.cargo)-CARGOS.indexOf(b.cargo)||a.n.localeCompare(b.n,"es"));lsSet("bit_personas",l);if(touch)invTouch();renderInv();renderPickers()}
+function persLabel(p){return`${p.n}${p.cargo?" · "+p.cargo:""}${p.emp?" ("+p.emp+")":""}`}
+function renderPickers(){const o=obrasInv(),p=persInv();
+ $("pickObra").innerHTML=`<option value="">📋 ${o.length?"Elegir obra del inventario":"Agrega obras en Inventario"}</option>${o.map((x,i)=>`<option value="${i}">${esc(obraLabel(x))}</option>`).join("")}`;$("pickObra").disabled=!o.length;
+ $("pickRes").innerHTML=`<option value="">📋 ${p.length?"Elegir del inventario":"Agrega personas en Inventario"}</option>${p.map((x,i)=>`<option value="${i}">${esc(persLabel(x))}</option>`).join("")}`;$("pickRes").disabled=!p.length}
+function delBtn(attr,i){return`<button type="button" class="btn sm" ${attr}="${i}">Quitar</button>`}
+function renderInv(){const o=obrasInv(),p=persInv();
+ $("invObrasN").textContent=`(${o.length})`;$("invPersN").textContent=`(${p.length})`;
+ $("invObras").innerHTML=o.length?o.map((x,i)=>`<li><span><b>${esc(x.n)}</b>${x.c1?`<br><span class="e-meta">km ${esc(x.c1)}${x.c2?" – "+esc(x.c2):""}</span>`:""}</span>${delBtn("data-obradel",i)}</li>`).join(""):`<li class="hint">Sin obras todavía.</li>`;
+ $("invPers").innerHTML=p.length?p.map((x,i)=>`<li><span><b>${esc(x.n)}</b><br><span class="e-meta">${esc([x.cargo,x.emp].filter(Boolean).join(" · "))}</span></span>${delBtn("data-persdel",i)}</li>`).join(""):`<li class="hint">Sin personas todavía.</li>`;
+ const emps=empList();$("invPersEmp").innerHTML=`<option value="">Empresa (opcional)</option>${emps.map(e=>`<option>${esc(e)}</option>`).join("")}`}
+function confirmDel(b,fn){if(!b.dataset.ok){b.dataset.ok=1;b.textContent="¿Seguro?";setTimeout(()=>{if(b.isConnected){delete b.dataset.ok;b.textContent="Quitar"}},4000);return}fn()}
+$("invObras").addEventListener("click",e=>{const b=e.target.closest("[data-obradel]");if(b)confirmDel(b,()=>{const l=obrasInv();l.splice(+b.dataset.obradel,1);saveObras(l)})});
+$("invPers").addEventListener("click",e=>{const b=e.target.closest("[data-persdel]");if(b)confirmDel(b,()=>{const l=persInv();l.splice(+b.dataset.persdel,1);savePers(l)})});
+$("invObraAdd").onclick=()=>{const n=$("invObraN").value.trim();if(!n){$("invObraN").focus();toast("Escribe el nombre de la obra");return}
+ saveObras([...obrasInv(),{n,c1:$("invObraC1").value.trim(),c2:$("invObraC2").value.trim()}]);["invObraN","invObraC1","invObraC2"].forEach(id=>$(id).value="");toast("Obra agregada")};
+$("invPersAdd").onclick=()=>{const n=$("invPersN2").value.trim();if(!n){$("invPersN2").focus();toast("Escribe el nombre");return}
+ savePers([...persInv(),{n,cargo:$("invPersCargo").value,emp:$("invPersEmp").value}]);$("invPersN2").value="";toast("Persona agregada")};
+$("pickObra").addEventListener("change",()=>{const o=obrasInv()[+$("pickObra").value];if(o){$("f_obra").value=o.n;if(o.c1)$("f_cad1").value=o.c1;if(o.c2)$("f_cad2").value=o.c2;toast("Obra y cadenamiento puestos; los puedes cambiar")}$("pickObra").value=""});
+$("pickRes").addEventListener("change",()=>{const p=persInv()[+$("pickRes").value];if(p){$("f_residente").value=[p.n,p.cargo].filter(Boolean).join(" · ");if(p.emp&&!$("f_contratista").value){renderEmpresas(p.emp)}}$("pickRes").value=""});
+function initInv(){renderInv();renderPickers()}
 function setTipo(t){try{if(document.getElementById("muList").querySelector(".mu"))syncMu()}catch(e){}tipo=t;document.querySelectorAll(".type").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
  ["concreto","asfalto","terraceria"].forEach(k=>$("sec_"+k).hidden=k!==t);if(typeof renderMu==="function")renderMu()}
 $("types").addEventListener("click",e=>{const b=e.target.closest(".type");if(b)setTipo(b.dataset.t)});
@@ -551,7 +609,7 @@ function mapUrl(e){return e.f_lat&&e.f_lng?`https://maps.google.com/?q=${e.f_lat
 /* ---------- formulario ---------- */
 $("f_fecha").addEventListener("change",()=>{$("f_dia").value=diaDe($("f_fecha").value)});
 function resetForm(keep){
- const prev=keep?{f_obra:$("f_obra").value,f_contratista:$("f_contratista").value,c_concretera:$("c_concretera").value,a_planta:$("a_planta").value}:{};
+ const prev=keep?{f_obra:$("f_obra").value,f_contratista:$("f_contratista").value,f_residente:$("f_residente").value,c_concretera:$("c_concretera").value,a_planta:$("a_planta").value}:{};
  FIELDS.forEach(f=>{const el=$(f);if(el.tagName==="SELECT")el.selectedIndex=0;else el.value=""});
  Object.assign(prev,{});for(const k in prev)$(k).value=prev[k]||"";
  const t=today();$("f_fecha").value=t.date;$("f_hora").value=t.time;$("f_dia").value=diaDe(t.date);
@@ -591,7 +649,7 @@ function renderList(){
   return`<article class="entry ${e.tipo}">
   <div class="e-h"><div class="e-date">${esc(e.f_dia||diaDe(e.f_fecha))} ${esc(fmtFecha(e.f_fecha))}${e.ejemplo?'<span class="badge-ej">EJEMPLO</span>':""}</div><div class="e-meta">${esc(e.f_hora||"")} · ${TIPOS[e.tipo]}</div></div>
   <div class="e-obra">${esc(e.f_obra||"Sin obra")}</div>
-  ${e.f_contratista?`<div class="e-meta">🏢 ${esc(e.f_contratista)}</div>`:""}
+  ${e.f_contratista?`<div class="e-meta">🏢 ${esc(e.f_contratista)}</div>`:""}${e.f_residente?`<div class="e-meta">👷 ${esc(e.f_residente)}</div>`:""}
   <div class="e-meta">${e.f_cad1?"Km "+esc(e.f_cad1)+(e.f_cad2?" – "+esc(e.f_cad2):""):""}${e.f_cuerpo?" · "+esc(e.f_cuerpo):""}${e.f_carril?" · Carril "+esc(e.f_carril):""}${e.f_ubic?" · "+esc(e.f_ubic):""}</div>
   ${kvFor(e)?`<dl class="kv">${kvFor(e)}</dl>`:""}
   ${qcs?`<div class="chips">${qcs}</div>`:""}
@@ -630,8 +688,8 @@ $("entries").addEventListener("click",async ev=>{const b=ev.target.closest("butt
 
 /* ---------- CSV ---------- */
 $("btnCsv").onclick=async()=>{const real=entries.filter(e=>!e.ejemplo);if(!real.length){toast("No hay registros para exportar");return}
- const cols=["f_fecha","f_dia","f_hora","f_obra","f_contratista","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","mu","f_notas"];
- const head=["Fecha","Día","Hora","Obra","Empresa contratista","Cad. del","Cad. al","Cuerpo","Carril","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Muestreo","Notas"];
+ const cols=["f_fecha","f_dia","f_hora","f_obra","f_contratista","f_residente","f_cad1","f_cad2","f_cuerpo","f_carril","f_ubic","f_lat","f_lng","f_clima","f_tamb","tipo",...Object.keys(LABELS),"qc","mu","f_notas"];
+ const head=["Fecha","Día","Hora","Obra","Empresa contratista","Residente / encargado","Cad. del","Cad. al","Cuerpo","Carril","Ubicación","Latitud","Longitud","Clima","T. ambiente","Actividad",...Object.keys(LABELS).map(k=>LABELS[k]),"Control de calidad","Muestreo","Notas"];
  const cell=v=>`"${String(v??"").replace(/"/g,'""')}"`;
  const rows=real.slice().sort((a,b)=>(a.f_fecha||"").localeCompare(b.f_fecha||"")).map(e=>cols.map(c=>c==="mu"?(e.mu||[]).map(x=>muPairs(e.tipo,x).map(([l,v])=>l+": "+v).join("; ")).join(" | "):c==="qc"?(e.qc||[]).map(r=>`${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" cumple":r.ok==="n"?" NO cumple":""}`).join(" | "):c==="tipo"?TIPOS[e.tipo]:e[c]).map(cell).join(","));
  const csv="﻿"+[head.map(cell).join(","),...rows].join("\r\n");
@@ -728,7 +786,7 @@ function shareText(e){const L=["📋 *BITÁCORA DE OBRA*","Supervisión Ampliaci
  const cc=[e.f_cuerpo,e.f_carril?"Carril "+e.f_carril:""].filter(Boolean).join(" · ");if(cc)L.push(`↔️ ${cc}`);
  if(e.f_ubic)L.push(`🗺 ${e.f_ubic}`);
  const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C":""].filter(Boolean).join(" · ");if(amb)L.push(`🌤 ${amb}`);
- L.push("",`🔧 *Actividad:* ${TIPOS[e.tipo]}`);if(e.f_contratista)L.push(`🏢 *Empresa contratista:* ${e.f_contratista}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`• ${LABELS[k]}: ${e[k]}`)});
+ L.push("",`🔧 *Actividad:* ${TIPOS[e.tipo]}`);if(e.f_contratista)L.push(`🏢 *Empresa contratista:* ${e.f_contratista}`);if(e.f_residente)L.push(`👷 *Residente / encargado:* ${e.f_residente}`);const pre=PREFIX[e.tipo];Object.keys(LABELS).forEach(k=>{if(k.startsWith(pre)&&e[k])L.push(`• ${LABELS[k]}: ${e[k]}`)});
  if((e.mu||[]).length){L.push("",`🧪 *Muestreo (${e.mu.length})*`);e.mu.forEach(x=>{const pr=muPairs(e.tipo,x).filter(([l])=>!/^Muestra/.test(l));L.push(`• ${x.id||"Muestra"}: ${pr.map(([l,v])=>l+" "+v).join(" · ")}`)})}
  if((e.qc||[]).length){L.push("","✅ *Control de calidad*");(e.qc||[]).forEach(r=>L.push(`• ${r.p}: ${r.r}${r.e?" (esp. "+r.e+")":""}${r.ok==="y"?" ✔ cumple":r.ok==="n"?" ✘ NO cumple":""}`))}
  if(e.f_notas)L.push("",`📝 *Notas:* ${e.f_notas}`);
@@ -862,9 +920,9 @@ async function syncConfig(create,newPid){const c=await ghGetJson("config.json");
  if(newPid){pid=newPid;lsSet("bit_portafolio",pid);cfg.portafolio=pid;changed=true}
  else if(cfg.portafolio){if(pid!==cfg.portafolio){pid=cfg.portafolio;lsSet("bit_portafolio",pid)}}
  else{if(!pid){if(!create)return{pid:null};pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}cfg.portafolio=pid;changed=true}
- const lc=lsGet("bit_comurl")||"",lw=lsGet("bit_wa")||"",ln=$("pdfName").value.trim();const stamp=lsGet("bit_cfg_t")||((lc||lw||empList().length)?1:0);
- if((cfg.t||0)>stamp){if(Array.isArray(cfg.empresas)){lsSet("bit_empresas",cfg.empresas);renderEmpresas();renderEmpMgr()}if(cfg.comurl!==undefined)lsSet("bit_comurl",cfg.comurl);if(cfg.wa!==undefined)lsSet("bit_wa",cfg.wa);if(cfg.nombre){$("pdfName").value=cfg.nombre;lsSet("bit_nombre",cfg.nombre)}lsSet("bit_cfg_t",cfg.t);initCfg()}
- else if(stamp>(cfg.t||0)){cfg.comurl=lc;cfg.wa=lw;cfg.nombre=ln;cfg.empresas=empList();cfg.t=stamp;changed=true}
+ const lc=lsGet("bit_comurl")||"",lw=lsGet("bit_wa")||"",ln=$("pdfName").value.trim();const stamp=lsGet("bit_cfg_t")||((lc||lw||empList().length||obrasInv().length||persInv().length)?1:0);
+ if((cfg.t||0)>stamp){if(Array.isArray(cfg.empresas)){lsSet("bit_empresas",cfg.empresas);renderEmpresas();renderEmpMgr()}if(Array.isArray(cfg.obras))lsSet("bit_obras",cfg.obras);if(Array.isArray(cfg.personas))lsSet("bit_personas",cfg.personas);if(typeof initInv==="function")initInv();if(cfg.comurl!==undefined)lsSet("bit_comurl",cfg.comurl);if(cfg.wa!==undefined)lsSet("bit_wa",cfg.wa);if(cfg.nombre){$("pdfName").value=cfg.nombre;lsSet("bit_nombre",cfg.nombre)}lsSet("bit_cfg_t",cfg.t);initCfg()}
+ else if(stamp>(cfg.t||0)){cfg.comurl=lc;cfg.wa=lw;cfg.nombre=ln;cfg.empresas=empList();cfg.obras=obrasInv();cfg.personas=persInv();cfg.t=stamp;changed=true}
  if(changed)await ghPut("config.json",jblob(cfg),"Configuración de la bitácora",c&&c.sha);
  return{pid}}
 async function saveRemoteRecord(sid,g,L){const d=g.data;const t=d.t||Date.parse(d.actualizado)||Date.now();
@@ -987,7 +1045,7 @@ async function buildPdf(list,opt){
   if(e.share&&e.share.id){need(5);doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(30,90,160);doc.textWithLink("Registro en línea y fotos originales: "+shareUrl(e.share.id),M,y,{url:shareUrl(e.share.id)});y+=4.5}
   const amb=[e.f_clima,e.f_tamb?e.f_tamb+" °C ambiente":""].filter(Boolean).join(" · ");if(amb)line(amb,9.5,false,[93,103,108]);
   const uf=(e.fotos||[]).filter(isU);if(uf.length){await drawPh(uf,"UBICACIÓN",uf.length>1?2:1,90);y+=1}
-  y+=2;line("ACTIVIDAD: "+TIPOS[e.tipo].toUpperCase(),9.5,true,[93,103,108]);if(e.f_contratista){y+=.5;line("Empresa contratista: "+e.f_contratista,10,true)}y+=1;
+  y+=2;line("ACTIVIDAD: "+TIPOS[e.tipo].toUpperCase(),9.5,true,[93,103,108]);if(e.f_contratista){y+=.5;line("Empresa contratista: "+e.f_contratista,10,true)}if(e.f_residente){line("Residente / encargado: "+e.f_residente,10)}y+=1;
   const kv=Object.keys(LABELS).filter(k=>k.startsWith(PREFIX[e.tipo])&&e[k]);
   if(kv.length){const cw=CW/2;doc.setFontSize(9.5);for(let i=0;i<kv.length;i+=2){need(6);[kv[i],kv[i+1]].forEach((k,j)=>{if(!k)return;doc.setFont("helvetica","normal");doc.setTextColor(93,103,108);doc.text(LABELS[k]+":",M+j*cw,y);doc.setTextColor(28,34,38);doc.setFont("helvetica","bold");doc.text(doc.splitTextToSize(cl(e[k]),cw-48)[0],M+j*cw+46,y)});y+=5.2}}
   if((e.qc||[]).length){y+=2;need(14);line("CONTROL DE CALIDAD",9.5,true,[93,103,108]);y+=1;
@@ -1046,8 +1104,8 @@ $("pvSave").onclick=()=>savePdf(false);$("pvPrint").onclick=()=>savePdf(true);
 $("btnPdfAll").onclick=()=>makePdf(window.__shown());
 
 /* ---------- pestañas ---------- */
-function show(v){$("form").hidden=v!=="new";$("listView").hidden=v!=="list";$("tabNew").setAttribute("aria-selected",v==="new");$("tabList").setAttribute("aria-selected",v==="list");if(v==="list")renderList()}
-$("tabNew").onclick=()=>show("new");$("tabList").onclick=()=>show("list");
+function show(v){$("form").hidden=v!=="new";$("listView").hidden=v!=="list";$("invView").hidden=v!=="inv";$("tabNew").setAttribute("aria-selected",v==="new");$("tabList").setAttribute("aria-selected",v==="list");$("tabInv").setAttribute("aria-selected",v==="inv");if(v==="list")renderList();if(v==="inv")renderInv()}
+$("tabNew").onclick=()=>show("new");$("tabList").onclick=()=>show("list");$("tabInv").onclick=()=>show("inv");
 
 /* ---------- almacenamiento en el teléfono (IndexedDB) ---------- */
 const idb=(()=>{let p;const open=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open("bitacora-obra",2);r.onupgradeneeded=()=>{const d=r.result;["registros","fotos","ajustes"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:"id"})})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
@@ -1076,7 +1134,7 @@ $("restoreFile").onchange=async ev=>{const file=ev.target.files[0];ev.target.val
  catch(e){toast("Ese archivo no es un respaldo de la bitácora")}};
 
 /* ---------- arranque ---------- */
-resetForm();entries=SAMPLE;renderList();initCfg();loadComments();cloudUi();initEmpresas();
+initInv();resetForm();entries=SAMPLE;renderList();initCfg();loadComments();cloudUi();initEmpresas();
 (async()=>{
  try{await restoreToken();await loadPhotoUrls();await reload()}catch(e){$("status").textContent="Este navegador no permite guardar datos. Abre la bitácora en Safari, fuera del modo privado."}
  try{if(navigator.storage&&navigator.storage.persist)await navigator.storage.persist()}catch(e){}

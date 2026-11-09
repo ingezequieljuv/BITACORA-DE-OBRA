@@ -141,7 +141,7 @@ async function main(){
  if(d.nombre)$("sup").textContent=d.nombre;
  const pre=PREFIX[d.tipo];const kv=Object.keys(LABELS).filter(k=>k.startsWith(pre)&&d[k]).map(k=>`<div><dt>${LABELS[k]}</dt><dd>${esc(d[k])}</dd></div>`).join("");
  const map=d.f_lat&&d.f_lng?`https://maps.google.com/?q=${d.f_lat},${d.f_lng}`:"";
- const gen=[["Empresa contratista",d.f_contratista],["Cadenamiento",d.f_cad1?d.f_cad1+(d.f_cad2?" al "+d.f_cad2:""):""],["Cuerpo",d.f_cuerpo],["Carril",d.f_carril],["Ubicación",d.f_ubic],["Coordenadas",d.f_lat&&d.f_lng?d.f_lat+", "+d.f_lng:""],["Clima",d.f_clima],["T. ambiente °C",d.f_tamb]].filter(x=>x[1]).map(x=>`<div><dt>${x[0]}</dt><dd>${esc(x[1])}</dd></div>`).join("");
+ const gen=[["Empresa contratista",d.f_contratista],["Residente / encargado",d.f_residente],["Cadenamiento",d.f_cad1?d.f_cad1+(d.f_cad2?" al "+d.f_cad2:""):""],["Cuerpo",d.f_cuerpo],["Carril",d.f_carril],["Ubicación",d.f_ubic],["Coordenadas",d.f_lat&&d.f_lng?d.f_lat+", "+d.f_lng:""],["Clima",d.f_clima],["T. ambiente °C",d.f_tamb]].filter(x=>x[1]).map(x=>`<div><dt>${x[0]}</dt><dd>${esc(x[1])}</dd></div>`).join("");
  const fotos=d.fotos||[],uf=fotos.filter(f=>f.mapa||f.ubic),of=fotos.filter(f=>!(f.mapa||f.ubic));
  const gal=(arr,off)=>arr.map((f,i)=>`<figure class="ph" style="margin:0"><div class="img" id="im_${off+i}">Cargando…</div>${f.cap?`<div class="cap">${esc(f.cap)}</div>`:""}<div class="row"><button class="btn sm" data-dl="${off+i}" disabled>Descargar</button><span class="size" id="sz_${off+i}"></span></div></figure>`).join("");
  const all=[...uf,...of];
