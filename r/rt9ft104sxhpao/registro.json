@@ -1,0 +1,105 @@
+{
+ "tipo": "asfalto",
+ "mu": [],
+ "qc": [],
+ "f_fecha": "2026-10-30",
+ "f_dia": "Viernes",
+ "f_hora": "12:50",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "88+570",
+ "f_cad2": "88+850",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Media",
+ "f_lat": "19.052431",
+ "f_lng": "-104.268836",
+ "f_clima": "Soleado",
+ "a_capa": "Riego de impregnación",
+ "a_tten": "75",
+ "a_ancho": "4",
+ "a_liga": "1.5",
+ "a_equipo": "Petrolizadora.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km88+570.jpg",
+   "cap": "Ubicación satelital 88+570",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km88+570.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km88+570.jpg",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-09T06:21:54.047Z",
+ "t": 1794205265998,
+ "muestreo": []
+}
