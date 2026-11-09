@@ -48,16 +48,89 @@
  "a_ancho": "4.5",
  "a_liga": "0.8",
  "a_equipo": "Barredora Petrolizadora Pavimentadora Doble Ridillo Compactador Neumatico Retroexcavadora.",
+ "f_notas": "El camión muestreado se encontraba esperando ser tendido en la Gasa 10.",
  "fotos": [
   {
    "file": "mapa_satelital_km94+158.jpg",
    "cap": "Ubicación satelital 94+158 · Gasa 10",
    "mapa": true
+  },
+  {
+   "file": "foto_2_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km94+158.heic",
+   "cap": ""
   }
  ],
  "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
- "actualizado": "2026-11-09T06:34:10.558Z",
- "t": 1794206048145,
+ "actualizado": "2026-11-09T07:27:30.617Z",
+ "t": 1794208914711,
  "muestreo": [
   {
    "id": "MBN-3010",
