@@ -1,0 +1,41 @@
+{
+ "tipo": "asfalto",
+ "mu": [],
+ "qc": [
+  {
+   "p": "Temperatura de tendido",
+   "r": "1+",
+   "e": "",
+   "ok": ""
+  }
+ ],
+ "f_fecha": "2026-10-30",
+ "f_dia": "Viernes",
+ "f_hora": "13:10",
+ "f_obra": "Puente Jalipa",
+ "f_contratista": "GACSA CONSTRUCCIONES",
+ "f_cad1": "94+158",
+ "f_ubic": "Gasa 10",
+ "f_lat": "19.098669",
+ "f_lng": "-104.285125",
+ "f_clima": "Soleado",
+ "a_capa": "Base negra",
+ "a_planta": "GSI",
+ "a_tipo": "PG 64-22",
+ "a_tten": "163",
+ "a_esp": "10",
+ "a_ancho": "4.5",
+ "a_liga": "0.8",
+ "a_equipo": "Barredora Petrolizadora Pavimentadora Doble Ridillo Compactador Neumatico Retroexcavadora.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km94+158.jpg",
+   "cap": "Ubicación satelital 94+158 · Gasa 10",
+   "mapa": true
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-09T06:29:41.409Z",
+ "t": 1794205777170,
+ "muestreo": []
+}
