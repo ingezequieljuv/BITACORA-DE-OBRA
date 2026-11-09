@@ -137,6 +137,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .emp-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
 .emp-list li span{min-width:0;overflow-wrap:anywhere}
 .pick{margin-bottom:6px;font-size:.92rem;background:var(--paper)}
+.emp-list .grp-h{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:none;padding-top:10px}
+.row-acts{display:flex;gap:6px;flex:none}
 .cfg{background:var(--paper);border:1px solid var(--line);border-radius:8px;margin-top:10px;padding:10px 14px}
 .cfg summary{cursor:pointer;font-weight:600}
 .cfg-body{display:flex;flex-direction:column;gap:10px;margin-top:10px}
@@ -256,7 +258,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <div class="grid">
       <label class="full">Elemento<input id="c_elemento" list="elementos" placeholder="Trabe, muro diafragma, losa, guarnición…"></label>
       <datalist id="elementos"><option>Trabe</option><option>Muro diafragma</option><option>Losa</option><option>Guarnición</option><option>Bordillo</option><option>Cabezal</option><option>Zapata</option><option>Parapeto</option></datalist>
-      <label>Concretera<input id="c_concretera" list="concreteras" placeholder="Nombre de la planta"></label>
+      <label>Concretera<select id="pickConc" class="pick" aria-label="Elegir planta de concreto del inventario"></select><input id="c_concretera" list="concreteras" placeholder="O escríbela aquí"></label>
       <datalist id="concreteras"></datalist>
       <label>f'c <span class="unit">kg/cm²</span><input type="number" id="c_fc" placeholder="250"></label>
       <label>Revenimiento <span class="unit">cm</span><input type="number" step="0.5" id="c_rev"></label>
@@ -279,7 +281,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <div class="sec-h"><span class="tag a"></span><h2>Mezcla asfáltica</h2></div>
     <div class="grid">
       <label>Capa<select id="a_capa"><option>Carpeta asfáltica</option><option>Base negra</option><option>Bacheo</option><option>Riego de liga</option><option>Riego de impregnación</option></select></label>
-      <label>Planta de producción<input id="a_planta" list="plantas"></label>
+      <label>Planta de producción<select id="pickPlanta" class="pick" aria-label="Elegir planta de asfalto del inventario"></select><input id="a_planta" list="plantas" placeholder="O escríbela aquí"></label>
       <datalist id="plantas"></datalist>
       <label>Contenido asfáltico <span class="unit">%</span><input type="number" step="0.01" id="a_ca" placeholder="5.80"></label>
       <label>Tipo de asfalto<input id="a_tipo" placeholder="AC-20 / PG 64-22"></label>
@@ -299,7 +301,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
     <div class="sec-h"><span class="tag" style="background:#a0743a"></span><h2>Terracerías</h2></div>
     <div class="grid">
       <label>Capa<select id="t_capa"><option>Terraplén</option><option>Subyacente</option><option>Subrasante</option><option>Sub-base</option><option>Base hidráulica</option></select></label>
-      <label>Banco de material<input id="t_banco"></label>
+      <label>Banco de material<select id="pickBanco" class="pick" aria-label="Elegir banco del inventario"></select><input id="t_banco" placeholder="O escríbelo aquí"></label>
       <label>Espesor <span class="unit">cm</span><input type="number" step="0.1" id="t_esp"></label>
       <label>Humedad <span class="unit">%</span><input type="number" step="0.1" id="t_hum"></label>
       <label>Grado de compactación <span class="unit">%</span><input type="number" step="0.1" id="t_gc"></label>
@@ -418,6 +420,19 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
       <button type="button" class="btn pri sm" id="invPersAdd" style="align-self:flex-start">+ Agregar persona</button>
     </div>
   </section>
+  <section class="card">
+    <div class="sec-h"><span class="tag"></span><h2>Plantas y bancos de materiales <span class="e-meta" id="invFuentesN"></span></h2></div>
+    <div class="qc" style="padding-top:12px">
+      <ul class="emp-list" id="invFuentes"></ul>
+      <div class="grid" style="padding:0">
+        <label>Tipo<select id="invFTipo"><option value="asfalto">Planta de asfalto</option><option value="concreto">Planta de concreto</option><option value="banco">Banco de materiales</option></select></label>
+        <label>Nombre<input id="invFN" placeholder="Ej. Planta Tecomán"></label>
+        <label>Ubicación / km<input id="invFU" placeholder="Ej. Armería, km 35+200"></label>
+        <label>Material o detalle<input id="invFMat"></label>
+      </div>
+      <button type="button" class="btn pri sm" id="invFAdd" style="align-self:flex-start">+ Agregar</button>
+    </div>
+  </section>
   <p class="hint" style="margin-top:12px">Todo lo del inventario aparece en listas desplegables al llenar un registro, y se guarda en todos tus dispositivos con el respaldo en la nube.</p>
 </div>
 </main>
@@ -529,12 +544,14 @@ function renderEmpresas(sel){const s=$("f_contratista");const cur=sel!==undefine
  s.innerHTML=`<option value="">— Elige la empresa —</option>${l.sort((a,b)=>a.localeCompare(b,"es")).map(x=>`<option${x===cur?" selected":""}>${esc(x)}</option>`).join("")}<option value="__nueva__">➕ Agregar empresa nueva…</option>`;
  if(cur&&cur!=="__nueva__")s.value=cur;$("empNewRow").hidden=true}
 function renderEmpMgr(){const l=empList();$("empCount").textContent=`(${l.length})`;
- $("empItems").innerHTML=l.length?l.map((x,i)=>`<li><span>${esc(x)}</span><button type="button" class="btn sm" data-empdel="${i}" aria-label="Quitar ${esc(x)}">Quitar</button></li>`).join(""):`<li class="hint">Todavía no hay empresas. Agrega la primera abajo.</li>`}
+ $("empItems").innerHTML=l.length?l.map((x,i)=>`<li><span>${esc(x)}</span><span class="row-acts">${editBtn("data-empedit",i)}<button type="button" class="btn sm" data-empdel="${i}" aria-label="Quitar ${esc(x)}">Quitar</button></span></li>`).join(""):`<li class="hint">Todavía no hay empresas. Agrega la primera abajo.</li>`}
 $("f_contratista").addEventListener("change",()=>{if($("f_contratista").value==="__nueva__"){$("empNewRow").hidden=false;$("empNew").value="";$("empNew").focus()}else $("empNewRow").hidden=true});
 $("empNewOk").onclick=()=>{const n=$("empNew").value.trim();if(!n){$("empNew").focus();return}empSave([...empList(),n]);renderEmpresas(n);toast("Empresa agregada a la lista")};
 $("empNewCancel").onclick=()=>renderEmpresas("");
-$("empAdd").onclick=()=>{const n=$("empAddName").value.trim();if(!n)return;empSave([...empList(),n]);$("empAddName").value="";toast("Empresa agregada")};
-$("empItems").addEventListener("click",e=>{const b=e.target.closest("[data-empdel]");if(!b)return;if(!b.dataset.ok){b.dataset.ok=1;b.textContent="¿Seguro? Quitar";return}const l=empList();l.splice(+b.dataset.empdel,1);empSave(l);toast("Empresa quitada de la lista (los registros no cambian)")});
+$("empAdd").onclick=()=>{const n=$("empAddName").value.trim();if(!n)return;const l=empList(),ed=invEdit.emp;
+ if(ed!=null){const old=l[ed];l[ed]=n;persInv().forEach(()=>{});const ps=persInv().map(p=>p.emp===old?{...p,emp:n}:p);lsSet("bit_personas",ps);if($("f_contratista").value===old){empSave(l);renderEmpresas(n)}else empSave(l)}else empSave([...l,n]);
+ $("empAddName").value="";endEdit("emp");toast(ed!=null?"Empresa actualizada":"Empresa agregada")};
+$("empItems").addEventListener("click",e=>{const b=e.target.closest("[data-empdel]");if(!b)return;if(!b.dataset.ok){b.dataset.ok=1;b.textContent="¿Seguro? Quitar";return}if(invEdit.emp!=null)endEdit("emp");const l=empList();l.splice(+b.dataset.empdel,1);empSave(l);toast("Empresa quitada de la lista (los registros no cambian)")});
 function initEmpresas(){if(!lsGet("bit_empresas")){const seed=[...new Set((entries||[]).filter(e=>!e.ejemplo).map(e=>e.f_contratista).filter(Boolean))];if(seed.length)empSave(seed,false)}renderEmpresas();renderEmpMgr()}
 /* ---------- inventario: obras y personas ---------- */
 const obrasInv=()=>{const l=lsGet("bit_obras");return Array.isArray(l)?l:[]};
@@ -552,19 +569,50 @@ function renderPickers(){const o=obrasInv(),p=persInv();
 function delBtn(attr,i){return`<button type="button" class="btn sm" ${attr}="${i}">Quitar</button>`}
 function renderInv(){const o=obrasInv(),p=persInv();
  $("invObrasN").textContent=`(${o.length})`;$("invPersN").textContent=`(${p.length})`;
- $("invObras").innerHTML=o.length?o.map((x,i)=>`<li><span><b>${esc(x.n)}</b>${x.c1?`<br><span class="e-meta">km ${esc(x.c1)}${x.c2?" – "+esc(x.c2):""}</span>`:""}</span>${delBtn("data-obradel",i)}</li>`).join(""):`<li class="hint">Sin obras todavía.</li>`;
- $("invPers").innerHTML=p.length?p.map((x,i)=>`<li><span><b>${esc(x.n)}</b><br><span class="e-meta">${esc([x.cargo,x.emp].filter(Boolean).join(" · "))}</span></span>${delBtn("data-persdel",i)}</li>`).join(""):`<li class="hint">Sin personas todavía.</li>`;
+ $("invObras").innerHTML=o.length?o.map((x,i)=>`<li><span><b>${esc(x.n)}</b>${x.c1?`<br><span class="e-meta">km ${esc(x.c1)}${x.c2?" – "+esc(x.c2):""}</span>`:""}</span><span class="row-acts">${editBtn("data-obraedit",i)}${delBtn("data-obradel",i)}</span></li>`).join(""):`<li class="hint">Sin obras todavía.</li>`;
+ $("invPers").innerHTML=p.length?p.map((x,i)=>`<li><span><b>${esc(x.n)}</b><br><span class="e-meta">${esc([x.cargo,x.emp].filter(Boolean).join(" · "))}</span></span><span class="row-acts">${editBtn("data-persedit",i)}${delBtn("data-persdel",i)}</span></li>`).join(""):`<li class="hint">Sin personas todavía.</li>`;
  const emps=empList();$("invPersEmp").innerHTML=`<option value="">Empresa (opcional)</option>${emps.map(e=>`<option>${esc(e)}</option>`).join("")}`}
-function confirmDel(b,fn){if(!b.dataset.ok){b.dataset.ok=1;b.textContent="¿Seguro?";setTimeout(()=>{if(b.isConnected){delete b.dataset.ok;b.textContent="Quitar"}},4000);return}fn()}
+function confirmDel(b,fn){if(b.dataset.ok){Object.keys(invEdit).forEach(k=>{if(invEdit[k]!=null)endEdit(k)})}if(!b.dataset.ok){b.dataset.ok=1;b.textContent="¿Seguro?";setTimeout(()=>{if(b.isConnected){delete b.dataset.ok;b.textContent="Quitar"}},4000);return}fn()}
 $("invObras").addEventListener("click",e=>{const b=e.target.closest("[data-obradel]");if(b)confirmDel(b,()=>{const l=obrasInv();l.splice(+b.dataset.obradel,1);saveObras(l)})});
 $("invPers").addEventListener("click",e=>{const b=e.target.closest("[data-persdel]");if(b)confirmDel(b,()=>{const l=persInv();l.splice(+b.dataset.persdel,1);savePers(l)})});
 $("invObraAdd").onclick=()=>{const n=$("invObraN").value.trim();if(!n){$("invObraN").focus();toast("Escribe el nombre de la obra");return}
- saveObras([...obrasInv(),{n,c1:$("invObraC1").value.trim(),c2:$("invObraC2").value.trim()}]);["invObraN","invObraC1","invObraC2"].forEach(id=>$(id).value="");toast("Obra agregada")};
+ const it={n,c1:$("invObraC1").value.trim(),c2:$("invObraC2").value.trim()},l=obrasInv(),ed=invEdit.obra;if(ed!=null)l[ed]=it;else l.push(it);saveObras(l);["invObraN","invObraC1","invObraC2"].forEach(id=>$(id).value="");endEdit("obra");toast(ed!=null?"Obra actualizada":"Obra agregada")};
 $("invPersAdd").onclick=()=>{const n=$("invPersN2").value.trim();if(!n){$("invPersN2").focus();toast("Escribe el nombre");return}
- savePers([...persInv(),{n,cargo:$("invPersCargo").value,emp:$("invPersEmp").value}]);$("invPersN2").value="";toast("Persona agregada")};
+ const it={n,cargo:$("invPersCargo").value,emp:$("invPersEmp").value},l=persInv(),ed=invEdit.pers;if(ed!=null)l[ed]=it;else l.push(it);savePers(l);$("invPersN2").value="";endEdit("pers");toast(ed!=null?"Persona actualizada":"Persona agregada")};
 $("pickObra").addEventListener("change",()=>{const o=obrasInv()[+$("pickObra").value];if(o){$("f_obra").value=o.n;if(o.c1)$("f_cad1").value=o.c1;if(o.c2)$("f_cad2").value=o.c2;toast("Obra y cadenamiento puestos; los puedes cambiar")}$("pickObra").value=""});
 $("pickRes").addEventListener("change",()=>{const p=persInv()[+$("pickRes").value];if(p){$("f_residente").value=[p.n,p.cargo].filter(Boolean).join(" · ");if(p.emp&&!$("f_contratista").value){renderEmpresas(p.emp)}}$("pickRes").value=""});
-function initInv(){renderInv();renderPickers()}
+/* ---------- inventario: plantas y bancos ---------- */
+const FTIPOS={asfalto:"Planta de asfalto",concreto:"Planta de concreto",banco:"Banco de materiales"};
+const fuentesInv=()=>{const l=lsGet("bit_fuentes");return Array.isArray(l)?l:[]};
+function saveFuentes(l,touch=true){l=l.filter(x=>x&&x.n).sort((a,b)=>Object.keys(FTIPOS).indexOf(a.t)-Object.keys(FTIPOS).indexOf(b.t)||a.n.localeCompare(b.n,"es"));lsSet("bit_fuentes",l);if(touch)invTouch();renderFuentes();renderFuentePickers()}
+function fuenteLabel(x){return`${x.n}${x.u?" · "+x.u:""}${x.m?" · "+x.m:""}`}
+function renderFuentes(){const l=fuentesInv();$("invFuentesN").textContent=`(${l.length})`;
+ $("invFuentes").innerHTML=l.length?Object.keys(FTIPOS).map(t=>{const g=l.map((x,i)=>[x,i]).filter(([x])=>x.t===t);return g.length?`<li class="grp-h">${{asfalto:"Plantas de asfalto",concreto:"Plantas de concreto",banco:"Bancos de materiales"}[t]}</li>`+g.map(([x,i])=>`<li><span><b>${esc(x.n)}</b>${x.u||x.m?`<br><span class="e-meta">${esc([x.u,x.m].filter(Boolean).join(" · "))}</span>`:""}</span><span class="row-acts">${editBtn("data-fedit",i)}<button type="button" class="btn sm" data-fdel="${i}">Quitar</button></span></li>`).join(""):""}).join(""):`<li class="hint">Sin plantas ni bancos todavía.</li>`;
+ $("invFMat").placeholder=$("invFTipo").value==="banco"?"Material (ej. base hidráulica, subyacente)":$("invFTipo").value==="asfalto"?"Tipo de mezcla / asfalto (opcional)":"Resistencias que surte (opcional)"}
+function renderFuentePickers(){const l=fuentesInv();[["pickConc","concreto","c_concretera"],["pickPlanta","asfalto","a_planta"],["pickBanco","banco","t_banco"]].forEach(([id,t])=>{const g=l.map((x,i)=>[x,i]).filter(([x])=>x.t===t);const el=$(id);if(!el)return;
+ el.innerHTML=`<option value="">📋 ${g.length?"Elegir del inventario":"Agrega "+FTIPOS[t].toLowerCase()+"s en Inventario"}</option>${g.map(([x,i])=>`<option value="${i}">${esc(fuenteLabel(x))}</option>`).join("")}`;el.disabled=!g.length})}
+$("invFuentes").addEventListener("click",e=>{const b=e.target.closest("[data-fdel]");if(b)confirmDel(b,()=>{const l=fuentesInv();l.splice(+b.dataset.fdel,1);saveFuentes(l)})});
+$("invFTipo").addEventListener("change",renderFuentes);
+$("invFAdd").onclick=()=>{const n=$("invFN").value.trim();if(!n){$("invFN").focus();toast("Escribe el nombre");return}
+ const it={t:$("invFTipo").value,n,u:$("invFU").value.trim(),m:$("invFMat").value.trim()},l=fuentesInv(),ed=invEdit.fuente;if(ed!=null)l[ed]=it;else l.push(it);saveFuentes(l);["invFN","invFU","invFMat"].forEach(id=>$(id).value="");endEdit("fuente");toast(ed!=null?"Actualizado":FTIPOS[it.t]+" agregada")};
+[["pickConc","c_concretera"],["pickPlanta","a_planta"],["pickBanco","t_banco"]].forEach(([id,f])=>$(id).addEventListener("change",()=>{const x=fuentesInv()[+$(id).value];if(x)$(f).value=x.n;$(id).value=""}));
+/* ---------- editar elementos del inventario ---------- */
+const invEdit={obra:null,emp:null,pers:null,fuente:null};
+const EDBTN={obra:["invObraAdd","+ Agregar obra"],emp:["empAdd","+ Agregar"],pers:["invPersAdd","+ Agregar persona"],fuente:["invFAdd","+ Agregar"]};
+function startEdit(kind,i,fill,focusId){invEdit[kind]=i;fill();const [b]=EDBTN[kind];$(b).textContent="Guardar cambios";$(b+"X").hidden=false;$(focusId).scrollIntoView({behavior:"smooth",block:"center"});$(focusId).focus()}
+function endEdit(kind){invEdit[kind]=null;const [b,t]=EDBTN[kind];$(b).textContent=t;$(b+"X").hidden=true}
+function editBtn(attr,i){return`<button type="button" class="btn sm" ${attr}="${i}">Editar</button>`}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-obraedit],[data-empedit],[data-persedit],[data-fedit]");if(!t)return;
+ if(t.dataset.obraedit!=null){const i=+t.dataset.obraedit,o=obrasInv()[i];startEdit("obra",i,()=>{$("invObraN").value=o.n||"";$("invObraC1").value=o.c1||"";$("invObraC2").value=o.c2||""},"invObraN")}
+ else if(t.dataset.empedit!=null){const i=+t.dataset.empedit;startEdit("emp",i,()=>{$("empAddName").value=empList()[i]},"empAddName")}
+ else if(t.dataset.persedit!=null){const i=+t.dataset.persedit,p=persInv()[i];startEdit("pers",i,()=>{$("invPersN2").value=p.n||"";$("invPersCargo").value=p.cargo||"Residente de obra";if(p.emp&&![...$("invPersEmp").options].some(o=>o.value===p.emp))$("invPersEmp").insertAdjacentHTML("beforeend",`<option>${esc(p.emp)}</option>`);$("invPersEmp").value=p.emp||""},"invPersN2")}
+ else if(t.dataset.fedit!=null){const i=+t.dataset.fedit,x=fuentesInv()[i];startEdit("fuente",i,()=>{$("invFTipo").value=x.t;$("invFN").value=x.n||"";$("invFU").value=x.u||"";$("invFMat").value=x.m||"";renderFuentes()},"invFN")}});
+["invObraAdd","empAdd","invPersAdd","invFAdd"].forEach(id=>{$(id).insertAdjacentHTML("afterend",`<button type="button" class="btn sm" id="${id}X" hidden>Cancelar</button>`)});
+$("invObraAddX").onclick=()=>{["invObraN","invObraC1","invObraC2"].forEach(id=>$(id).value="");endEdit("obra")};
+$("empAddX").onclick=()=>{$("empAddName").value="";endEdit("emp")};
+$("invPersAddX").onclick=()=>{$("invPersN2").value="";endEdit("pers")};
+$("invFAddX").onclick=()=>{["invFN","invFU","invFMat"].forEach(id=>$(id).value="");endEdit("fuente")};
+function initInv(){renderInv();renderPickers();renderFuentes();renderFuentePickers()}
 function setTipo(t){try{if(document.getElementById("muList").querySelector(".mu"))syncMu()}catch(e){}tipo=t;document.querySelectorAll(".type").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
  ["concreto","asfalto","terraceria"].forEach(k=>$("sec_"+k).hidden=k!==t);if(typeof renderMu==="function")renderMu()}
 $("types").addEventListener("click",e=>{const b=e.target.closest(".type");if(b)setTipo(b.dataset.t)});
@@ -920,9 +968,9 @@ async function syncConfig(create,newPid){const c=await ghGetJson("config.json");
  if(newPid){pid=newPid;lsSet("bit_portafolio",pid);cfg.portafolio=pid;changed=true}
  else if(cfg.portafolio){if(pid!==cfg.portafolio){pid=cfg.portafolio;lsSet("bit_portafolio",pid)}}
  else{if(!pid){if(!create)return{pid:null};pid=newShareId()+newShareId().slice(0,6);lsSet("bit_portafolio",pid)}cfg.portafolio=pid;changed=true}
- const lc=lsGet("bit_comurl")||"",lw=lsGet("bit_wa")||"",ln=$("pdfName").value.trim();const stamp=lsGet("bit_cfg_t")||((lc||lw||empList().length||obrasInv().length||persInv().length)?1:0);
- if((cfg.t||0)>stamp){if(Array.isArray(cfg.empresas)){lsSet("bit_empresas",cfg.empresas);renderEmpresas();renderEmpMgr()}if(Array.isArray(cfg.obras))lsSet("bit_obras",cfg.obras);if(Array.isArray(cfg.personas))lsSet("bit_personas",cfg.personas);if(typeof initInv==="function")initInv();if(cfg.comurl!==undefined)lsSet("bit_comurl",cfg.comurl);if(cfg.wa!==undefined)lsSet("bit_wa",cfg.wa);if(cfg.nombre){$("pdfName").value=cfg.nombre;lsSet("bit_nombre",cfg.nombre)}lsSet("bit_cfg_t",cfg.t);initCfg()}
- else if(stamp>(cfg.t||0)){cfg.comurl=lc;cfg.wa=lw;cfg.nombre=ln;cfg.empresas=empList();cfg.obras=obrasInv();cfg.personas=persInv();cfg.t=stamp;changed=true}
+ const lc=lsGet("bit_comurl")||"",lw=lsGet("bit_wa")||"",ln=$("pdfName").value.trim();const stamp=lsGet("bit_cfg_t")||((lc||lw||empList().length||obrasInv().length||persInv().length||fuentesInv().length)?1:0);
+ if((cfg.t||0)>stamp){if(Array.isArray(cfg.empresas)){lsSet("bit_empresas",cfg.empresas);renderEmpresas();renderEmpMgr()}if(Array.isArray(cfg.obras))lsSet("bit_obras",cfg.obras);if(Array.isArray(cfg.personas))lsSet("bit_personas",cfg.personas);if(Array.isArray(cfg.fuentes))lsSet("bit_fuentes",cfg.fuentes);if(typeof initInv==="function")initInv();if(cfg.comurl!==undefined)lsSet("bit_comurl",cfg.comurl);if(cfg.wa!==undefined)lsSet("bit_wa",cfg.wa);if(cfg.nombre){$("pdfName").value=cfg.nombre;lsSet("bit_nombre",cfg.nombre)}lsSet("bit_cfg_t",cfg.t);initCfg()}
+ else if(stamp>(cfg.t||0)){cfg.comurl=lc;cfg.wa=lw;cfg.nombre=ln;cfg.empresas=empList();cfg.obras=obrasInv();cfg.personas=persInv();cfg.fuentes=fuentesInv();cfg.t=stamp;changed=true}
  if(changed)await ghPut("config.json",jblob(cfg),"Configuración de la bitácora",c&&c.sha);
  return{pid}}
 async function saveRemoteRecord(sid,g,L){const d=g.data;const t=d.t||Date.parse(d.actualizado)||Date.now();
@@ -1104,7 +1152,7 @@ $("pvSave").onclick=()=>savePdf(false);$("pvPrint").onclick=()=>savePdf(true);
 $("btnPdfAll").onclick=()=>makePdf(window.__shown());
 
 /* ---------- pestañas ---------- */
-function show(v){$("form").hidden=v!=="new";$("listView").hidden=v!=="list";$("invView").hidden=v!=="inv";$("tabNew").setAttribute("aria-selected",v==="new");$("tabList").setAttribute("aria-selected",v==="list");$("tabInv").setAttribute("aria-selected",v==="inv");if(v==="list")renderList();if(v==="inv")renderInv()}
+function show(v){$("form").hidden=v!=="new";$("listView").hidden=v!=="list";$("invView").hidden=v!=="inv";$("tabNew").setAttribute("aria-selected",v==="new");$("tabList").setAttribute("aria-selected",v==="list");$("tabInv").setAttribute("aria-selected",v==="inv");if(v==="list")renderList();if(v==="inv"){renderInv();renderFuentes()}}
 $("tabNew").onclick=()=>show("new");$("tabList").onclick=()=>show("list");$("tabInv").onclick=()=>show("inv");
 
 /* ---------- almacenamiento en el teléfono (IndexedDB) ---------- */
