@@ -663,8 +663,25 @@
    "tipo": "asfalto",
    "a_capa": "Riego de impregnación",
    "fotos": 19
+  },
+  {
+   "id": "owrdmiam0fsntc",
+   "t": 1794205777170,
+   "f_fecha": "2026-10-30",
+   "f_dia": "Viernes",
+   "f_hora": "13:10",
+   "f_obra": "Puente Jalipa",
+   "f_cad1": "94+158",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "Gasa 10",
+   "f_contratista": "GACSA CONSTRUCCIONES",
+   "tipo": "asfalto",
+   "a_capa": "Base negra",
+   "fotos": 1
   }
  ],
  "borrados": {},
- "actualizado": "2026-11-09T06:22:46.765Z"
+ "actualizado": "2026-11-09T06:29:42.968Z"
 }
