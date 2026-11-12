@@ -14,16 +14,59 @@
  "f_lng": "-104.245667",
  "f_clima": "Soleado",
  "c_elemento": "Escamas",
+ "c_concretera": "PSM",
+ "c_fc": "250",
+ "c_rev": "14",
+ "c_vol": "4",
+ "c_ollas": "1",
+ "c_remision": "2989",
+ "c_tma": "20 MM",
+ "c_hini": "16:28",
+ "c_cil": "4",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
  "fotos": [
   {
    "file": "mapa_satelital_km80+240.jpg",
    "cap": "Ubicación satelital 80+240 · Ampliacion.",
    "mapa": true
+  },
+  {
+   "file": "foto_2_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km80+240.heic",
+   "cap": ""
   }
  ],
  "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
- "actualizado": "2026-11-12T02:35:33.633Z",
- "t": 1794239611444,
+ "actualizado": "2026-11-12T02:43:45.981Z",
+ "t": 1794451350122,
  "muestreo": [],
  "whatsapp": "523121767989"
 }
