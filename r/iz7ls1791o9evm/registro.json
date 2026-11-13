@@ -1,0 +1,87 @@
+{
+ "tipo": "concreto",
+ "mu": [],
+ "qc": [
+  {
+   "p": "Revenimiento",
+   "r": "16",
+   "e": "14",
+   "ok": "y"
+  }
+ ],
+ "f_fecha": "2026-10-30",
+ "f_dia": "Viernes",
+ "f_hora": "17:10",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "80+240",
+ "f_cuerpo": "Cuerpo B",
+ "f_ubic": "Rampa",
+ "f_lat": "18.998756",
+ "f_lng": "-104.244475",
+ "f_clima": "Soleado",
+ "f_tamb": "34",
+ "c_elemento": "Losa de Escamas",
+ "c_concretera": "PSM",
+ "c_fc": "250",
+ "c_rev": "14",
+ "c_temp": "30",
+ "c_ollas": "1",
+ "c_tma": "20 MM",
+ "c_hini": "17:10",
+ "c_cil": "4",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km80+240.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-13T12:28:15.926Z",
+ "t": 1794572714977,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
