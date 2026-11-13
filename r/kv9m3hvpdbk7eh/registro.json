@@ -1,0 +1,88 @@
+{
+ "tipo": "concreto",
+ "mu": [],
+ "qc": [],
+ "f_fecha": "2026-11-13",
+ "f_dia": "Viernes",
+ "f_hora": "06:30",
+ "f_obra": "Puente Jalipa",
+ "f_contratista": "GACSA CONSTRUCCIONES",
+ "f_ubic": "Gasa 10",
+ "f_lat": "19.098958",
+ "f_lng": "-104.285989",
+ "f_clima": "Soleado",
+ "f_tamb": "35",
+ "c_elemento": "Cuneta",
+ "c_concretera": "DCC",
+ "c_fc": "150",
+ "c_rev": "10",
+ "c_vol": "7",
+ "c_ollas": "1",
+ "c_remision": "A 194810",
+ "c_tma": "20 MM",
+ "c_hini": "09:20",
+ "c_cil": "0",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
+ "c_curado": "Agua",
+ "fotos": [
+  {
+   "file": "mapa_satelital.jpg",
+   "cap": "Ubicación satelital Gasa 10",
+   "mapa": true
+  },
+  {
+   "file": "foto_2.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-13T12:38:08.130Z",
+ "t": 1794573218365,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
