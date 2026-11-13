@@ -4,15 +4,165 @@
  "qc": [],
  "f_fecha": "2026-10-30",
  "f_dia": "Viernes",
- "f_hora": "14:21",
- "f_obra": "Ampliación Armería - Manzanillo",
- "f_contratista": "GACSA CONSTRUCCIONES",
- "a_capa": "Carpeta asfáltica",
- "a_planta": "GSI",
- "fotos": [],
+ "f_hora": "17:05",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "80+240",
+ "f_cuerpo": "Cuerpo B",
+ "f_ubic": "Rampa",
+ "f_lat": "18.999094",
+ "f_lng": "-104.244386",
+ "f_clima": "Soleado",
+ "a_capa": "Riego de impregnación",
+ "a_tten": "74",
+ "a_liga": "1.2",
+ "a_equipo": "Petrolizadora.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240 · Rampa",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_26_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_27_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_28_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_29_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_30_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_31_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_32_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_33_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_34_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_35_km80+240.heic",
+   "cap": ""
+  }
+ ],
  "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
- "actualizado": "2026-11-12T02:36:01.208Z",
- "t": 1794450959247,
+ "actualizado": "2026-11-13T12:22:40.333Z",
+ "t": 1794451823191,
  "muestreo": [],
  "whatsapp": "523121767989"
 }
