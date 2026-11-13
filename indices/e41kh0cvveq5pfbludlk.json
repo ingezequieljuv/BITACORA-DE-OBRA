@@ -701,22 +701,22 @@
   },
   {
    "id": "94hl5b563wv6f9",
-   "t": 1794450959247,
+   "t": 1794451823191,
    "f_fecha": "2026-10-30",
    "f_dia": "Viernes",
-   "f_hora": "14:21",
-   "f_obra": "Ampliación Armería - Manzanillo",
-   "f_cad1": "",
+   "f_hora": "17:05",
+   "f_obra": "PSFFCC Tepalcates I",
+   "f_cad1": "80+240",
    "f_cad2": "",
-   "f_cuerpo": "",
+   "f_cuerpo": "Cuerpo B",
    "f_carril": "",
-   "f_ubic": "",
-   "f_contratista": "GACSA CONSTRUCCIONES",
+   "f_ubic": "Rampa",
+   "f_contratista": "PLACOSA",
    "tipo": "asfalto",
-   "a_capa": "Carpeta asfáltica",
-   "fotos": 0
+   "a_capa": "Riego de impregnación",
+   "fotos": 35
   }
  ],
  "borrados": {},
- "actualizado": "2026-11-12T02:43:47.489Z"
+ "actualizado": "2026-11-13T12:22:41.741Z"
 }
