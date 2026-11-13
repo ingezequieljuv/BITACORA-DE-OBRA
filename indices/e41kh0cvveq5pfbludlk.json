@@ -732,8 +732,25 @@
    "tipo": "concreto",
    "a_capa": "",
    "fotos": 11
+  },
+  {
+   "id": "l0jsmhswd8fl2y",
+   "t": 1794573002911,
+   "f_fecha": "2026-11-02",
+   "f_dia": "Lunes",
+   "f_hora": "10:32",
+   "f_obra": "Puente Jalipa",
+   "f_cad1": "94+158",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "G_",
+   "f_contratista": "PLACOSA",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 0
   }
  ],
  "borrados": {},
- "actualizado": "2026-11-13T12:28:17.800Z"
+ "actualizado": "2026-11-13T12:30:07.804Z"
 }
