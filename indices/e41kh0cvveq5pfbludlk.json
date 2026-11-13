@@ -715,8 +715,25 @@
    "tipo": "asfalto",
    "a_capa": "Riego de impregnación",
    "fotos": 35
+  },
+  {
+   "id": "iz7ls1791o9evm",
+   "t": 1794572714977,
+   "f_fecha": "2026-10-30",
+   "f_dia": "Viernes",
+   "f_hora": "17:10",
+   "f_obra": "PSFFCC Tepalcates I",
+   "f_cad1": "80+240",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "",
+   "f_ubic": "Rampa",
+   "f_contratista": "PLACOSA",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 11
   }
  ],
  "borrados": {},
- "actualizado": "2026-11-13T12:22:41.741Z"
+ "actualizado": "2026-11-13T12:28:17.800Z"
 }
