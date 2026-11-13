@@ -749,8 +749,25 @@
    "tipo": "concreto",
    "a_capa": "",
    "fotos": 0
+  },
+  {
+   "id": "kv9m3hvpdbk7eh",
+   "t": 1794573218365,
+   "f_fecha": "2026-11-13",
+   "f_dia": "Viernes",
+   "f_hora": "06:30",
+   "f_obra": "Puente Jalipa",
+   "f_cad1": "",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "Gasa 10",
+   "f_contratista": "GACSA CONSTRUCCIONES",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 13
   }
  ],
  "borrados": {},
- "actualizado": "2026-11-13T12:30:07.804Z"
+ "actualizado": "2026-11-13T12:38:09.690Z"
 }
