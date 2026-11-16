@@ -1,88 +1,146 @@
 {
- "tipo": "concreto",
+ "tipo": "terraceria",
  "mu": [],
- "qc": [],
- "f_fecha": "2026-11-13",
- "f_dia": "Viernes",
- "f_hora": "06:30",
- "f_obra": "Puente Jalipa",
- "f_contratista": "GACSA CONSTRUCCIONES",
- "f_ubic": "Gasa 10",
- "f_lat": "19.098958",
- "f_lng": "-104.285989",
+ "qc": [
+  {
+   "p": "Grado de compactación (cala)",
+   "r": "98%",
+   "e": "100% +-2%",
+   "ok": "y"
+  }
+ ],
+ "f_fecha": "2026-11-02",
+ "f_dia": "Lunes",
+ "f_hora": "12:00",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "80+240",
+ "f_cuerpo": "Cuerpo B",
+ "f_ubic": "80+360 A 80+310",
+ "f_lat": "19.000872",
+ "f_lng": "-104.243736",
  "f_clima": "Soleado",
  "f_tamb": "35",
- "c_elemento": "Cuneta",
- "c_concretera": "DCC",
- "c_fc": "150",
- "c_rev": "10",
- "c_vol": "7",
- "c_ollas": "1",
- "c_remision": "A 194810",
- "c_tma": "20 MM",
- "c_hini": "09:20",
- "c_cil": "0",
- "c_metodo": "Directo de olla",
- "c_vibrado": "Correcto",
- "c_curado": "Agua",
+ "t_capa": "Subrasante",
+ "t_esp": "15",
+ "t_hum": "7",
+ "t_gc": "98",
+ "t_gcreq": "98",
+ "f_notas": "Se realizo prueba en conjunto con el Control de calidad \"IMPROYEC\" y la Supervisión \"JESMAR\".",
  "fotos": [
   {
-   "file": "mapa_satelital.jpg",
-   "cap": "Ubicación satelital Gasa 10",
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240 · 80+360 A 80+310",
    "mapa": true
   },
   {
-   "file": "foto_2.heic",
+   "file": "foto_2_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_3.heic",
+   "file": "foto_3_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_4.heic",
+   "file": "foto_4_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_5.heic",
+   "file": "foto_5_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_6.heic",
+   "file": "foto_6_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_7.heic",
+   "file": "foto_7_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_8.heic",
+   "file": "foto_8_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_9.heic",
+   "file": "foto_9_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_10.heic",
+   "file": "foto_10_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_11.heic",
+   "file": "foto_11_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_12.heic",
+   "file": "foto_12_km80+240.jpg",
    "cap": ""
   },
   {
-   "file": "foto_13.heic",
+   "file": "foto_13_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_26_km80+240.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_27_km80+240.jpg",
    "cap": ""
   }
  ],
  "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
- "actualizado": "2026-11-13T12:38:08.130Z",
- "t": 1794573218365,
+ "actualizado": "2026-11-16T17:19:21.491Z",
+ "t": 1794849491143,
  "muestreo": [],
  "whatsapp": "523121767989"
 }
