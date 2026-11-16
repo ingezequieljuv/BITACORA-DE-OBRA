@@ -768,6 +768,23 @@
    "fotos": 0
   },
   {
+   "id": "nyohun6cm1tn3k",
+   "t": 1794573658734,
+   "f_fecha": "2026-11-02",
+   "f_dia": "Lunes",
+   "f_hora": "11:00",
+   "f_obra": "Ampliación Armería - Manzanillo",
+   "f_cad1": "88+300",
+   "f_cad2": "88+490",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "Media",
+   "f_ubic": "",
+   "f_contratista": "HORUS GB",
+   "tipo": "asfalto",
+   "a_capa": "Riego de liga",
+   "fotos": 15
+  },
+  {
    "id": "kv9m3hvpdbk7eh",
    "t": 1794573218365,
    "f_fecha": "2026-11-13",
@@ -786,5 +803,5 @@
   }
  ],
  "borrados": {},
- "actualizado": "2026-11-16T16:45:54.238Z"
+ "actualizado": "2026-11-16T16:47:26.566Z"
 }
