@@ -1,0 +1,91 @@
+{
+ "tipo": "asfalto",
+ "mu": [],
+ "qc": [],
+ "f_fecha": "2026-11-02",
+ "f_dia": "Lunes",
+ "f_hora": "11:00",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_contratista": "HORUS GB",
+ "f_cad1": "88+300",
+ "f_cad2": "88+490",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Media",
+ "f_lat": "19.056428",
+ "f_lng": "-104.269561",
+ "f_clima": "Soleado",
+ "f_tamb": "35",
+ "a_capa": "Riego de liga",
+ "a_tten": "80",
+ "a_ancho": "4.30",
+ "a_liga": "0.8",
+ "a_equipo": "Barredora, Petrolizadora.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km88+300.jpg",
+   "cap": "Ubicación satelital 88+300",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km88+300.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km88+300.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-16T16:47:24.962Z",
+ "t": 1794573658734,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
