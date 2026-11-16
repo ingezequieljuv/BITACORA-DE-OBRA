@@ -1,0 +1,86 @@
+{
+ "tipo": "concreto",
+ "mu": [],
+ "qc": [],
+ "f_fecha": "2026-11-02",
+ "f_dia": "Lunes",
+ "f_hora": "10:00",
+ "f_obra": "Puente Jalipa",
+ "f_contratista": "GACSA CONSTRUCCIONES",
+ "f_residente": "Ing. Ramon Ochoa · Encargado / sobrestante",
+ "f_cad1": "94+158",
+ "f_ubic": "Gasa 10",
+ "f_lat": "19.098956",
+ "f_lng": "-104.285819",
+ "f_clima": "Soleado",
+ "f_tamb": "30",
+ "c_elemento": "Cuneta",
+ "c_concretera": "DCC",
+ "c_fc": "150",
+ "c_rev": "10",
+ "c_temp": "29",
+ "c_vol": "7",
+ "c_ollas": "1",
+ "c_remision": "A 194810",
+ "c_tma": "20 MM",
+ "c_hini": "09:20",
+ "c_hfin": "10:20",
+ "c_cil": "0",
+ "f_notas": "Se superviso el proceso de colado.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km94+158.jpg",
+   "cap": "Ubicación satelital 94+158 · Gasa 10",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km94+158.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km94+158.jpg",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-16T17:00:55.748Z",
+ "t": 1794848419979,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
