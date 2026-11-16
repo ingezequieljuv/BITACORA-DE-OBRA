@@ -153,6 +153,11 @@
  ],
  "personas": [
   {
+   "n": "Ing. Ramon Ochoa",
+   "cargo": "Encargado / sobrestante",
+   "emp": "GACSA CONSTRUCCIONES"
+  },
+  {
    "n": "Ing. Julio Cesar Rojas Miranda",
    "cargo": "Jefe directo",
    "emp": "JUVISA INGENIERIA"
@@ -199,5 +204,5 @@
    "m": "Concreto Premezclado"
   }
  ],
- "t": 1794450877830
+ "t": 1794847814085
 }
