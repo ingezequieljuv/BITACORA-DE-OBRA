@@ -1,0 +1,90 @@
+{
+ "tipo": "terraceria",
+ "mu": [],
+ "qc": [
+  {
+   "p": "Grado de compactación (cala)",
+   "r": "92",
+   "e": "90",
+   "ok": "y"
+  }
+ ],
+ "f_fecha": "2026-11-02",
+ "f_dia": "Lunes",
+ "f_hora": "12:40",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "80+240",
+ "f_cuerpo": "Cuerpo B",
+ "f_ubic": "Rampa de Puente",
+ "f_lat": "18.997764",
+ "f_lng": "-104.244500",
+ "f_clima": "Soleado",
+ "f_tamb": "30",
+ "t_capa": "Terraplén",
+ "t_esp": "18",
+ "t_hum": "7",
+ "t_gc": "92",
+ "t_gcreq": "90",
+ "f_notas": "Se realizó prueba de compactación en conjunto con Supervisión de JESMAR y control de calidad IMPROYEC.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240 · Rampa de Puente",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km80+240.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-17T16:04:39.488Z",
+ "t": 1794930364841,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
