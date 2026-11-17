@@ -800,10 +800,27 @@
    "tipo": "terraceria",
    "a_capa": "",
    "fotos": 27
+  },
+  {
+   "id": "tx2ra5oxz773f8",
+   "t": 1794930364841,
+   "f_fecha": "2026-11-02",
+   "f_dia": "Lunes",
+   "f_hora": "12:40",
+   "f_obra": "PSFFCC Tepalcates I",
+   "f_cad1": "80+240",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "",
+   "f_ubic": "Rampa de Puente",
+   "f_contratista": "PLACOSA",
+   "tipo": "terraceria",
+   "a_capa": "",
+   "fotos": 13
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715
  },
- "actualizado": "2026-11-16T17:19:23.027Z"
+ "actualizado": "2026-11-17T16:04:41.288Z"
 }
