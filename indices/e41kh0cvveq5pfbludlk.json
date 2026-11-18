@@ -817,10 +817,27 @@
    "tipo": "terraceria",
    "a_capa": "",
    "fotos": 13
+  },
+  {
+   "id": "lto7515duutqoc",
+   "t": 1794888291987,
+   "f_fecha": "2026-12-02",
+   "f_dia": "Miércoles",
+   "f_hora": "12:30",
+   "f_obra": "PSFFCC Tepalcates I",
+   "f_cad1": "80+240",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "",
+   "f_contratista": "PLACOSA",
+   "tipo": "terraceria",
+   "a_capa": "",
+   "fotos": 1
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715
  },
- "actualizado": "2026-11-17T16:04:41.288Z"
+ "actualizado": "2026-11-18T03:15:38.660Z"
 }
