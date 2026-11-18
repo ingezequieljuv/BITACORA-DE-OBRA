@@ -1,0 +1,31 @@
+{
+ "tipo": "terraceria",
+ "mu": [],
+ "qc": [],
+ "f_fecha": "2026-12-02",
+ "f_dia": "Miércoles",
+ "f_hora": "12:30",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "80+240",
+ "f_lat": "18.997764",
+ "f_lng": "-104.244500",
+ "f_clima": "Soleado",
+ "f_tamb": "30",
+ "t_capa": "Base hidráulica",
+ "t_esp": "18",
+ "t_hum": "7",
+ "t_gcreq": "100",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240",
+   "mapa": true
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-18T03:15:36.947Z",
+ "t": 1794888291987,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
