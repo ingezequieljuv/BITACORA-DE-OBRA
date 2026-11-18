@@ -817,11 +817,28 @@
    "tipo": "terraceria",
    "a_capa": "",
    "fotos": 13
+  },
+  {
+   "id": "lz3j2ksf8xko8n",
+   "t": 1794972972057,
+   "f_fecha": "2026-11-02",
+   "f_dia": "Lunes",
+   "f_hora": "13:31",
+   "f_obra": "Ampliación Armería - Manzanillo",
+   "f_cad1": "88+600",
+   "f_cad2": "88+060",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "Media",
+   "f_ubic": "",
+   "f_contratista": "HORUS GB",
+   "tipo": "asfalto",
+   "a_capa": "Carpeta asfáltica",
+   "fotos": 54
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715,
   "lto7515duutqoc": 1794971746591
  },
- "actualizado": "2026-11-18T03:15:49.001Z"
+ "actualizado": "2026-11-18T03:44:30.662Z"
 }
