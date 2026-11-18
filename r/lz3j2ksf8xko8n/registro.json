@@ -1,0 +1,311 @@
+{
+ "tipo": "asfalto",
+ "mu": [
+  {
+   "id": "",
+   "hora": "14:10",
+   "cad": "88+400",
+   "lugar": "Camión",
+   "camion": "",
+   "temp": "150",
+   "peso": "",
+   "ensayes": "Marshall, Extracción o Lavado y Granulometría.",
+   "lab": "",
+   "ca": "",
+   "estab": "",
+   "flujo": "",
+   "vacios": "",
+   "vam": "",
+   "dens": "",
+   "gc": "",
+   "esp": "",
+   "obs": "Pendiente por agregar resultados de las pruebas de laboratorio."
+  }
+ ],
+ "qc": [
+  {
+   "p": "Temperatura de tendido",
+   "r": "157",
+   "e": "",
+   "ok": "y"
+  }
+ ],
+ "f_fecha": "2026-11-02",
+ "f_dia": "Lunes",
+ "f_hora": "13:31",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_contratista": "HORUS GB",
+ "f_cad1": "88+600",
+ "f_cad2": "88+060",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Media",
+ "f_lat": "19.058344",
+ "f_lng": "-104.269792",
+ "f_clima": "Soleado",
+ "f_tamb": "32",
+ "a_capa": "Carpeta asfáltica",
+ "a_planta": "GSI",
+ "a_tipo": "PG 64-22",
+ "a_tprod": "168",
+ "a_tten": "157",
+ "a_tcomp": "140",
+ "a_esp": "6",
+ "a_ancho": "4",
+ "a_liga": "0.8",
+ "a_equipo": "Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumatico.",
+ "f_notas": "Se superviso el tendido de carpeta asfáltica en conjunto con la Supervisión de Josmar.\nSe perciben buenas temperaturas de tendido y un proceso de ejecución aceptables cuanto a compactación y terminado de la carpeta asfáltica.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km88+600.jpg",
+   "cap": "Ubicación satelital 88+600",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_19_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_20_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_21_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_22_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_23_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_24_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_25_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_26_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_27_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_28_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_29_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_30_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_31_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_32_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_33_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_34_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_35_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_36_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_37_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_38_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_39_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_40_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_41_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_42_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_43_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_44_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_45_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_46_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_47_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_48_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_49_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_50_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_51_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_52_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_53_km88+600.jpg",
+   "cap": ""
+  },
+  {
+   "file": "foto_54_km88+600.jpg",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-18T03:44:29.108Z",
+ "t": 1794972972057,
+ "muestreo": [
+  {
+   "id": "",
+   "datos": [
+    [
+     "Hora de muestreo",
+     "14:10"
+    ],
+    [
+     "Lugar de muestreo",
+     "Camión"
+    ],
+    [
+     "Cadenamiento",
+     "88+400"
+    ],
+    [
+     "Temp. de la muestra °C",
+     "150"
+    ],
+    [
+     "Ensayes solicitados",
+     "Marshall, Extracción o Lavado y Granulometría."
+    ],
+    [
+     "Observaciones",
+     "Pendiente por agregar resultados de las pruebas de laboratorio."
+    ]
+   ]
+  }
+ ],
+ "whatsapp": "523121767989"
+}
