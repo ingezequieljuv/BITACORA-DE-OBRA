@@ -1,0 +1,31 @@
+{
+ "tipo": "asfalto",
+ "mu": [],
+ "qc": [],
+ "f_fecha": "2026-11-03",
+ "f_dia": "Martes",
+ "f_hora": "10:00",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_contratista": "HORUS GB",
+ "f_cad1": "54+000",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Media",
+ "f_lat": "18.920114",
+ "f_lng": "-104.019103",
+ "f_clima": "Soleado",
+ "f_tamb": "30",
+ "a_capa": "Carpeta asfáltica",
+ "a_planta": "GSI",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km54+000.jpg",
+   "cap": "Ubicación satelital 54+000",
+   "mapa": true
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-18T03:44:36.673Z",
+ "t": 1794973267040,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
