@@ -837,25 +837,25 @@
   },
   {
    "id": "04s1g868mfv1fl",
-   "t": 1794973267040,
+   "t": 1795107526544,
    "f_fecha": "2026-11-03",
    "f_dia": "Martes",
    "f_hora": "10:00",
    "f_obra": "Ampliación Armería - Manzanillo",
-   "f_cad1": "54+000",
+   "f_cad1": "56+000",
    "f_cad2": "",
    "f_cuerpo": "Cuerpo B",
    "f_carril": "Media",
    "f_ubic": "",
-   "f_contratista": "HORUS GB",
+   "f_contratista": "PLACOSA",
    "tipo": "asfalto",
-   "a_capa": "Carpeta asfáltica",
-   "fotos": 1
+   "a_capa": "Bacheo",
+   "fotos": 15
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715,
   "lto7515duutqoc": 1794971746591
  },
- "actualizado": "2026-11-18T03:44:38.096Z"
+ "actualizado": "2026-11-19T17:01:47.242Z"
 }
