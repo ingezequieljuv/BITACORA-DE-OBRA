@@ -6,26 +6,90 @@
  "f_dia": "Martes",
  "f_hora": "10:00",
  "f_obra": "Ampliación Armería - Manzanillo",
- "f_contratista": "HORUS GB",
- "f_cad1": "54+000",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "56+000",
  "f_cuerpo": "Cuerpo B",
  "f_carril": "Media",
  "f_lat": "18.920114",
  "f_lng": "-104.019103",
  "f_clima": "Soleado",
  "f_tamb": "30",
- "a_capa": "Carpeta asfáltica",
- "a_planta": "GSI",
+ "a_capa": "Bacheo",
+ "a_planta": "Xicuco",
+ "a_tipo": "PG 64-22",
+ "a_esp": "16",
+ "a_ancho": "3.50",
+ "a_ton": "60",
+ "a_viajes": "2",
+ "a_liga": "1.2",
+ "a_equipo": "Barredora, Perfiladora, Pipa de Agua.",
+ "f_notas": "Se encontraban en la zona en trabajos de perfilado, se encontraban esperando para ser tendidos, dos camiones que contenían base asfáltica.\nDatos:\nCamion JE-4877-B\nFolio: M 28235\nContenido Neto: 20,380 Kg.\n\nCamión JE-4876-B\nFolio: M 28236\nContenido Neto: 20,480 Kg.",
  "fotos": [
   {
-   "file": "mapa_satelital_km54+000.jpg",
-   "cap": "Ubicación satelital 54+000",
+   "file": "mapa_satelital_km56+000.jpg",
+   "cap": "Ubicación satelital 56+000",
    "mapa": true
+  },
+  {
+   "file": "foto_2_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km56+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km56+000.heic",
+   "cap": ""
   }
  ],
  "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
- "actualizado": "2026-11-18T03:44:36.673Z",
- "t": 1794973267040,
+ "actualizado": "2026-11-19T17:01:45.646Z",
+ "t": 1795107526544,
  "muestreo": [],
  "whatsapp": "523121767989"
 }
