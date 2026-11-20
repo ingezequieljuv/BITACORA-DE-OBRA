@@ -1,0 +1,138 @@
+{
+ "tipo": "concreto",
+ "mu": [
+  {
+   "id": "M-31126-CDERRAME",
+   "hora": "10:45",
+   "rev": "16",
+   "temp": "30",
+   "remision": "3021",
+   "elemento": "Cono De Derrame",
+   "piezas": "4",
+   "tipo": "Cilindro 15×30 cm",
+   "edades": "7,14 y 28",
+   "curado": "Pileta",
+   "lab": "JUVISA",
+   "res": "",
+   "obs": ""
+  }
+ ],
+ "qc": [
+  {
+   "p": "Revenimiento",
+   "r": "16",
+   "e": "14",
+   "ok": "y"
+  }
+ ],
+ "f_fecha": "2026-11-20",
+ "f_dia": "Viernes",
+ "f_hora": "11:30",
+ "f_obra": "PIV Minatitlán Lib. I",
+ "f_contratista": "COINBO Y GUERRA",
+ "f_cad1": "93+000",
+ "f_ubic": "Cono De Derrame",
+ "f_lat": "19.094744",
+ "f_lng": "-104.274903",
+ "f_clima": "Nublado",
+ "f_tamb": "30",
+ "c_elemento": "Cono De Derrame",
+ "c_concretera": "PSM",
+ "c_fc": "150",
+ "c_rev": "14",
+ "c_temp": "30",
+ "c_vol": "21",
+ "c_ollas": "3",
+ "c_remision": "3021",
+ "c_tma": "20 mm",
+ "c_hini": "11:35",
+ "c_cil": "4",
+ "c_metodo": "Bomba",
+ "c_vibrado": "Correcto",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km93+000.jpg",
+   "cap": "Ubicación satelital 93+000 · Cono De Derrame",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km93+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km93+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km93+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km93+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km93+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km93+000.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km93+000.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-20T12:49:57.172Z",
+ "t": 1795178682950,
+ "muestreo": [
+  {
+   "id": "M-31126-CDERRAME",
+   "datos": [
+    [
+     "Hora de muestreo",
+     "10:45"
+    ],
+    [
+     "Olla / remisión",
+     "3021"
+    ],
+    [
+     "Elemento / ubicación",
+     "Cono De Derrame"
+    ],
+    [
+     "No. de especímenes",
+     "4"
+    ],
+    [
+     "Tipo de espécimen",
+     "Cilindro 15×30 cm"
+    ],
+    [
+     "Revenimiento cm",
+     "16"
+    ],
+    [
+     "Temp. del concreto °C",
+     "30"
+    ],
+    [
+     "Edades de ensaye (días)",
+     "7,14 y 28"
+    ],
+    [
+     "Curado inicial",
+     "Pileta"
+    ],
+    [
+     "Laboratorio",
+     "JUVISA"
+    ]
+   ]
+  }
+ ],
+ "whatsapp": "523121767989"
+}
