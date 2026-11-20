@@ -1,0 +1,167 @@
+{
+ "tipo": "concreto",
+ "mu": [
+  {
+   "id": "M-31126-LESCAMAS",
+   "hora": "10:50",
+   "rev": "14",
+   "temp": "30",
+   "remision": "3020",
+   "elemento": "Losa de Escamas",
+   "piezas": "4",
+   "tipo": "Cilindro 15×30 cm",
+   "edades": "7, 14 y 28",
+   "curado": "Pileta",
+   "lab": "JUVISA",
+   "res": "",
+   "obs": ""
+  }
+ ],
+ "qc": [
+  {
+   "p": "Revenimiento",
+   "r": "15.5",
+   "e": "14",
+   "ok": "y"
+  }
+ ],
+ "f_fecha": "2026-11-03",
+ "f_dia": "Martes",
+ "f_hora": "10:40",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "80+240",
+ "f_cuerpo": "Cuerpo B",
+ "f_ubic": "Rampa",
+ "f_lat": "18.998300",
+ "f_lng": "-104.244531",
+ "f_clima": "Soleado",
+ "f_tamb": "30",
+ "c_elemento": "Losa de Escamas",
+ "c_concretera": "PSM",
+ "c_fc": "250",
+ "c_rev": "14",
+ "c_temp": "30",
+ "c_vol": "21",
+ "c_ollas": "3",
+ "c_remision": "3020",
+ "c_tma": "20 mm",
+ "c_hini": "10:45",
+ "c_cil": "4",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240 · Rampa",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km80+240.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km80+240.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-20T12:44:05.599Z",
+ "t": 1795178222191,
+ "muestreo": [
+  {
+   "id": "M-31126-LESCAMAS",
+   "datos": [
+    [
+     "Hora de muestreo",
+     "10:50"
+    ],
+    [
+     "Olla / remisión",
+     "3020"
+    ],
+    [
+     "Elemento / ubicación",
+     "Losa de Escamas"
+    ],
+    [
+     "No. de especímenes",
+     "4"
+    ],
+    [
+     "Tipo de espécimen",
+     "Cilindro 15×30 cm"
+    ],
+    [
+     "Revenimiento cm",
+     "14"
+    ],
+    [
+     "Temp. del concreto °C",
+     "30"
+    ],
+    [
+     "Edades de ensaye (días)",
+     "7, 14 y 28"
+    ],
+    [
+     "Curado inicial",
+     "Pileta"
+    ],
+    [
+     "Laboratorio",
+     "JUVISA"
+    ]
+   ]
+  }
+ ],
+ "whatsapp": "523121767989"
+}
