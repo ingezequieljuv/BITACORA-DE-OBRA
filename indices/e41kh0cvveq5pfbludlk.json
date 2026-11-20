@@ -851,11 +851,28 @@
    "tipo": "asfalto",
    "a_capa": "Bacheo",
    "fotos": 15
+  },
+  {
+   "id": "qzbzj88vvjrjxg",
+   "t": 1795178222191,
+   "f_fecha": "2026-11-03",
+   "f_dia": "Martes",
+   "f_hora": "10:40",
+   "f_obra": "PSFFCC Tepalcates I",
+   "f_cad1": "80+240",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "",
+   "f_ubic": "Rampa",
+   "f_contratista": "PLACOSA",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 15
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715,
   "lto7515duutqoc": 1794971746591
  },
- "actualizado": "2026-11-19T17:01:47.242Z"
+ "actualizado": "2026-11-20T12:44:07.918Z"
 }
