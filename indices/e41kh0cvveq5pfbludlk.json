@@ -868,11 +868,28 @@
    "tipo": "concreto",
    "a_capa": "",
    "fotos": 15
+  },
+  {
+   "id": "bxmksn966e1fzt",
+   "t": 1795178682950,
+   "f_fecha": "2026-11-20",
+   "f_dia": "Viernes",
+   "f_hora": "11:30",
+   "f_obra": "PIV Minatitlán Lib. I",
+   "f_cad1": "93+000",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "Cono De Derrame",
+   "f_contratista": "COINBO Y GUERRA",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 8
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715,
   "lto7515duutqoc": 1794971746591
  },
- "actualizado": "2026-11-20T12:44:07.918Z"
+ "actualizado": "2026-11-20T12:49:59.012Z"
 }
