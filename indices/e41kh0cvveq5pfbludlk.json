@@ -871,9 +871,9 @@
   },
   {
    "id": "bxmksn966e1fzt",
-   "t": 1795178682950,
-   "f_fecha": "2026-11-20",
-   "f_dia": "Viernes",
+   "t": 1795179537145,
+   "f_fecha": "2026-11-03",
+   "f_dia": "Martes",
    "f_hora": "11:30",
    "f_obra": "PIV Minatitlán Lib. I",
    "f_cad1": "93+000",
@@ -885,11 +885,28 @@
    "tipo": "concreto",
    "a_capa": "",
    "fotos": 8
+  },
+  {
+   "id": "x7sb2ra5ixc3t4",
+   "t": 1795179180436,
+   "f_fecha": "2026-11-03",
+   "f_dia": "Martes",
+   "f_hora": "12:20",
+   "f_obra": "Ampliación Armería - Manzanillo",
+   "f_cad1": "87+880",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "Media",
+   "f_ubic": "",
+   "f_contratista": "HORUS GB",
+   "tipo": "asfalto",
+   "a_capa": "Base negra",
+   "fotos": 18
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715,
   "lto7515duutqoc": 1794971746591
  },
- "actualizado": "2026-11-20T12:49:59.012Z"
+ "actualizado": "2026-11-20T15:39:06.434Z"
 }
