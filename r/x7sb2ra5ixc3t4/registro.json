@@ -1,0 +1,112 @@
+{
+ "tipo": "asfalto",
+ "mu": [],
+ "qc": [
+  {
+   "p": "Temperatura de tendido",
+   "r": "168",
+   "e": "168 - 157",
+   "ok": "n"
+  }
+ ],
+ "f_fecha": "2026-11-03",
+ "f_dia": "Martes",
+ "f_hora": "12:20",
+ "f_obra": "Ampliación Armería - Manzanillo",
+ "f_contratista": "HORUS GB",
+ "f_cad1": "87+880",
+ "f_cuerpo": "Cuerpo B",
+ "f_carril": "Media",
+ "f_lat": "19.052442",
+ "f_lng": "-104.268783",
+ "f_clima": "Nublado",
+ "f_tamb": "30",
+ "a_capa": "Base negra",
+ "a_planta": "GCI",
+ "a_tipo": "PG 64-22",
+ "a_tten": "152",
+ "a_tcomp": "140",
+ "a_ancho": "4",
+ "a_liga": "0.8",
+ "a_equipo": "Barredora, Petrolizadora, Pavimentadora, Doble Rodillo, Compactador Neumático.",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km87+880.jpg",
+   "cap": "Ubicación satelital 87+880",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_17_km87+880.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_18_km87+880.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-20T15:39:04.894Z",
+ "t": 1795179180436,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
