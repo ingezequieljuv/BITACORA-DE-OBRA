@@ -902,11 +902,28 @@
    "tipo": "asfalto",
    "a_capa": "Base negra",
    "fotos": 18
+  },
+  {
+   "id": "4n9c47pm696var",
+   "t": 1795190695385,
+   "f_fecha": "2026-11-20",
+   "f_dia": "Viernes",
+   "f_hora": "09:38",
+   "f_obra": "Puente Jalipa",
+   "f_cad1": "94+158",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "Eje 50, Costado de Caballete 5.",
+   "f_contratista": "GACSA CONSTRUCCIONES",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 16
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715,
   "lto7515duutqoc": 1794971746591
  },
- "actualizado": "2026-11-20T15:39:06.434Z"
+ "actualizado": "2026-11-21T05:04:34.019Z"
 }
