@@ -921,6 +921,23 @@
    "fotos": 19
   },
   {
+   "id": "gtae9rkwi844cx",
+   "t": 1795277457097,
+   "f_fecha": "2026-11-03",
+   "f_dia": "Martes",
+   "f_hora": "16:30",
+   "f_obra": "Ampliación Armería - Manzanillo",
+   "f_cad1": "54+000",
+   "f_cad2": "",
+   "f_cuerpo": "Cuerpo B",
+   "f_carril": "Media",
+   "f_ubic": "",
+   "f_contratista": "PLACOSA",
+   "tipo": "asfalto",
+   "a_capa": "Bacheo",
+   "fotos": 19
+  },
+  {
    "id": "efzl5lkyt1unyb",
    "t": 1795242194116,
    "f_fecha": "2026-11-04",
@@ -953,28 +970,11 @@
    "tipo": "concreto",
    "a_capa": "",
    "fotos": 16
-  },
-  {
-   "id": "gtae9rkwi844cx",
-   "t": 1795240955475,
-   "f_fecha": "2026-12-03",
-   "f_dia": "Jueves",
-   "f_hora": "16:30",
-   "f_obra": "Ampliación Armería - Manzanillo",
-   "f_cad1": "54+000",
-   "f_cad2": "",
-   "f_cuerpo": "Cuerpo B",
-   "f_carril": "Media",
-   "f_ubic": "",
-   "f_contratista": "PLACOSA",
-   "tipo": "asfalto",
-   "a_capa": "Bacheo",
-   "fotos": 19
   }
  ],
  "borrados": {
   "l0jsmhswd8fl2y": 1794848492715,
   "lto7515duutqoc": 1794971746591
  },
- "actualizado": "2026-11-21T06:23:19.395Z"
+ "actualizado": "2026-11-21T16:11:01.575Z"
 }
