@@ -1,0 +1,177 @@
+{
+ "tipo": "concreto",
+ "mu": [
+  {
+   "id": "M-201126CUN.PJALIPA",
+   "hora": "09:40",
+   "rev": "10",
+   "temp": "24",
+   "remision": "A 195206",
+   "elemento": "Cunetas",
+   "piezas": "4",
+   "tipo": "Cilindro 15×30 cm",
+   "edades": "7, 14 y 28",
+   "curado": "Pileta",
+   "lab": "JUVISA",
+   "res": "",
+   "obs": "Pendientes por Ensayar."
+  }
+ ],
+ "qc": [
+  {
+   "p": "Revenimiento",
+   "r": "12",
+   "e": "10",
+   "ok": "y"
+  }
+ ],
+ "f_fecha": "2026-11-20",
+ "f_dia": "Viernes",
+ "f_hora": "09:38",
+ "f_obra": "Puente Jalipa",
+ "f_contratista": "GACSA CONSTRUCCIONES",
+ "f_residente": "Ing. Ramon Ochoa · Encargado / sobrestante",
+ "f_cad1": "94+158",
+ "f_ubic": "Eje 50, Costado de Caballete 5.",
+ "f_lat": "19.098707",
+ "f_lng": "-104.285836",
+ "f_clima": "Soleado",
+ "f_tamb": "29",
+ "c_elemento": "Cunetas",
+ "c_concretera": "DCC",
+ "c_fc": "150",
+ "c_rev": "10",
+ "c_temp": "24",
+ "c_vol": "4",
+ "c_ollas": "1",
+ "c_remision": "A 195206",
+ "c_tma": "20 mm",
+ "c_hini": "09:36",
+ "c_hfin": "10:00",
+ "c_cil": "4",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
+ "c_curado": "Agua",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km94+158.jpg",
+   "cap": "Ubicación satelital ",
+   "mapa": true
+  },
+  {
+   "file": "foto_2_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_3_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_4_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_5_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_6_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_7_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_8_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_9_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_10_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_11_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_12_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_13_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_14_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_15_km94+158.heic",
+   "cap": ""
+  },
+  {
+   "file": "foto_16_km94+158.heic",
+   "cap": ""
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-21T05:04:32.516Z",
+ "t": 1795190695385,
+ "muestreo": [
+  {
+   "id": "M-201126CUN.PJALIPA",
+   "datos": [
+    [
+     "Hora de muestreo",
+     "09:40"
+    ],
+    [
+     "Olla / remisión",
+     "A 195206"
+    ],
+    [
+     "Elemento / ubicación",
+     "Cunetas"
+    ],
+    [
+     "No. de especímenes",
+     "4"
+    ],
+    [
+     "Tipo de espécimen",
+     "Cilindro 15×30 cm"
+    ],
+    [
+     "Revenimiento cm",
+     "10"
+    ],
+    [
+     "Temp. del concreto °C",
+     "24"
+    ],
+    [
+     "Edades de ensaye (días)",
+     "7, 14 y 28"
+    ],
+    [
+     "Curado inicial",
+     "Pileta"
+    ],
+    [
+     "Laboratorio",
+     "JUVISA"
+    ],
+    [
+     "Observaciones",
+     "Pendientes por Ensayar."
+    ]
+   ]
+  }
+ ],
+ "whatsapp": "523121767989"
+}
