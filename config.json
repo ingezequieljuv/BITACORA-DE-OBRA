@@ -168,6 +168,11 @@
    "emp": "JESMAR"
   },
   {
+   "n": "Ing. Oscar Lopez",
+   "cargo": "Supervisor",
+   "emp": "PYCE"
+  },
+  {
    "n": "Juan Jesús Padilla Paredes",
    "cargo": "Laboratorista",
    "emp": "JUVISA INGENIERIA"
@@ -204,5 +209,5 @@
    "m": "Concreto Premezclado"
   }
  ],
- "t": 1795010622732
+ "t": 1795239312046
 }
