@@ -921,6 +921,23 @@
    "fotos": 19
   },
   {
+   "id": "efzl5lkyt1unyb",
+   "t": 1795242194116,
+   "f_fecha": "2026-11-04",
+   "f_dia": "Miércoles",
+   "f_hora": "11:00",
+   "f_obra": "PSFFCC Tepalcates I",
+   "f_cad1": "80+240",
+   "f_cad2": "",
+   "f_cuerpo": "",
+   "f_carril": "",
+   "f_ubic": "Patio De Placosa",
+   "f_contratista": "PLACOSA",
+   "tipo": "concreto",
+   "a_capa": "",
+   "fotos": 1
+  },
+  {
    "id": "4n9c47pm696var",
    "t": 1795190695385,
    "f_fecha": "2026-11-20",
@@ -959,5 +976,5 @@
   "l0jsmhswd8fl2y": 1794848492715,
   "lto7515duutqoc": 1794971746591
  },
- "actualizado": "2026-11-21T06:03:21.563Z"
+ "actualizado": "2026-11-21T06:23:19.395Z"
 }
