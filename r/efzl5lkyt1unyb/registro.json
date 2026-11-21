@@ -1,0 +1,39 @@
+{
+ "tipo": "concreto",
+ "mu": [],
+ "qc": [],
+ "f_fecha": "2026-11-04",
+ "f_dia": "Miércoles",
+ "f_hora": "11:00",
+ "f_obra": "PSFFCC Tepalcates I",
+ "f_contratista": "PLACOSA",
+ "f_cad1": "80+240",
+ "f_ubic": "Patio De Placosa",
+ "f_lat": "19.001033",
+ "f_lng": "-104.245553",
+ "f_clima": "Soleado",
+ "f_tamb": "29",
+ "c_elemento": "Escamas",
+ "c_concretera": "PSM",
+ "c_fc": "250",
+ "c_rev": "14",
+ "c_temp": "28",
+ "c_ollas": "1",
+ "c_tma": "20 mm",
+ "c_hini": "11:20",
+ "c_cil": "4",
+ "c_metodo": "Directo de olla",
+ "c_vibrado": "Correcto",
+ "fotos": [
+  {
+   "file": "mapa_satelital_km80+240.jpg",
+   "cap": "Ubicación satelital 80+240 · Patio De Placosa",
+   "mapa": true
+  }
+ ],
+ "nombre": "Supervisor: Ing. César Ezequiel Tafoya Garibay · JUVISA",
+ "actualizado": "2026-11-21T06:23:17.860Z",
+ "t": 1795242194116,
+ "muestreo": [],
+ "whatsapp": "523121767989"
+}
